@@ -6,8 +6,11 @@ import {
   MenubarSeparator,
   MenubarShortcut,
   MenubarTrigger,
+  MenubarSub,
+  MenubarSubContent,
+  MenubarSubTrigger,
 } from "@/components/ui/menubar";
-import { cn } from "@/lib/utils";
+import React from "react";
 
 // 定义菜单项类型
 type MenuItemType = "item" | "separator" | "sub";
@@ -47,68 +50,49 @@ interface sysMenuProps {
 }
 
 export default function SysMenu({ className, items }: sysMenuProps) {
+  /**
+   * Renders the menu items based on the provided data.
+   *
+   * @param {MenuItem[]} items - The array of menu items to be rendered.
+   * @return {ReactNode} The rendered menu items as React components.
+   */
+  const renderMenuItem = (items: MenuItem[]) =>
+    items.map((item, index) => {
+      switch (item.type) {
+        case "item":
+          return (
+            <MenubarItem key={index}>
+              {item.label}
+              {item.shortcut && (
+                <MenubarShortcut>{item.shortcut}</MenubarShortcut>
+              )}
+            </MenubarItem>
+          );
+        case "separator":
+          return <MenubarSeparator key={index} />;
+        case "sub":
+          return (
+            <MenubarSub key={index}>
+              <MenubarSubTrigger>{item.label}</MenubarSubTrigger>
+              <MenubarSubContent>
+                {renderMenuItem(item.items)}
+              </MenubarSubContent>
+            </MenubarSub>
+          );
+        default:
+          return <></>;
+      }
+    });
   return (
-    <Menubar className={cn("rounded-none shadow-none", className)}>
-      <MenubarMenu>
-        <MenubarTrigger className="text-muted-foreground hover:text-primary">
-          File
-        </MenubarTrigger>
-        <MenubarContent>
-          <MenubarItem>
-            New Tab <MenubarShortcut>⌘T</MenubarShortcut>
-          </MenubarItem>
-          <MenubarItem>New Window</MenubarItem>
-          <MenubarSeparator />
-          <MenubarItem>Share</MenubarItem>
-          <MenubarSeparator />
-          <MenubarItem>Print</MenubarItem>
-        </MenubarContent>
-      </MenubarMenu>
-      <MenubarMenu>
-        <MenubarTrigger className="text-muted-foreground hover:text-primary">
-          Edit
-        </MenubarTrigger>
-        <MenubarContent>
-          <MenubarItem>
-            New Tab <MenubarShortcut>⌘T</MenubarShortcut>
-          </MenubarItem>
-          <MenubarItem>New Window</MenubarItem>
-          <MenubarSeparator />
-          <MenubarItem>Share</MenubarItem>
-          <MenubarSeparator />
-          <MenubarItem>Print</MenubarItem>
-        </MenubarContent>
-      </MenubarMenu>
-      <MenubarMenu>
-        <MenubarTrigger className="text-muted-foreground hover:text-primary">
-          View
-        </MenubarTrigger>
-        <MenubarContent>
-          <MenubarItem>
-            New Tab <MenubarShortcut>⌘T</MenubarShortcut>
-          </MenubarItem>
-          <MenubarItem>New Window</MenubarItem>
-          <MenubarSeparator />
-          <MenubarItem>Share</MenubarItem>
-          <MenubarSeparator />
-          <MenubarItem>Print</MenubarItem>
-        </MenubarContent>
-      </MenubarMenu>
-      <MenubarMenu>
-        <MenubarTrigger className="text-muted-foreground hover:text-primary">
-          Help
-        </MenubarTrigger>
-        <MenubarContent>
-          <MenubarItem>
-            New Tab <MenubarShortcut>⌘T</MenubarShortcut>
-          </MenubarItem>
-          <MenubarItem>New Window</MenubarItem>
-          <MenubarSeparator />
-          <MenubarItem>Share</MenubarItem>
-          <MenubarSeparator />
-          <MenubarItem>Print</MenubarItem>
-        </MenubarContent>
-      </MenubarMenu>
+    <Menubar className={className}>
+      {items.map((item, index) => (
+        <MenubarMenu key={index}>
+          <MenubarTrigger className="text-muted-foreground hover:text-primary">
+            {item.title}
+          </MenubarTrigger>
+          <MenubarContent>{renderMenuItem(item.items)}</MenubarContent>
+        </MenubarMenu>
+      ))}
     </Menubar>
   );
 }

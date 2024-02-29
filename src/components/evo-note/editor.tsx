@@ -33,7 +33,147 @@ export default function EvoEditor({
     <>
       <div className="flex flex-col w-full">
         <div>
-          <SysMenu />
+          <SysMenu
+            className="rounded-none shadow-none"
+            items={[
+              {
+                title: "File",
+                items: [
+                  {
+                    type: "item",
+                    label: "New Note",
+                  },
+                  {
+                    type: "separator",
+                  },
+                  {
+                    type: "item",
+                    label: "Save",
+                  },
+                  {
+                    type: "separator",
+                  },
+                  {
+                    type: "item",
+                    label: "Perferences",
+                  },
+                  {
+                    type: "separator",
+                  },
+                  {
+                    type: "item",
+                    label: "Exit",
+                  },
+                ],
+              },
+              {
+                title: "Edit",
+                items: [
+                  {
+                    type: "item",
+                    label: "Toggle Editor",
+                  },
+                  {
+                    type: "separator",
+                  },
+                  {
+                    type: "item",
+                    label: "Copy",
+                  },
+                  {
+                    type: "item",
+                    label: "Cut",
+                  },
+                  {
+                    type: "item",
+                    label: "Paste",
+                  },
+                  {
+                    type: "separator",
+                  },
+                  {
+                    type: "item",
+                    label: "Find",
+                  },
+                  {
+                    type: "item",
+                    label: "Find",
+                  },
+                ],
+              },
+              {
+                title: "View",
+                items: [
+                  {
+                    type: "item",
+                    label: "Toggle Sidebar",
+                  },
+                  {
+                    type: "separator",
+                  },
+                  {
+                    type: "item",
+                    label: "Toggle Navbar",
+                  },
+                  {
+                    type: "separator",
+                  },
+                  {
+                    type: "item",
+                    label: "Toogle Fullscreen",
+                  },
+                  {
+                    type: "separator",
+                  },
+                  {
+                    type: "sub",
+                    label: "Appearance",
+                    items: [
+                      {
+                        type: "item",
+                        label: "Dark Mode",
+                      },
+                      {
+                        type: "item",
+                        label: "Light Mode",
+                      },
+                      {
+                        type: "item",
+                        label: "Auto Mode",
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                title: "Help",
+                items: [
+                  {
+                    type: "item",
+                    label: "Video Tutorials",
+                  },
+                  {
+                    type: "item",
+                    label: "Tips and Tricks",
+                  },
+                  {
+                    type: "separator",
+                  },
+                  {
+                    type: "item",
+                    label: "Feedback",
+                  },
+                  {
+                    type: "separator",
+                  },
+                  {
+                    type: "item",
+                    label: "About",
+                  },
+                ],
+              },
+            ]}
+          />
         </div>
 
         <ResizablePanelGroup
@@ -78,8 +218,8 @@ export default function EvoEditor({
                     variant: "ghost",
                   },
                   {
-                    title: "AI Chat",
-                    label: "Chat with AI",
+                    title: "Copilot Chat",
+                    label: "Chat with Copilot",
                     icon: BotMessageSquare,
                     variant: "ghost",
                   },

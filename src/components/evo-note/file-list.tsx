@@ -49,7 +49,12 @@ export function FileList({ className, files }: FileListProps) {
               </div> */}
                 </div>
               </div>
-              <div className="text-xs text-muted-foreground line-clamp-2">
+              <div
+                className={cn(
+                  "text-xs text-muted-foreground line-clamp-2",
+                  selectNote.selected === note.id && "font-medium"
+                )}
+              >
                 {note.brief.substring(0, 300)}
               </div>
               <div className="flex flex-row gap-2 items-center w-full">
@@ -68,7 +73,7 @@ export function FileList({ className, files }: FileListProps) {
                   className={cn(
                     "ml-auto text-xs",
                     selectNote.selected === note.id
-                      ? "text-foreground"
+                      ? "text-gray-900 dark:text-zinc-200"
                       : "text-muted-foreground"
                   )}
                 >

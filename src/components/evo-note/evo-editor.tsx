@@ -24,6 +24,8 @@ import { testFilesData } from "./test-files-data";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import { TabsContent } from "@radix-ui/react-tabs";
 import { Item } from "@radix-ui/react-menubar";
+import { ModeToggle } from "./theme-toggle";
+import { useNote } from "./useNote";
 
 interface EvoEditorProps {
   defaultLayout?: number[];
@@ -35,6 +37,8 @@ export default function EvoEditor({
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isFileCollapsible, setIsFileCollapsible] = useState(false);
   const NavResizablePanelRef = useRef<ImperativePanelHandle>(null);
+  const [selectedNote] = useNote();
+
   return (
     <>
       <div className="flex flex-col w-full">
@@ -206,7 +210,9 @@ export default function EvoEditor({
             }}
           >
             <div>
-              <div className="flex h-[52px]"></div>
+              <div className="flex h-[52px]">
+                <ModeToggle />
+              </div>
               <Separator />
               <Nav
                 isCollapsed={isCollapsed}
@@ -266,17 +272,17 @@ export default function EvoEditor({
           >
             <Tabs defaultValue="all">
               <div className="flex px-4 py-2 items-center h-[52px]">
-                <h1 className="text-xl font-bold">Files</h1>
+                <h1 className="text-xl font-bold">Notes</h1>
                 <TabsList className="ml-auto">
                   <TabsTrigger
                     value="all"
-                    className="text-zinc-600 dark:text-zinc-200"
+                    className="text-zinc-600  dark:text-zinc-200"
                   >
                     All
                   </TabsTrigger>
                   <TabsTrigger
                     value="stared"
-                    className="text-zinc-600 dark:text-zinc-200"
+                    className="text-zinc-600  dark:text-zinc-200"
                   >
                     Stared
                   </TabsTrigger>
@@ -302,7 +308,9 @@ export default function EvoEditor({
               }
             }}
           />
-          <ResizablePanel defaultSize={defaultLayout[2]}>editor</ResizablePanel>
+          <ResizablePanel defaultSize={defaultLayout[2]}>
+            {selectedNote.selected}
+          </ResizablePanel>
         </ResizablePanelGroup>
       </div>
     </>

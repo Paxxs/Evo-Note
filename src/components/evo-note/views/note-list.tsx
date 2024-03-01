@@ -1,12 +1,12 @@
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FileList, NoteItemType } from "./ui/file-list";
+import { FileList, NoteItemType } from "../ui/file-list";
+import SideBarTitle from "../ui/sider-bar-title";
 
 export function NoteList({ files }: { files: NoteItemType[] }) {
   return (
     <Tabs defaultValue="all">
-      <div className="flex px-4 py-2 items-center h-[52px]">
-        <h1 className="text-xl font-bold">Notes</h1>
+      <SideBarTitle title="Notes">
         <TabsList className="ml-auto">
           <TabsTrigger
             value="all"
@@ -21,8 +21,7 @@ export function NoteList({ files }: { files: NoteItemType[] }) {
             Stared
           </TabsTrigger>
         </TabsList>
-      </div>
-      <Separator />
+      </SideBarTitle>
       <div className="h-3 "></div>
       <TabsContent value="all" className="m-0">
         <FileList files={files} />

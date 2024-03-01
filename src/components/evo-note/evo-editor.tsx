@@ -25,11 +25,17 @@ import { TabsContent } from "@radix-ui/react-tabs";
 import { Item } from "@radix-ui/react-menubar";
 import { ModeToggle } from "./theme-toggle";
 import { useNote } from "./useNote";
-import { NoteList } from "./note-list";
+import { NoteList } from "./views/note-list";
+import SideBarSearch from "./views/sidebar-search";
+import SideBarAI from "./views/sidebar-copilot";
+import SidebarTrash from "./views/sidebar-trash";
 
 interface EvoEditorProps {
   defaultLayout?: number[];
 }
+
+// TabsValue: Define the type for the tabs value
+type TabsValue = "notes" | "search" | "copilot" | "trash" | "preference";
 
 export default function EvoEditor({
   defaultLayout = [20, 30, 50],
@@ -38,6 +44,8 @@ export default function EvoEditor({
   const [isFileCollapsible, setIsFileCollapsible] = useState(false);
   const NavResizablePanelRef = useRef<ImperativePanelHandle>(null);
   const [selectedNote] = useNote();
+
+  const [tabsValue, setTabsValue] = useState<TabsValue>("notes");
 
   return (
     <>
@@ -215,7 +223,9 @@ export default function EvoEditor({
               </div>
               <Separator />
               <Nav
+                onClick={(keyValue) => setTabsValue(keyValue as TabsValue)}
                 isCollapsed={isCollapsed}
+                keyValue={tabsValue}
                 links={[
                   {
                     title: "Explorer",
@@ -258,6 +268,7 @@ export default function EvoEditor({
             <Nav
               className="mt-auto"
               isCollapsed={isCollapsed}
+              keyValue={tabsValue}
               links={[
                 {
                   title: "Settings",
@@ -265,6 +276,7 @@ export default function EvoEditor({
                   icon: Settings,
                   variant: "ghost",
                   herf: "/dashboard/preference",
+                  keyValue: "settings",
                 },
               ]}
             />
@@ -275,13 +287,23 @@ export default function EvoEditor({
             collapsible={isFileCollapsible}
             defaultSize={defaultLayout[1]}
           >
-            <Tabs defaultValue="notes">
+            <Tabs
+              defaultValue="notes"
+              value={tabsValue}
+              onValueChange={(value) => setTabsValue(value as TabsValue)}
+            >
               <TabsContent value="notes">
                 <NoteList files={testFilesData} />
               </TabsContent>
-              <TabsContent value="search"></TabsContent>
-              <TabsContent value="copilot"></TabsContent>
-              <TabsContent value="trash"></TabsContent>
+              <TabsContent value="search">
+                <SideBarSearch />
+              </TabsContent>
+              <TabsContent value="copilot">
+                <SideBarAI />
+              </TabsContent>
+              <TabsContent value="trash">
+                <SidebarTrash />
+              </TabsContent>
             </Tabs>
           </ResizablePanel>
           <ResizableHandle

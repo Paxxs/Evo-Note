@@ -20,12 +20,19 @@ interface NavProps {
     icon: LucideIcon;
     variant: "default" | "ghost";
     herf?: string;
-    keyValue?: string; // 用来确定选中状态
+    keyValue: string; // 用来确定选中状态
   }[];
   className?: string;
   keyValue?: string; // 选中状态显示
+  onClick?: (keyValue: string) => void;
 }
-export function Nav({ isCollapsed, links, keyValue, className }: NavProps) {
+export function Nav({
+  isCollapsed,
+  links,
+  keyValue,
+  className,
+  onClick,
+}: NavProps) {
   return (
     <div
       data-collapsed={isCollapsed}
@@ -54,6 +61,7 @@ export function Nav({ isCollapsed, links, keyValue, className }: NavProps) {
                         link.variant === "default" &&
                           "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
                       )}
+                      onClick={() => onClick && onClick(link.keyValue)}
                     >
                       <link.icon className="h-6 w-6" />
                       <span className="sr-only">{link.title}</span>
@@ -74,6 +82,7 @@ export function Nav({ isCollapsed, links, keyValue, className }: NavProps) {
                         keyValue === link.keyValue &&
                           "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white"
                       )}
+                      onClick={() => onClick && onClick(link.keyValue)}
                     >
                       <link.icon className="mr-2 h-6 w-6" />
                       {link.title}

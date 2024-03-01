@@ -23,7 +23,7 @@ export function NoteList({ files }: { files: NoteItemType[] }) {
         </TabsList>
       </SideBarTitle>
       <div className="h-3 "></div>
-      <TabsContent value="all" className="m-0">
+      <TabsContent value="all" className="m-0" asChild>
         <FileList files={files} />
       </TabsContent>
       <TabsContent value="stared" className="m-0">

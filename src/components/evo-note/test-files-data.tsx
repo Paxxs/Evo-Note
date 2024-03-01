@@ -1,4 +1,4 @@
-import { NoteItemType } from "./file-list";
+import { NoteItemType } from "./ui/file-list";
 export const testFilesData: NoteItemType[] = [
   {
     id: "notes/note_1.md",

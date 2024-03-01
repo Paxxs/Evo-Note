@@ -1,7 +1,7 @@
 import { atom, useAtom } from "jotai";
 
 import { testFilesData } from "./test-files-data";
-import { NoteItemType } from "./file-list";
+import { NoteItemType } from "./ui/file-list";
 
 type Config = {
   selected: NoteItemType["id"] | null;

@@ -1,9 +1,9 @@
 import { Sparkle, Star } from "lucide-react";
-import { Badge } from "../ui/badge";
-import { ScrollArea } from "../ui/scroll-area";
+import { Badge } from "../../ui/badge";
+import { ScrollArea } from "../../ui/scroll-area";
 import { formatDistanceToNow } from "date-fns";
 import { cn } from "@/lib/utils";
-import { useNote } from "./useNote";
+import { useNote } from "../useNote";
 
 export type NoteItemType = {
   id: string;

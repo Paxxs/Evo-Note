@@ -1,5 +1,5 @@
 "use client";
-import { Nav } from "@/components/evo-note/nav";
+import { Nav } from "@/components/evo-note/ui/nav";
 import {
   BotMessageSquare,
   Files,
@@ -14,11 +14,10 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { Separator } from "../ui/separator";
-import SysMenu from "./sys-menu";
+import SysMenu from "./ui/sys-menu";
 import { use, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import type { ImperativePanelHandle } from "react-resizable-panels";
-import { FileList } from "./file-list";
 
 import { testFilesData } from "./test-files-data";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
@@ -26,6 +25,7 @@ import { TabsContent } from "@radix-ui/react-tabs";
 import { Item } from "@radix-ui/react-menubar";
 import { ModeToggle } from "./theme-toggle";
 import { useNote } from "./useNote";
+import { NoteList } from "./note-list";
 
 interface EvoEditorProps {
   defaultLayout?: number[];
@@ -270,33 +270,7 @@ export default function EvoEditor({
             collapsible={isFileCollapsible}
             defaultSize={defaultLayout[1]}
           >
-            <Tabs defaultValue="all">
-              <div className="flex px-4 py-2 items-center h-[52px]">
-                <h1 className="text-xl font-bold">Notes</h1>
-                <TabsList className="ml-auto">
-                  <TabsTrigger
-                    value="all"
-                    className="text-zinc-600  dark:text-zinc-200"
-                  >
-                    All
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="stared"
-                    className="text-zinc-600  dark:text-zinc-200"
-                  >
-                    Stared
-                  </TabsTrigger>
-                </TabsList>
-              </div>
-              <Separator />
-              <div className="h-3 "></div>
-              <TabsContent value="all" className="m-0">
-                <FileList files={testFilesData} />
-              </TabsContent>
-              <TabsContent value="stared" className="m-0">
-                <FileList files={testFilesData.filter((item) => item.stars)} />
-              </TabsContent>
-            </Tabs>
+            <NoteList files={testFilesData} />
           </ResizablePanel>
           <ResizableHandle
             withHandle

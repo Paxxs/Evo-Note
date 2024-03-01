@@ -1,6 +1,6 @@
 "use client";
 
-import { type NoteItemType } from "@/components/evo-note/file-list";
+import { type NoteItemType } from "@/components/evo-note/ui/file-list";
 import { ThemeProvider } from "@/components/theme-provider";
 import useLocalStorage from "@/hooks/use-local-storage";
 import {
@@ -25,7 +25,10 @@ const AppContext = createContext<{
 
 export default function Provider({ children }: { children: ReactNode }) {
   // 用于全局上下文
-  const [notes, setNotes] = useLocalStorage<NoteItemType[]>("evo__notes", []);
+  const [notes, setNotes] = useLocalStorage<NoteItemType[]>(
+    "evo__notes",
+    []
+  ) as [NoteItemType[], Dispatch<SetStateAction<NoteItemType[]>>];
   return (
     <ThemeProvider
       attribute="class"

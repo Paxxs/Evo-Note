@@ -1,9 +1,17 @@
-export default function DashboardLayout({
-    children,
-}: { children: React.ReactNode }): JSX.Element {
-    return (
-        <div className="flex w-full h-dvh flex-row">
-            {children}
-        </div>
-    );
+import Link from "next/link";
+import React from "react";
+
+export default function Layout({
+  settings,
+  children,
+}: {
+  settings: React.ReactNode;
+  children: React.ReactNode;
+}): JSX.Element {
+  return (
+    <div className="flex h-dvh w-dvw">
+      {settings}
+      {children}
+    </div>
+  );
 }

@@ -19,10 +19,13 @@ interface NavProps {
     label?: string;
     icon: LucideIcon;
     variant: "default" | "ghost";
+    herf?: string;
+    keyValue?: string; // 用来确定选中状态
   }[];
   className?: string;
+  keyValue?: string; // 选中状态显示
 }
-export function Nav({ isCollapsed, links, className }: NavProps) {
+export function Nav({ isCollapsed, links, keyValue, className }: NavProps) {
   return (
     <div
       data-collapsed={isCollapsed}
@@ -39,9 +42,13 @@ export function Nav({ isCollapsed, links, className }: NavProps) {
                 <TooltipTrigger asChild>
                   {isCollapsed ? ( // 收缩只显示图标
                     <Link
-                      href="#"
+                      href={link.herf ? link.herf : "#"}
                       className={cn(
-                        buttonVariants({ variant: link.variant, size: "icon" }),
+                        buttonVariants({
+                          variant:
+                            keyValue === link.keyValue ? "default" : "ghost",
+                          size: "icon",
+                        }),
                         // "h-10"
                         "h-11 w-11",
                         link.variant === "default" &&
@@ -55,12 +62,16 @@ export function Nav({ isCollapsed, links, className }: NavProps) {
                     // 未收缩时候显示长条
                     <Link
                       key={index}
-                      href="#"
+                      href={link.herf ? link.herf : "#"}
                       className={cn(
-                        buttonVariants({ variant: link.variant, size: "lg" }),
+                        buttonVariants({
+                          variant:
+                            keyValue === link.keyValue ? "default" : "ghost",
+                          size: "lg",
+                        }),
                         "justify-start",
                         "h-11 pl-3",
-                        link.variant === "default" &&
+                        keyValue === link.keyValue &&
                           "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white"
                       )}
                     >

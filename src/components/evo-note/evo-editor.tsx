@@ -222,24 +222,28 @@ export default function EvoEditor({
                     label: "Explore your notes",
                     icon: Files,
                     variant: "default",
+                    keyValue: "notes",
                   },
                   {
                     title: "Search",
                     label: "Find your notes",
                     icon: Search,
                     variant: "ghost",
+                    keyValue: "search",
                   },
                   {
                     title: "Copilot Chat",
                     label: "Chat with Copilot",
                     icon: BotMessageSquare,
                     variant: "ghost",
+                    keyValue: "copilot",
                   },
                   {
                     title: "Trash",
                     label: "Recover deleted notes",
                     icon: Trash2,
                     variant: "ghost",
+                    keyValue: "trash",
                   },
                   // {
                   //   title: "Settings",
@@ -260,6 +264,7 @@ export default function EvoEditor({
                   label: "Customize your experience",
                   icon: Settings,
                   variant: "ghost",
+                  herf: "/dashboard/preference",
                 },
               ]}
             />
@@ -270,7 +275,14 @@ export default function EvoEditor({
             collapsible={isFileCollapsible}
             defaultSize={defaultLayout[1]}
           >
-            <NoteList files={testFilesData} />
+            <Tabs defaultValue="notes">
+              <TabsContent value="notes">
+                <NoteList files={testFilesData} />
+              </TabsContent>
+              <TabsContent value="search"></TabsContent>
+              <TabsContent value="copilot"></TabsContent>
+              <TabsContent value="trash"></TabsContent>
+            </Tabs>
           </ResizablePanel>
           <ResizableHandle
             withHandle

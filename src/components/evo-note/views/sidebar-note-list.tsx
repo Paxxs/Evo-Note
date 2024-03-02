@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FileList, NoteItemType } from "../ui/file-list";
 import SideBarTitle from "../ui/sider-bar-title";
 
-export function NoteList({ files }: { files: NoteItemType[] }) {
+export function SideBarNoteList({ files }: { files: NoteItemType[] }) {
   return (
     <Tabs defaultValue="all">
       <SideBarTitle title="Notes">

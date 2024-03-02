@@ -3,9 +3,15 @@ import { Nav } from "@/components/evo-note/ui/nav";
 import {
   BotMessageSquare,
   Files,
+  Maximize2,
+  Minimize2,
+  Minus,
+  PlusCircle,
+  PlusSquare,
   Search,
   Settings,
   Trash2,
+  X,
 } from "lucide-react";
 
 import {
@@ -25,12 +31,13 @@ import { TabsContent } from "@radix-ui/react-tabs";
 import { Item } from "@radix-ui/react-menubar";
 import { ModeToggle } from "./theme-toggle";
 import { useNote } from "./useNote";
-import { NoteList } from "./views/note-list";
+import { SideBarNoteList } from "./views/sidebar-note-list";
 import SideBarSearch from "./views/sidebar-search";
 import SideBarAI from "./views/sidebar-copilot";
 import SidebarTrash from "./views/sidebar-trash";
 import SidebarSettins from "./views/sidebar-settins";
 import { AccountSwitcher } from "./ui/account-switcher";
+import { Button } from "../ui/button";
 
 interface EvoEditorProps {
   defaultLayout?: number[];
@@ -54,9 +61,9 @@ export default function EvoEditor({
   return (
     <>
       <div className="flex flex-col w-full bg-background">
-        <div>
+        <div className="flex flex-row justify-between border-b">
           <SysMenu
-            className="rounded-none shadow-none"
+            className="rounded-none shadow-none border-none"
             items={[
               {
                 title: "File",
@@ -196,8 +203,23 @@ export default function EvoEditor({
               },
             ]}
           />
+          <div className="flex flex-row">
+            <Button variant="ghost" size="icon" className="rounded-none">
+              <Minus className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="icon" className="rounded-none">
+              {/* <Maximize2 className="h-4 w-4" /> */}
+              <Minimize2 className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="hover:bg-destructive rounded-none"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
-
         <ResizablePanelGroup
           direction="horizontal"
           className="h-full items-stretch"
@@ -249,6 +271,25 @@ export default function EvoEditor({
                   isCollapsed={isCollapsed}
                 />
               </div>
+              <Separator />
+              <Nav
+                className="mt-auto"
+                isCollapsed={isCollapsed}
+                keyValue={tabsValue}
+                links={[
+                  {
+                    title: "New Note",
+                    label: "Create a new note",
+                    icon: PlusCircle,
+                    variant: "ghost",
+                    // herf: "/dashboard/preference",
+                    keyValue: "newNote",
+                  },
+                ]}
+                onClick={(keyValue) =>
+                  keyValue === "settings" && setIsSettingsOpen(true)
+                }
+              />
               <Separator />
               <Nav
                 onClick={(keyValue) => setTabsValue(keyValue as TabsValue)}
@@ -324,7 +365,7 @@ export default function EvoEditor({
               onValueChange={(value) => setTabsValue(value as TabsValue)}
             >
               <TabsContent value="notes">
-                <NoteList files={testFilesData} />
+                <SideBarNoteList files={testFilesData} />
               </TabsContent>
               <TabsContent value="search">
                 <SideBarSearch />
@@ -349,6 +390,7 @@ export default function EvoEditor({
           />
           <ResizablePanel defaultSize={defaultLayout[2]}>
             {selectedNote.selected}
+            <ModeToggle />
           </ResizablePanel>
         </ResizablePanelGroup>
         <SidebarSettins

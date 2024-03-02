@@ -100,7 +100,7 @@ function NoteItemNode({ note }: { note: NoteItemType }) {
     <button
       className={cn(
         "flex flex-col items-start gap-2 border p-3 rounded-lg hover:bg-accent transition-all text-sm text-left",
-        selectNote.selected === note.id && "bg-muted" // 选中的文件
+        selectNote.selected === note.id && "bg-muted", // 选中的文件
       )}
       onClick={() =>
         setSelectNote({
@@ -122,7 +122,7 @@ function NoteItemNode({ note }: { note: NoteItemType }) {
       <div
         className={cn(
           "text-xs text-muted-foreground line-clamp-2",
-          selectNote.selected === note.id && "font-medium"
+          selectNote.selected === note.id && "font-medium",
         )}
       >
         {note.brief.substring(0, 300)}
@@ -142,7 +142,7 @@ function NoteItemNode({ note }: { note: NoteItemType }) {
             "ml-auto text-xs",
             selectNote.selected === note.id
               ? "text-gray-900 dark:text-zinc-200"
-              : "text-muted-foreground"
+              : "text-muted-foreground",
           )}
         >
           {formatDistanceToNow(new Date(note.lastModified))}

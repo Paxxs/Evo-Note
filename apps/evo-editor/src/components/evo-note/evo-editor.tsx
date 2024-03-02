@@ -232,7 +232,7 @@ export default function EvoEditor({
             className={cn(
               "flex flex-col",
               isCollapsed &&
-                "min-w-[56px] max-w-[56px] transition-all duration-300 ease-in-out "
+                "min-w-[56px] max-w-[56px] transition-all duration-300 ease-in-out ",
             )}
             collapsible={true}
             collapsedSize={4}
@@ -247,7 +247,7 @@ export default function EvoEditor({
               <div
                 className={cn(
                   "flex h-[52px] items-center justify-center",
-                  isCollapsed ? "h-[52px]" : "px-2"
+                  isCollapsed ? "h-[52px]" : "px-2",
                 )}
               >
                 {/* <ModeToggle /> */}

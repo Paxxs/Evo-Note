@@ -38,7 +38,7 @@ export function Nav({
       data-collapsed={isCollapsed}
       className={cn(
         "group flex flex-col gap-4 py-2 data-[collapsed=true]:py-2",
-        className
+        className,
       )}
     >
       <nav className="grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2">
@@ -59,7 +59,7 @@ export function Nav({
                         // "h-10"
                         "h-11 w-11",
                         link.variant === "default" &&
-                          "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
+                          "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white",
                       )}
                       onClick={() => onClick && onClick(link.keyValue)}
                     >
@@ -80,7 +80,7 @@ export function Nav({
                         "justify-start",
                         "h-11 pl-3",
                         keyValue === link.keyValue &&
-                          "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white"
+                          "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
                       )}
                       onClick={() => onClick && onClick(link.keyValue)}
                     >
@@ -98,7 +98,7 @@ export function Nav({
                     <span
                       className={cn(
                         isCollapsed && "text-muted-foreground",
-                        "ml-auto"
+                        "ml-auto",
                       )}
                     >
                       {link.label}

@@ -15,7 +15,7 @@ export const queryAtom = atom("");
 export const rangeAtom = atom<Range | null>(null);
 
 export const EditorCommandTunnelContext = createContext(
-  {} as ReturnType<typeof tunnel>
+  {} as ReturnType<typeof tunnel>,
 );
 
 export const EditorCommandOut = ({
@@ -49,7 +49,7 @@ export const EditorCommandOut = ({
               key: e.key,
               cancelable: true,
               bubbles: true,
-            })
+            }),
           );
 
         return false;

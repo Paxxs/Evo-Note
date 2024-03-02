@@ -1,4 +1,8 @@
-import { type ComponentPropsWithoutRef, type ReactNode, forwardRef } from "react";
+import {
+  type ComponentPropsWithoutRef,
+  type ReactNode,
+  forwardRef,
+} from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { useCurrentEditor, type Editor } from "@tiptap/react";
 

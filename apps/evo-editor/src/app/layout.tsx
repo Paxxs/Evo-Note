@@ -34,7 +34,7 @@ export default function RootLayout({
         className={cn(
           "h-dvh bg-background font-sans antialiased",
           fontSans.variable,
-          noteSC.variable
+          noteSC.variable,
         )}
       >
         <Provider>{children}</Provider>

@@ -27,7 +27,7 @@ export default function Provider({ children }: { children: ReactNode }) {
   // 用于全局上下文
   const [notes, setNotes] = useLocalStorage<NoteItemType[]>(
     "evo__notes",
-    []
+    [],
   ) as [NoteItemType[], Dispatch<SetStateAction<NoteItemType[]>>];
   return (
     <ThemeProvider

@@ -63,7 +63,7 @@ export const EditorContent = forwardRef<HTMLDivElement, EditorContentProps>(
         </EditorProvider>
       </div>
     );
-  }
+  },
 );
 
 export const defaultEditorProps: EditorProviderProps["editorProps"] = {

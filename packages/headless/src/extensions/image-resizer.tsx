@@ -7,7 +7,9 @@ export const ImageResizer = (): JSX.Element | null => {
   if (!editor?.isActive("image")) return null;
 
   const updateMediaSize = () => {
-    const imageInfo = document.querySelector(".ProseMirror-selectednode") as HTMLImageElement;
+    const imageInfo = document.querySelector(
+      ".ProseMirror-selectednode",
+    ) as HTMLImageElement;
     if (imageInfo) {
       const selection = editor.state.selection;
       const setImage = editor.commands.setImage as any;

@@ -58,7 +58,7 @@ export function Modal({ children }: { children: React.ReactNode }) {
     if (!open) {
       setTimeout(() => router.back(), 500);
     }
-  }, [open]);
+  }, [open, router]);
 
   return (
     <Drawer open={open} onOpenChange={setOpen} shouldScaleBackground>

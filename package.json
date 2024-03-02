@@ -7,12 +7,21 @@
     "dev": "pnpm --filter evo-note dev",
     "build": "pnpm --filter evo-note build",
     "start": "pnpm --filter evo-note start",
-    "lint": "pnpm --filter evo-note lint"
+    "lint": "pnpm --filter evo-note lint",
+    "prepare": "husky",
+    "lint-staged": "lint-staged"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "turbo": "^1.12.4"
+  },
+  "devDependencies": {
+    "eslint": "^8",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
+    "prettier": "^3.2.5",
+    "shell-quote": "^1.8.1"
   }
 }

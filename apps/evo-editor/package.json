@@ -6,7 +6,8 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "start-static": "npx serve@latest out"
   },
   "dependencies": {
     "@radix-ui/react-context-menu": "^2.1.5",

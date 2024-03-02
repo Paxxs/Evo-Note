@@ -1,8 +1,10 @@
 {
   "extends": "next/core-web-vitals",
   "settings": {
-    "next": {
-      "rootDir": "apps/evo-editor/"
+    "next/core-web-vitals": {
+      "next": {
+        "rootDir": "apps/evo-editor/"
+      }
     }
   }
 }

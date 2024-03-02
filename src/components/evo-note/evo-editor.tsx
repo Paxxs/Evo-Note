@@ -29,6 +29,8 @@ import { NoteList } from "./views/note-list";
 import SideBarSearch from "./views/sidebar-search";
 import SideBarAI from "./views/sidebar-copilot";
 import SidebarTrash from "./views/sidebar-trash";
+import SidebarSettins from "./views/sidebar-settins";
+import { AccountSwitcher } from "./ui/account-switcher";
 
 interface EvoEditorProps {
   defaultLayout?: number[];
@@ -42,6 +44,8 @@ export default function EvoEditor({
 }: EvoEditorProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isFileCollapsible, setIsFileCollapsible] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false); // 设置菜单
+
   const NavResizablePanelRef = useRef<ImperativePanelHandle>(null);
   const [selectedNote] = useNote();
 
@@ -49,7 +53,7 @@ export default function EvoEditor({
 
   return (
     <>
-      <div className="flex flex-col w-full">
+      <div className="flex flex-col w-full bg-background">
         <div>
           <SysMenu
             className="rounded-none shadow-none"
@@ -218,8 +222,32 @@ export default function EvoEditor({
             }}
           >
             <div>
-              <div className="flex h-[52px]">
-                <ModeToggle />
+              <div
+                className={cn(
+                  "flex h-[52px] items-center justify-center",
+                  isCollapsed ? "h-[52px]" : "px-2"
+                )}
+              >
+                {/* <ModeToggle /> */}
+                <AccountSwitcher
+                  accounts={[
+                    {
+                      label: "V2Note",
+                      email: "Local User",
+                      icon: (
+                        <svg
+                          role="img"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <title>V2Note</title>
+                          <path d="M0 2.0H24l-12 21.05z" fill="currentColor" />
+                        </svg>
+                      ),
+                    },
+                  ]}
+                  isCollapsed={isCollapsed}
+                />
               </div>
               <Separator />
               <Nav
@@ -275,10 +303,13 @@ export default function EvoEditor({
                   label: "Customize your experience",
                   icon: Settings,
                   variant: "ghost",
-                  herf: "/dashboard/preference",
+                  // herf: "/dashboard/preference",
                   keyValue: "settings",
                 },
               ]}
+              onClick={(keyValue) =>
+                keyValue === "settings" && setIsSettingsOpen(true)
+              }
             />
           </ResizablePanel>
           <ResizableHandle withHandle />
@@ -320,6 +351,10 @@ export default function EvoEditor({
             {selectedNote.selected}
           </ResizablePanel>
         </ResizablePanelGroup>
+        <SidebarSettins
+          open={isSettingsOpen}
+          onOpenChange={setIsSettingsOpen}
+        />
       </div>
     </>
   );

@@ -61,7 +61,7 @@ export default function EvoEditor({
   return (
     <>
       <div className="flex flex-col w-full bg-background">
-        <div className="flex flex-row justify-between border-b">
+        <div className="flex flex-row justify-between border-b select-none">
           <SysMenu
             className="rounded-none shadow-none border-none"
             items={[
@@ -230,9 +230,9 @@ export default function EvoEditor({
             maxSize={20}
             minSize={15}
             className={cn(
-              "flex flex-col",
+              "flex flex-col select-none",
               isCollapsed &&
-                "min-w-[56px] max-w-[56px] transition-all duration-300 ease-in-out ",
+                "min-w-[56px] max-w-[56px] transition-all duration-300 ease-in-out",
             )}
             collapsible={true}
             collapsedSize={4}
@@ -358,6 +358,7 @@ export default function EvoEditor({
             minSize={20}
             collapsible={isFileCollapsible}
             defaultSize={defaultLayout[1]}
+            className="select-none"
           >
             <Tabs
               defaultValue="notes"

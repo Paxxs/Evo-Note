@@ -7,7 +7,7 @@
     "dev": "turbo dev",
     "build": "turbo build",
     "dev-next": "pnpm --filter evo-note dev",
-    "start": "pnpm --filter evo-note start-static",
+    "start": "turbo build && pnpm --filter evo-note start-static",
     "lint": "turbo lint",
     "prepare": "husky",
     "lint-staged": "lint-staged"

@@ -3,7 +3,9 @@ import { EditorRoot } from "novel";
 export default function TwEditor() {
   return (
     <>
-      <EditorRoot></EditorRoot>
+      <EditorRoot>
+        <div></div>
+      </EditorRoot>
     </>
   );
 }

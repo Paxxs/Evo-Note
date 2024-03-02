@@ -3,7 +3,6 @@
   "private": true,
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "dev": "pnpm --filter evo-note dev",
     "build": "pnpm --filter evo-note build",
@@ -12,5 +11,8 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "turbo": "^1.12.4"
+  }
 }

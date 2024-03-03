@@ -1,5 +1,4 @@
 "use client";
-import { Nav } from "@/components/evo-note/ui/nav";
 import {
   BotMessageSquare,
   Files,
@@ -7,13 +6,12 @@ import {
   Minimize2,
   Minus,
   PlusCircle,
-  PlusSquare,
   Search,
   Settings,
   Trash2,
   X,
 } from "lucide-react";
-
+import { Nav } from "@/components/evo-note/ui/nav";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -21,16 +19,7 @@ import {
 } from "@/components/ui/resizable";
 import { Separator } from "../ui/separator";
 import SysMenu from "./ui/sys-menu";
-import { use, useEffect, useRef, useState } from "react";
-import { cn } from "@/lib/utils";
-import type { ImperativePanelHandle } from "react-resizable-panels";
-
-import { testFilesData } from "./test-files-data";
-import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
-import { TabsContent } from "@radix-ui/react-tabs";
-import { Item } from "@radix-ui/react-menubar";
-import { ModeToggle } from "./theme-toggle";
-import { useNote } from "./useNote";
+import { Tabs, TabsContent } from "../ui/tabs";
 import { SideBarNoteList } from "./views/sidebar-note-list";
 import SideBarSearch from "./views/sidebar-search";
 import SideBarAI from "./views/sidebar-copilot";
@@ -38,6 +27,14 @@ import SidebarTrash from "./views/sidebar-trash";
 import SidebarSettins from "./views/sidebar-settins";
 import { AccountSwitcher } from "./ui/account-switcher";
 import { Button } from "../ui/button";
+import NoteDisplay from "./views/note-display";
+
+import dynamic from "next/dynamic";
+import type { ImperativePanelHandle } from "react-resizable-panels";
+import { useMemo, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
+
+import { testFilesData } from "./test-files-data";
 
 interface EvoEditorProps {
   defaultLayout?: number[];
@@ -47,16 +44,22 @@ interface EvoEditorProps {
 type TabsValue = "notes" | "search" | "copilot" | "trash" | "preference";
 
 export default function EvoEditor({
-  defaultLayout = [20, 30, 50],
+  defaultLayout = [20, 25, 75],
 }: EvoEditorProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isFileCollapsible, setIsFileCollapsible] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false); // 设置菜单
 
   const NavResizablePanelRef = useRef<ImperativePanelHandle>(null);
-  const [selectedNote] = useNote();
+  // const [selectedNote] = useNote();
 
   const [tabsValue, setTabsValue] = useState<TabsValue>("notes");
+
+  const Editor = useMemo(() => {
+    return dynamic(() => import("./core/block/block-editor"), {
+      ssr: false,
+    });
+  }, []);
 
   return (
     <>
@@ -273,7 +276,7 @@ export default function EvoEditor({
               </div>
               <Separator />
               <Nav
-                className="mt-auto"
+                // className="mt-auto"
                 isCollapsed={isCollapsed}
                 keyValue={tabsValue}
                 links={[
@@ -390,8 +393,7 @@ export default function EvoEditor({
             }}
           />
           <ResizablePanel defaultSize={defaultLayout[2]}>
-            {selectedNote.selected}
-            <ModeToggle />
+            <NoteDisplay />
           </ResizablePanel>
         </ResizablePanelGroup>
         <SidebarSettins

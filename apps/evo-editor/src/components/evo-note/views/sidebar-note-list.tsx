@@ -22,11 +22,11 @@ export function SideBarNoteList({ files }: { files: NoteItemType[] }) {
           </TabsTrigger>
         </TabsList>
       </SideBarTitle>
-      <div className="h-3 "></div>
+      {/* <div className="h-3 "></div> */}
       <TabsContent value="all" className="m-0" asChild>
         <FileList files={files} />
       </TabsContent>
-      <TabsContent value="stared" className="m-0">
+      <TabsContent value="stared" className="m-0" asChild>
         <FileList files={files.filter((item) => item.stars)} />
       </TabsContent>
     </Tabs>

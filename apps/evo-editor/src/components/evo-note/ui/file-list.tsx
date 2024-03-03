@@ -23,7 +23,13 @@ interface FileListProps {
 export function FileList({ className, files }: FileListProps) {
   const [selectNote, setSelectNote] = useNote();
   return (
-    <ScrollArea className={cn("h-screen", className)}>
+    <ScrollArea
+      className={cn(
+        "overflow-auto h-[calc(100vh-90px)] pt-4",
+        //
+        className,
+      )}
+    >
       <div className="flex flex-col gap-2 pt-0 p-4">
         {files?.map((note, index) => {
           return (

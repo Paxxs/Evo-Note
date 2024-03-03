@@ -6,19 +6,19 @@ import type {
 } from "@blocknote/core";
 import { BlockNoteView, useBlockNote } from "@blocknote/react";
 import "@blocknote/react/style.css";
-import "./style.css";
+// import "./style.scss";
 import testData from "./test-data.json";
 
 import { useTheme } from "next-themes";
 
 export default function BlockEditor() {
   const editor = useBlockNote({
-    defaultStyles: false,
+    // defaultStyles: false,
     domAttributes: {
-      //   blockGroup: {
-      //     class:
-      //       "prose prose-neutral dark:prose-invert prose-sm xl:prose-base prose-h2:border-b",
-      //   },
+      blockGroup: {
+        class:
+          "prose prose-neutral dark:prose-invert prose-sm xl:prose-base prose-h2:border-b",
+      },
       inlineContent: {
         "data-placeholder": "Enter text or type '/' for commands :)",
         // 需要配合 css

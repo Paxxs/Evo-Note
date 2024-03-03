@@ -1,0 +1,325 @@
+[
+  {
+    "id": "b56f036c-c9e1-49c7-acb8-da55ff81db19",
+    "type": "heading",
+    "props": {
+      "textColor": "default",
+      "backgroundColor": "default",
+      "textAlignment": "left",
+      "level": 1
+    },
+    "content": [
+      {
+        "type": "text",
+        "text": "The Joke Tax Chronicles",
+        "styles": {}
+      }
+    ],
+    "children": []
+  },
+  {
+    "id": "cd981cee-b3c0-4bfa-83f4-06c08f8f4cc0",
+    "type": "paragraph",
+    "props": {
+      "textColor": "default",
+      "backgroundColor": "default",
+      "textAlignment": "left"
+    },
+    "content": [
+      {
+        "type": "text",
+        "text": "The Joke Tax Chronicles",
+        "styles": {}
+      }
+    ],
+    "children": [
+      {
+        "id": "2d0ce3c8-8d7f-4f6d-95bd-00b4386b5ba6",
+        "type": "paragraph",
+        "props": {
+          "textColor": "default",
+          "backgroundColor": "default",
+          "textAlignment": "left"
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Once upon a time, in a far-off land, there was a very lazy king who spent all day lounging on his throne. One day, his advisors came to him with a problem: the kingdom was running out of money.",
+            "styles": {}
+          }
+        ],
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "2a477888-466d-4118-a3ed-e8f01c65bc73",
+    "type": "heading",
+    "props": {
+      "textColor": "default",
+      "backgroundColor": "default",
+      "textAlignment": "left",
+      "level": 2
+    },
+    "content": [
+      {
+        "type": "text",
+        "text": "The King's Plan",
+        "styles": {}
+      }
+    ],
+    "children": []
+  },
+  {
+    "id": "ad3231fd-ba19-4b49-b464-6e6029f81e77",
+    "type": "paragraph",
+    "props": {
+      "textColor": "default",
+      "backgroundColor": "default",
+      "textAlignment": "left"
+    },
+    "content": [
+      {
+        "type": "text",
+        "text": "\"After all,\" he said, \"everyone enjoys a good joke, so it's only fair that they should pay for the privilege.\"",
+        "styles": {}
+      }
+    ],
+    "children": []
+  },
+  {
+    "id": "0454cd5e-b1b8-44c9-b4fe-50a9cac6504d",
+    "type": "heading",
+    "props": {
+      "textColor": "default",
+      "backgroundColor": "default",
+      "textAlignment": "left",
+      "level": 3
+    },
+    "content": [
+      {
+        "type": "text",
+        "text": "The Joke Tax",
+        "styles": {}
+      }
+    ],
+    "children": []
+  },
+  {
+    "id": "3f5446dd-a860-4edf-bde8-3ca91af54dbd",
+    "type": "paragraph",
+    "props": {
+      "textColor": "default",
+      "backgroundColor": "default",
+      "textAlignment": "left"
+    },
+    "content": [
+      {
+        "type": "text",
+        "text": "The king's subjects were not amused. They grumbled and complained, but the king was firm:",
+        "styles": {}
+      }
+    ],
+    "children": []
+  },
+  {
+    "id": "44b5ad4b-8c1a-45b5-8b26-c99e03c3ab28",
+    "type": "bulletListItem",
+    "props": {
+      "textColor": "default",
+      "backgroundColor": "default",
+      "textAlignment": "left"
+    },
+    "content": [
+      {
+        "type": "text",
+        "text": "1st level of puns: 5 gold coins",
+        "styles": {}
+      }
+    ],
+    "children": []
+  },
+  {
+    "id": "72d5b241-b8d0-41cd-9af2-f10b70a87694",
+    "type": "bulletListItem",
+    "props": {
+      "textColor": "default",
+      "backgroundColor": "default",
+      "textAlignment": "left"
+    },
+    "content": [
+      {
+        "type": "text",
+        "text": "2nd level of jokes: 10 gold coins",
+        "styles": {}
+      }
+    ],
+    "children": []
+  },
+  {
+    "id": "771c1049-2555-46f3-bf65-70be2ecc696d",
+    "type": "paragraph",
+    "props": {
+      "textColor": "default",
+      "backgroundColor": "default",
+      "textAlignment": "left"
+    },
+    "content": [
+      {
+        "type": "text",
+        "text": "As a result, people stopped telling jokes, and the kingdom fell into a gloom. But there was one person who refused to let the king's foolishness get him down: a court jester named Jokester.",
+        "styles": {}
+      }
+    ],
+    "children": []
+  },
+  {
+    "id": "f56bc627-2414-4571-a72b-b04dc932810a",
+    "type": "heading",
+    "props": {
+      "textColor": "default",
+      "backgroundColor": "default",
+      "textAlignment": "left",
+      "level": 3
+    },
+    "content": [
+      {
+        "type": "text",
+        "text": "The People's Rebellion",
+        "styles": {}
+      }
+    ],
+    "children": []
+  },
+  {
+    "id": "ed8a7715-fbb3-40bb-b849-147c9910874a",
+    "type": "paragraph",
+    "props": {
+      "textColor": "default",
+      "backgroundColor": "default",
+      "textAlignment": "left"
+    },
+    "content": [
+      {
+        "type": "text",
+        "text": "The people of the kingdom, feeling uplifted by the laughter, started to tell jokes and puns again, and soon the entire kingdom was in on the joke.",
+        "styles": {}
+      }
+    ],
+    "children": []
+  },
+  {
+    "id": "2836b8b6-c021-4b75-9efe-77d2bc605a01",
+    "type": "table",
+    "props": {
+      "textColor": "default",
+      "backgroundColor": "default"
+    },
+    "content": {
+      "type": "tableContent",
+      "rows": [
+        {
+          "cells": [
+            [
+              {
+                "type": "text",
+                "text": "King's Treasury",
+                "styles": {}
+              }
+            ],
+            [
+              {
+                "type": "text",
+                "text": "People's happiness",
+                "styles": {}
+              }
+            ]
+          ]
+        },
+        {
+          "cells": [
+            [
+              {
+                "type": "text",
+                "text": "Empty",
+                "styles": {}
+              }
+            ],
+            [
+              {
+                "type": "text",
+                "text": "Overflowing",
+                "styles": {}
+              }
+            ]
+          ]
+        },
+        {
+          "cells": [
+            [
+              {
+                "type": "text",
+                "text": "Modest",
+                "styles": {}
+              }
+            ],
+            [
+              {
+                "type": "text",
+                "text": "Satisfied",
+                "styles": {}
+              }
+            ]
+          ]
+        },
+        {
+          "cells": [
+            [
+              {
+                "type": "text",
+                "text": "Full",
+                "styles": {}
+              }
+            ],
+            [
+              {
+                "type": "text",
+                "text": "Ecstatic",
+                "styles": {}
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    "children": []
+  },
+  {
+    "id": "eaf86636-5d85-4b67-aed1-aa8e39878cbb",
+    "type": "paragraph",
+    "props": {
+      "textColor": "default",
+      "backgroundColor": "default",
+      "textAlignment": "left"
+    },
+    "content": [
+      {
+        "type": "text",
+        "text": "The king, seeing how much happier his subjects were, realized the error of his ways and repealed the joke tax. Jokester was declared a hero, and the kingdom lived happily ever after.",
+        "styles": {}
+      }
+    ],
+    "children": []
+  },
+  {
+    "id": "cc437b93-a756-4b43-bd51-5fd0d5140c5f",
+    "type": "paragraph",
+    "props": {
+      "textColor": "default",
+      "backgroundColor": "default",
+      "textAlignment": "left"
+    },
+    "content": [],
+    "children": []
+  }
+]

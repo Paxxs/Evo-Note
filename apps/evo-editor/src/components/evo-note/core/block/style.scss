@@ -1,0 +1,41 @@
+/* 覆盖默认背景，使之匹配主题 */
+.bn-editor {
+  @apply bg-background;
+}
+
+/* 覆盖默认提示词 */
+.bn-editor
+  .bn-block-content[data-content-type="paragraph"].bn-is-empty
+  .bn-inline-content::before {
+  content: attr(data-placeholder);
+}
+
+/* 覆盖样式 */
+.bn-block-outer:not([data-prev-type])
+  > .bn-block
+  > .bn-block-content[data-content-type="heading"] {
+  all: initial;
+}
+
+.bn-block-outer:not([data-prev-type])
+  > .bn-block
+  > .bn-block-content[data-content-type="heading"] {
+  & > h1 {
+    @apply scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl;
+  }
+  & > h2 {
+    @apply scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0;
+  }
+  & > h3 {
+    @apply scroll-m-20 text-2xl font-semibold tracking-tight;
+  }
+}
+
+.bn-block-content[data-content-type="paragraph"] {
+  @apply leading-7 [&:not(:first-child)]:mt-6;
+}
+
+/* .bn-block-content[data-content-type="bulletListItem"] {
+  @apply flex gap-1.5 ml-5 list-disc [&>p]:mt-0.5;
+
+} */

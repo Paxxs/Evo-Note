@@ -12,18 +12,25 @@ export default function NoteDisplay() {
       ssr: false,
     });
   }, []);
+  // const YJSEditor = useMemo(() => {
+  //   return dynamic(() => import("../core/yjs-editor/yjs-editor"), {
+  //     ssr: false,
+  //   });
+  // }, []);
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center gap-4 p-2">
-        <div className="block">{selectedNote.selected}</div>
-        <div className="block">
-          <ModeToggle />
+      <ScrollArea className="h-dvh">
+        <div className="mf-bg-blur sticky z-10 top-0 flex flex-col  max-h-[52px]">
+          <div className="flex gap-4 p-2 items-center justify-between">
+            <div className="block">{selectedNote.selected}</div>
+            <div className="block">
+              <ModeToggle />
+            </div>
+          </div>
+          <Separator />
         </div>
-      </div>
-      <Separator />
-      <ScrollArea>
         <Editor />
-        <ScrollBar orientation="vertical" />
+        <ScrollBar orientation="vertical" className="mt-[52px] z-20" />
       </ScrollArea>
     </div>
   );

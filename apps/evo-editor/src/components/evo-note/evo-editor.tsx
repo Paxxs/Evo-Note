@@ -64,9 +64,9 @@ export default function EvoEditor({
   return (
     <>
       <div className="flex flex-col w-full bg-background">
-        <div className="flex flex-row justify-between border-b select-none">
+        <div className="mf-system-menu flex flex-row items-center justify-between border-b select-none h-9">
           <SysMenu
-            className="rounded-none shadow-none border-none"
+            className="rounded-none shadow-none border-none h-8"
             items={[
               {
                 title: "File",
@@ -368,16 +368,16 @@ export default function EvoEditor({
               value={tabsValue}
               onValueChange={(value) => setTabsValue(value as TabsValue)}
             >
-              <TabsContent value="notes">
+              <TabsContent value="notes" className="mt-0">
                 <SideBarNoteList files={testFilesData} />
               </TabsContent>
-              <TabsContent value="search">
+              <TabsContent value="search" className="mt-0">
                 <SideBarSearch />
               </TabsContent>
-              <TabsContent value="copilot">
+              <TabsContent value="copilot" className="mt-0">
                 <SideBarAI />
               </TabsContent>
-              <TabsContent value="trash">
+              <TabsContent value="trash" className="mt-0">
                 <SidebarTrash />
               </TabsContent>
             </Tabs>

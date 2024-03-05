@@ -3,6 +3,10 @@
 @tailwind utilities;
 @tailwind typography;
 
+.mf-bg-blur {
+  @apply bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

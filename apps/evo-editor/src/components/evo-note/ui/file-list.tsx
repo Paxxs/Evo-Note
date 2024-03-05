@@ -23,14 +23,11 @@ interface FileListProps {
 export function FileList({ className, files }: FileListProps) {
   const [selectNote, setSelectNote] = useNote();
   return (
-    <ScrollArea
-      className={cn(
-        "overflow-auto h-[calc(100vh-90px)] pt-4",
-        //
-        className,
-      )}
-    >
-      <div className="flex flex-col gap-2 pt-0 p-4">
+    <>
+      {/* <ScrollArea
+        className={cn("overflow-auto h-[calc(100vh-90px)] pt-4", className)}
+      > */}
+      <div className={cn("flex flex-col gap-2 p-4 pt-0 ", className)}>
         {files?.map((note, index) => {
           return (
             <ContextMenu
@@ -96,7 +93,8 @@ export function FileList({ className, files }: FileListProps) {
           );
         })}
       </div>
-    </ScrollArea>
+      {/* </ScrollArea> */}
+    </>
   );
 }
 

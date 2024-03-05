@@ -36,7 +36,7 @@ export function SideBarNoteList({ files }: { files: NoteItemType[] }) {
             <FileList files={files.filter((item) => item.stars)} />
           </TabsContent>
         </div>
-        <ScrollBar orientation="vertical" className="top-10" />
+        <ScrollBar orientation="vertical" />
       </ScrollArea>
     </Tabs>
   );

@@ -4,7 +4,7 @@
 @tailwind typography;
 
 .mf-bg-blur {
-  @apply bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60;
+  @apply bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/80;
 }
 
 @layer base {

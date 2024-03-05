@@ -4,6 +4,8 @@ import { useMemo } from "react";
 import { useNote } from "../useNote";
 import { ModeToggle } from "../theme-toggle";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import ToggleIconBtn from "../ui/toggle-icon-btn";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 export default function NoteDisplay() {
   const [selectedNote] = useNote();
@@ -19,19 +21,22 @@ export default function NoteDisplay() {
   // }, []);
   return (
     <div className="flex h-full flex-col">
-      <ScrollArea className="h-dvh">
-        <div className="mf-bg-blur sticky z-10 top-0 flex flex-col  max-h-[52px]">
-          <div className="flex gap-4 p-2 items-center justify-between">
-            <div className="block">{selectedNote.selected}</div>
-            <div className="block">
-              <ModeToggle />
+      <TooltipProvider delayDuration={0}>
+        <ScrollArea className="h-dvh">
+          <div className="mf-bg-blur sticky z-10 top-0 flex flex-col justify-center max-h-[52px] min-h-[52px] border-b">
+            <div className="flex gap-4 px-2 items-center justify-between">
+              <div className="block">{selectedNote.selected}</div>
+              <div className="flex gap-4">
+                <ModeToggle />
+                <ToggleIconBtn />
+              </div>
             </div>
+            {/* <Separator /> */}
           </div>
-          <Separator />
-        </div>
-        <Editor />
-        <ScrollBar orientation="vertical" className="mt-[52px] z-20" />
-      </ScrollArea>
+          <Editor />
+          <ScrollBar orientation="vertical" />
+        </ScrollArea>
+      </TooltipProvider>
     </div>
   );
 }

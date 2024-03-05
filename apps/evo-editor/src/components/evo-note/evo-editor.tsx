@@ -110,26 +110,7 @@ export default function EvoEditor({
                   },
                   {
                     type: "item",
-                    label: "Copy",
-                  },
-                  {
-                    type: "item",
-                    label: "Cut",
-                  },
-                  {
-                    type: "item",
-                    label: "Paste",
-                  },
-                  {
-                    type: "separator",
-                  },
-                  {
-                    type: "item",
-                    label: "Find",
-                  },
-                  {
-                    type: "item",
-                    label: "Find",
+                    label: "[dev] Show diagnostic",
                   },
                 ],
               },
@@ -138,14 +119,11 @@ export default function EvoEditor({
                 items: [
                   {
                     type: "item",
-                    label: "Toggle Sidebar",
-                  },
-                  {
-                    type: "separator",
+                    label: "Toggle Navbar",
                   },
                   {
                     type: "item",
-                    label: "Toggle Navbar",
+                    label: "Toggle Sidebar",
                   },
                   {
                     type: "separator",
@@ -258,7 +236,7 @@ export default function EvoEditor({
                   accounts={[
                     {
                       label: "V2Note",
-                      email: "Local User",
+                      email: "Workspace",
                       icon: (
                         <svg
                           role="img"

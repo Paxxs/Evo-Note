@@ -2,5 +2,6 @@
   "files.associations": {
     "*.css": "tailwindcss",
     "*.scss": "tailwindcss"
-  }
+  },
+  "cSpell.words": ["blocksuite", "subdocs"]
 }

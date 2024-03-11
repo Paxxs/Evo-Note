@@ -1,3 +1,4 @@
+"use client";
 import { Separator } from "@/components/ui/separator";
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
@@ -6,14 +7,24 @@ import { ModeToggle } from "../theme-toggle";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import ToggleIconBtn from "../ui/toggle-icon-btn";
 import { TooltipProvider } from "@/components/ui/tooltip";
+// import EditorContainer from "../core/yjs-editor/components/EditorContainer";
 
 export default function NoteDisplay() {
   const [selectedNote] = useNote();
+  // const Editor = useMemo(() => {
+  //   return dynamic(() => import("../core/block/block-editor"), {
+  //     ssr: false,
+  //   });
+  // }, []);
   const Editor = useMemo(() => {
-    return dynamic(() => import("../core/block/block-editor"), {
-      ssr: false,
-    });
+    return dynamic(
+      () => import("../core/yjs-editor/components/EditorContainer"),
+      {
+        ssr: false,
+      },
+    );
   }, []);
+
   // const YJSEditor = useMemo(() => {
   //   return dynamic(() => import("../core/yjs-editor/yjs-editor"), {
   //     ssr: false,
@@ -34,6 +45,7 @@ export default function NoteDisplay() {
             {/* <Separator /> */}
           </div>
           <Editor />
+          {/* <EditorContainer /> */}
           <ScrollBar orientation="vertical" />
         </ScrollArea>
       </TooltipProvider>

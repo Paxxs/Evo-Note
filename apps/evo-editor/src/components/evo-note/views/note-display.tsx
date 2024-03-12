@@ -7,7 +7,7 @@ import { ModeToggle } from "../theme-toggle";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import ToggleIconBtn from "../ui/toggle-icon-btn";
 import { TooltipProvider } from "@/components/ui/tooltip";
-// import EditorContainer from "../core/yjs-editor/components/EditorContainer";
+import EditorContainer from "../core/yjs-editor/components/EditorContainer";
 
 export default function NoteDisplay() {
   const [selectedNote] = useNote();
@@ -16,14 +16,14 @@ export default function NoteDisplay() {
   //     ssr: false,
   //   });
   // }, []);
-  const Editor = useMemo(() => {
-    return dynamic(
-      () => import("../core/yjs-editor/components/EditorContainer"),
-      {
-        ssr: false,
-      },
-    );
-  }, []);
+  // const Editor = useMemo(() => {
+  //   return dynamic(
+  //     () => import("../core/yjs-editor/components/EditorContainer"),
+  //     {
+  //       ssr: false,
+  //     },
+  //   );
+  // }, []);
 
   // const YJSEditor = useMemo(() => {
   //   return dynamic(() => import("../core/yjs-editor/yjs-editor"), {
@@ -44,8 +44,8 @@ export default function NoteDisplay() {
             </div>
             {/* <Separator /> */}
           </div>
-          <Editor />
-          {/* <EditorContainer /> */}
+          {/* <Editor /> */}
+          <EditorContainer />
           <ScrollBar orientation="vertical" />
         </ScrollArea>
       </TooltipProvider>

@@ -29,7 +29,8 @@ import { AccountSwitcher } from "./ui/account-switcher";
 import { Button } from "../ui/button";
 import NoteDisplay from "./views/note-display";
 
-import dynamic from "next/dynamic";
+// import dynamic from "next/dynamic";
+import YjsEditorProvider from "./core/yjs-editor/components/EditorProvider";
 import type { ImperativePanelHandle } from "react-resizable-panels";
 import { useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -60,16 +61,16 @@ export default function EvoEditor({
   //     ssr: false,
   //   });
   // }, []);
-  const EditorProvider = dynamic(
-    () => import("./core/yjs-editor/components/EditorProvider"),
-    {
-      ssr: false,
-    },
-  );
+  // const EditorProvider = dynamic(
+  //   () => import("./core/yjs-editor/components/EditorProvider"),
+  //   {
+  //     ssr: false,
+  //   },
+  // );
 
   return (
     <>
-      <EditorProvider>
+      <YjsEditorProvider>
         <div className="flex flex-col w-full bg-background">
           <div className="mf-system-menu flex flex-row items-center justify-between border-b select-none h-9">
             <SysMenu
@@ -389,7 +390,7 @@ export default function EvoEditor({
             onOpenChange={setIsSettingsOpen}
           />
         </div>
-      </EditorProvider>
+      </YjsEditorProvider>
     </>
   );
 }

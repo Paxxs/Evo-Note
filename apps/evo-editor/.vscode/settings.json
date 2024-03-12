@@ -3,5 +3,5 @@
     "*.css": "tailwindcss",
     "*.scss": "tailwindcss"
   },
-  "cSpell.words": ["blocksuite", "subdocs"]
+  "cSpell.words": ["blocksuite", "subdocs", "vaul"]
 }

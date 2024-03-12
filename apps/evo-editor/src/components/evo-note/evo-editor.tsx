@@ -45,7 +45,7 @@ interface EvoEditorProps {
 type TabsValue = "notes" | "search" | "copilot" | "trash" | "preference";
 
 export default function EvoEditor({
-  defaultLayout = [20, 25, 75],
+  defaultLayout = [10, 25, 65],
 }: EvoEditorProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isFileCollapsible, setIsFileCollapsible] = useState(false);
@@ -348,41 +348,33 @@ export default function EvoEditor({
             <ResizableHandle withHandle />
             <ResizablePanel
               minSize={20}
-              collapsible={isFileCollapsible}
+              // collapsible={isFileCollapsible}
+              collapsible={false}
               defaultSize={defaultLayout[1]}
               className="select-none"
             >
-              <Tabs
-                defaultValue="notes"
-                value={tabsValue}
-                onValueChange={(value) => setTabsValue(value as TabsValue)}
-              >
-                <TabsContent value="notes" className="mt-0">
-                  <SideBarNoteList files={testFilesData} />
-                </TabsContent>
-                <TabsContent value="search" className="mt-0">
-                  <SideBarSearch />
-                </TabsContent>
-                <TabsContent value="copilot" className="mt-0">
-                  <SideBarAI />
-                </TabsContent>
-                <TabsContent value="trash" className="mt-0">
-                  <SidebarTrash />
-                </TabsContent>
-              </Tabs>
-            </ResizablePanel>
-            <ResizableHandle
-              withHandle
-              onDragging={() => {
-                if (NavResizablePanelRef.current?.isCollapsed()) {
-                  setIsFileCollapsible(true);
-                } else {
-                  setIsFileCollapsible(false);
-                }
-              }}
-            />
-            <ResizablePanel defaultSize={defaultLayout[2]}>
-              <NoteDisplay />
+              <div className="flex flex-row h-full">
+                <Tabs
+                  className="w-72 border-r"
+                  defaultValue="notes"
+                  value={tabsValue}
+                  onValueChange={(value) => setTabsValue(value as TabsValue)}
+                >
+                  <TabsContent value="notes" className="mt-0">
+                    <SideBarNoteList files={testFilesData} />
+                  </TabsContent>
+                  <TabsContent value="search" className="mt-0">
+                    <SideBarSearch />
+                  </TabsContent>
+                  <TabsContent value="copilot" className="mt-0">
+                    <SideBarAI />
+                  </TabsContent>
+                  <TabsContent value="trash" className="mt-0">
+                    <SidebarTrash />
+                  </TabsContent>
+                </Tabs>
+                <NoteDisplay />
+              </div>
             </ResizablePanel>
           </ResizablePanelGroup>
           <SidebarSettins

@@ -17,7 +17,7 @@ interface NavProps {
     label?: string;
     icon: LucideIcon;
     variant: "default" | "ghost";
-    herf?: string;
+    href?: string;
     keyValue: string; // 用来确定选中状态
   }[];
   className?: string;
@@ -31,6 +31,34 @@ export function Nav({
   className,
   onClick,
 }: NavProps) {
+  const NavLink = ({
+    keyValue,
+    href,
+    className,
+    key,
+    children,
+    onClick,
+  }: {
+    keyValue: string;
+    href?: string;
+    className?: string;
+    key?: string;
+    children?: React.ReactNode;
+    onClick?: (keyValue: string) => void;
+  }) => {
+    const Tag = href ? Link : "a";
+    // 根据是否有链接来决定使用Link还是a标签，因为如果编辑器是动态导入的，使用Link会导致第一次点击时候刷新页面（不知道为甚
+    return (
+      <Tag
+        href={href ? href : "#"}
+        className={className}
+        key={key}
+        onClick={() => onClick && onClick(keyValue)}
+      >
+        {children}
+      </Tag>
+    );
+  };
   return (
     <div
       data-collapsed={isCollapsed}
@@ -44,10 +72,11 @@ export function Nav({
           return (
             <TooltipProvider key={index} delayDuration={0}>
               <Tooltip>
-                <TooltipTrigger asChild>
+                <TooltipTrigger className="grid">
                   {isCollapsed ? ( // 收缩只显示图标
-                    <Link
-                      href={link.herf ? link.herf : "#"}
+                    <NavLink
+                      keyValue={link.keyValue}
+                      href={link.href}
                       className={cn(
                         buttonVariants({
                           variant:
@@ -56,19 +85,19 @@ export function Nav({
                         }),
                         // "h-10"
                         "h-11 w-11",
-                        link.variant === "default" &&
+                        keyValue === link.keyValue &&
                           "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white",
                       )}
-                      onClick={() => onClick && onClick(link.keyValue)}
+                      onClick={onClick}
                     >
                       <link.icon className="h-6 w-6" />
                       <span className="sr-only">{link.title}</span>
-                    </Link>
+                    </NavLink>
                   ) : (
                     // 未收缩时候显示长条
-                    <Link
-                      key={index}
-                      href={link.herf ? link.herf : "#"}
+                    <NavLink
+                      keyValue={link.keyValue}
+                      href={link.href}
                       className={cn(
                         buttonVariants({
                           variant:
@@ -80,11 +109,11 @@ export function Nav({
                         keyValue === link.keyValue &&
                           "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
                       )}
-                      onClick={() => onClick && onClick(link.keyValue)}
+                      onClick={onClick}
                     >
                       <link.icon className="mr-2 h-6 w-6" />
                       {link.title}
-                    </Link>
+                    </NavLink>
                   )}
                 </TooltipTrigger>
                 <TooltipContent

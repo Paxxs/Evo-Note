@@ -360,16 +360,32 @@ export default function EvoEditor({
                   value={tabsValue}
                   onValueChange={(value) => setTabsValue(value as TabsValue)}
                 >
-                  <TabsContent value="notes" className="mt-0">
+                  <TabsContent
+                    value="notes"
+                    className="mt-0 data-[state=inactive]:hidden"
+                    forceMount
+                  >
                     <SideBarNoteList files={testFilesData} />
                   </TabsContent>
-                  <TabsContent value="search" className="mt-0">
+                  <TabsContent
+                    value="search"
+                    className="mt-0 data-[state=inactive]:hidden"
+                    forceMount
+                  >
                     <SideBarSearch />
                   </TabsContent>
-                  <TabsContent value="copilot" className="mt-0">
+                  <TabsContent
+                    value="copilot"
+                    className="mt-0 data-[state=inactive]:hidden"
+                    forceMount
+                  >
                     <SideBarAI />
                   </TabsContent>
-                  <TabsContent value="trash" className="mt-0">
+                  <TabsContent
+                    value="trash"
+                    className="mt-0 data-[state=inactive]:hidden"
+                    forceMount
+                  >
                     <SidebarTrash />
                   </TabsContent>
                 </Tabs>

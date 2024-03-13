@@ -3,8 +3,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FileList, NoteItemType } from "../ui/file-list";
 import SideBarTitle from "../ui/sider-bar-title";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { useEffect } from "react";
 
 export function SideBarNoteList({ files }: { files: NoteItemType[] }) {
+  useEffect(() => {
+    console.log("Component has been mounted");
+    return () => {
+      console.log("Component will be unmounted");
+    };
+  }, []); // 空依赖数组表示只在组件挂载和卸载时运行
+
   return (
     <Tabs defaultValue="all">
       <ScrollArea

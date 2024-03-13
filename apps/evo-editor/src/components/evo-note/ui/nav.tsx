@@ -1,5 +1,3 @@
-"use client";
-
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
@@ -49,7 +47,7 @@ export function Nav({
                 <TooltipTrigger asChild>
                   {isCollapsed ? ( // 收缩只显示图标
                     <Link
-                      href={link.herf ? link.herf : ""}
+                      href={link.herf ? link.herf : "#"}
                       className={cn(
                         buttonVariants({
                           variant:
@@ -70,7 +68,7 @@ export function Nav({
                     // 未收缩时候显示长条
                     <Link
                       key={index}
-                      href={link.herf ? link.herf : ""}
+                      href={link.herf ? link.herf : "#"}
                       className={cn(
                         buttonVariants({
                           variant:

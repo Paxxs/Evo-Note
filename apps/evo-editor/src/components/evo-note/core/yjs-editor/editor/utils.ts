@@ -1,15 +1,20 @@
-import { Workspace, BlobStorage, Generator, Schema } from "@blocksuite/store";
+import {
+  DocCollection,
+  BlobStorage,
+  Generator,
+  Schema,
+} from "@blocksuite/store";
 import { AffineSchemas } from "@blocksuite/blocks";
-export function createWorkspace(id = "evo-note-example") {
+export function createCollection(id = "evo-note-example") {
   const schema = new Schema().register(AffineSchemas);
   const idGenerator = Generator.NanoID;
-  const workspace = new Workspace({
+  const collection = new DocCollection({
     schema,
     id,
     // blobStorages:
     idGenerator,
   });
-  return workspace;
+  return collection;
 }
 
 function createLogStorage(): BlobStorage {
@@ -35,10 +40,10 @@ function createLogStorage(): BlobStorage {
 }
 
 export async function createEmptyDoc(
-  workspace: Workspace,
+  collection: DocCollection,
   id: string = "page1",
 ) {
-  const doc = workspace.createDoc({
+  const doc = collection.createDoc({
     id,
   });
   doc.load(() => {

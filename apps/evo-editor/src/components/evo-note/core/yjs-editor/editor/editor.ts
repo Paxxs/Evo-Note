@@ -1,4 +1,3 @@
-"use client";
 import { Doc } from "@blocksuite/store";
 import { Provider } from "./provider/provider";
 import { AffineEditorContainer } from "@blocksuite/presets";
@@ -10,8 +9,8 @@ export async function initEditor() {
   await provider.start();
 
   let doc: Doc | null = null;
-  const { workspace } = provider;
-  workspace.docs.forEach((d) => {
+  const { collection } = provider;
+  collection.docs.forEach((d) => {
     doc = doc ?? d;
   });
   if (!doc) throw Error("doc not found");
@@ -19,8 +18,8 @@ export async function initEditor() {
   const editor = new AffineEditorContainer();
   editor.doc = doc;
   editor.slots.docLinkClicked.on(({ docId }) => {
-    const target = <Doc>workspace.getDoc(docId);
+    const target = <Doc>collection.getDoc(docId);
     editor.doc = target;
   });
-  return { editor, provider, workspace };
+  return { editor, provider, collection };
 }

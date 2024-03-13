@@ -24,7 +24,7 @@ import { SideBarNoteList } from "./views/sidebar-note-list";
 import SideBarSearch from "./views/sidebar-search";
 import SideBarAI from "./views/sidebar-copilot";
 import SidebarTrash from "./views/sidebar-trash";
-import SidebarSettins from "./views/sidebar-settins";
+import SidebarSettings from "./views/sidebar-settins";
 import { AccountSwitcher } from "./ui/account-switcher";
 import { Button } from "../ui/button";
 import NoteDisplay from "./views/note-display";
@@ -42,16 +42,23 @@ interface EvoEditorProps {
 }
 
 // TabsValue: Define the type for the tabs value
-type TabsValue = "notes" | "search" | "copilot" | "trash" | "preference";
+type TabsValue =
+  | "notes"
+  | "search"
+  | "copilot"
+  | "trash"
+  | "preference"
+  | "settings"
+  | "newNote";
 
 export default function EvoEditor({
-  defaultLayout = [10, 25, 65],
+  defaultLayout = [15, 25, 70],
 }: EvoEditorProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [isFileCollapsible, setIsFileCollapsible] = useState(false);
+  // const [isFileCollapsible, setIsFileCollapsible] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false); // 设置菜单
 
-  const NavResizablePanelRef = useRef<ImperativePanelHandle>(null);
+  // const NavResizablePanelRef = useRef<ImperativePanelHandle>(null);
   // const [selectedNote] = useNote();
 
   const [tabsValue, setTabsValue] = useState<TabsValue>("notes");
@@ -214,8 +221,8 @@ export default function EvoEditor({
             className="h-full items-stretch"
           >
             <ResizablePanel
-              ref={NavResizablePanelRef}
-              defaultSize={defaultLayout[0]}
+              // ref={NavResizablePanelRef}
+              // defaultSize={defaultLayout[0]}
               maxSize={20}
               minSize={15}
               className={cn(
@@ -292,7 +299,7 @@ export default function EvoEditor({
                       title: "Explorer",
                       label: "Explore your notes",
                       icon: Files,
-                      variant: "default",
+                      variant: "ghost",
                       keyValue: "notes",
                     },
                     {
@@ -350,7 +357,7 @@ export default function EvoEditor({
               minSize={20}
               // collapsible={isFileCollapsible}
               collapsible={false}
-              defaultSize={defaultLayout[1]}
+              // defaultSize={defaultLayout[1]}
               className="select-none"
             >
               <div className="flex flex-row h-full">
@@ -358,7 +365,7 @@ export default function EvoEditor({
                   className="w-72 border-r"
                   defaultValue="notes"
                   value={tabsValue}
-                  onValueChange={(value) => setTabsValue(value as TabsValue)}
+                  // onValueChange={(value) => setTabsValue(value as TabsValue)}
                 >
                   <TabsContent
                     value="notes"
@@ -393,7 +400,7 @@ export default function EvoEditor({
               </div>
             </ResizablePanel>
           </ResizablePanelGroup>
-          <SidebarSettins
+          <SidebarSettings
             open={isSettingsOpen}
             onOpenChange={setIsSettingsOpen}
           />

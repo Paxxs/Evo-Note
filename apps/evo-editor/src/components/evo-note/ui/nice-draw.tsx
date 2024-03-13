@@ -7,7 +7,7 @@ import {
 
 interface NiceDrawProps {
   title: string | JSX.Element;
-  discription?: string | JSX.Element;
+  description?: string | JSX.Element;
   children: React.ReactNode;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -15,7 +15,7 @@ interface NiceDrawProps {
 
 export default function NiceDraw({
   title,
-  discription,
+  description,
   children,
   open,
   onOpenChange,
@@ -26,7 +26,7 @@ export default function NiceDraw({
         <div className="mx-auto w-full max-w-sm">
           <DrawerHeader>
             <DrawerTitle>{title}</DrawerTitle>
-            {discription && <DrawerTitle>{discription}</DrawerTitle>}
+            {description && <DrawerTitle>{description}</DrawerTitle>}
           </DrawerHeader>
           {children}
         </div>

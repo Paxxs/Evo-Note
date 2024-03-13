@@ -1,19 +1,19 @@
 import SettingsPage from "@/app/dashboard/preference/page";
 import NiceDraw from "../ui/nice-draw";
 
-interface SideBarSettinsProps {
+interface SideBarSettingsProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export default function SidebarSettins({
+export default function SidebarSettings({
   open,
   onOpenChange,
-}: SideBarSettinsProps) {
+}: SideBarSettingsProps) {
   return (
     <NiceDraw
       title="Preferences"
-      discription="Customize your experience"
+      description="Customize your experience"
       open={open}
       onOpenChange={onOpenChange}
     >

@@ -2,9 +2,6 @@
 import {
   BotMessageSquare,
   Files,
-  Maximize2,
-  Minimize2,
-  Minus,
   PlusCircle,
   Search,
   Settings,
@@ -24,18 +21,18 @@ import { SideBarNoteList } from "./views/sidebar-note-list";
 import SideBarSearch from "./views/sidebar-search";
 import SideBarAI from "./views/sidebar-copilot";
 import SidebarTrash from "./views/sidebar-trash";
-import SidebarSettings from "./views/sidebar-settins";
+import SidebarSettings from "./views/sidebar-settings";
 import { AccountSwitcher } from "./ui/account-switcher";
-import { Button } from "../ui/button";
 import NoteDisplay from "./views/note-display";
 
 // import dynamic from "next/dynamic";
 import YjsEditorProvider from "./core/yjs-editor/components/EditorProvider";
-import type { ImperativePanelHandle } from "react-resizable-panels";
-import { useMemo, useRef, useState } from "react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 import { testFilesData } from "./test-files-data";
+import ControlButton from "./ui/control-button";
+import { useIsWailsEnvironment } from "@/hooks/use-is-wails-environment";
 
 interface EvoEditorProps {
   defaultLayout?: number[];
@@ -63,6 +60,8 @@ export default function EvoEditor({
 
   const [tabsValue, setTabsValue] = useState<TabsValue>("notes");
 
+  const isWails = useIsWailsEnvironment();
+
   // const Editor = useMemo(() => {
   //   return dynamic(() => import("./core/block/block-editor"), {
   //     ssr: false,
@@ -79,9 +78,9 @@ export default function EvoEditor({
     <>
       <YjsEditorProvider>
         <div className="flex flex-col w-full bg-background">
-          <div className="mf-system-menu flex flex-row items-center justify-between border-b select-none h-9">
+          <div className="mf-system-menu flex flex-row items-center justify-between border-b select-none h-12 mf-draggable">
             <SysMenu
-              className="rounded-none shadow-none border-none h-8"
+              className="rounded-none shadow-none border-none h-8 pl-3"
               items={[
                 {
                   title: "File",
@@ -199,22 +198,7 @@ export default function EvoEditor({
                 },
               ]}
             />
-            <div className="flex flex-row">
-              <Button variant="ghost" size="icon" className="rounded-none">
-                <Minus className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" className="rounded-none">
-                {/* <Maximize2 className="h-4 w-4" /> */}
-                <Minimize2 className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="hover:bg-destructive rounded-none"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
+            <div className="flex flex-row">{isWails && <ControlButton />}</div>
           </div>
           <ResizablePanelGroup
             direction="horizontal"

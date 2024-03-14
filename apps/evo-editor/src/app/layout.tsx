@@ -32,7 +32,7 @@ export default function RootLayout({
       {/* <body className={inter.className}>{children}</body> */}
       <body
         className={cn(
-          "h-dvh bg-background font-sans antialiased",
+          "h-dvh bg-background/0 font-sans antialiased",
           fontSans.variable,
           noteSC.variable,
         )}

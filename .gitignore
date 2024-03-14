@@ -16,6 +16,10 @@
 /out/
 /apps/*/out/
 .turbo
+/apps/go-backend/dist
+
+#wails
+/apps/go-backend/build/bin/*
 
 # production
 /build

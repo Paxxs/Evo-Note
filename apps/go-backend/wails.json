@@ -1,0 +1,15 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "v2Note",
+  "outputfilename": "v2Note",
+  "frontend:install": "pnpm install",
+  "frontend:build": "pnpm run build",
+  "frontend:dev:watcher": "pnpm run dev",
+  "frontend:dev:serverUrl": "auto",
+  "frontend:dir": "../evo-editor",
+  "wailsjsdir": "../evo-editor/src/wails",
+  "author": {
+    "name": "Paxxs",
+    "email": "10364775+Paxxs@users.noreply.github.com"
+  }
+}

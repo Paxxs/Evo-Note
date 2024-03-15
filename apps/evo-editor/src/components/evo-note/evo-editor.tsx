@@ -77,7 +77,29 @@ export default function EvoEditor({
   return (
     <>
       <YjsEditorProvider>
-        <div className="flex flex-col w-full bg-background">
+        <div
+          className="flex flex-col w-full bg-background"
+          onContextMenu={(e) => {
+            // 首先，将e.target断言为HTMLElement
+            const targetElement = e.target as HTMLElement;
+            // Allow context menu on any input
+            if (targetElement) {
+              if (["INPUT", "TEXTAREA"].includes(targetElement.tagName)) {
+                return;
+              }
+              if (targetElement.parentElement?.tagName === "V-TEXT") {
+                // block suit stuff
+                return;
+              }
+              if (window.getSelection()?.toString()) {
+                // Allow context menu on any text selection
+                return;
+              }
+            }
+            // Disable the context menu otherwise
+            e.preventDefault();
+          }}
+        >
           <div className="mf-system-menu flex flex-row items-center justify-between border-b select-none h-12">
             <SysMenu
               className="rounded-none shadow-none border-none h-8 pl-3"

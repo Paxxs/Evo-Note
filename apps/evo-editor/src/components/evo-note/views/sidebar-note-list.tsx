@@ -3,15 +3,103 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FileList, NoteItemType } from "../ui/file-list";
 import SideBarTitle from "../ui/sider-bar-title";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useEditor } from "../core/yjs-editor/components/EditorProvider";
+import { Doc, Tag } from "@blocksuite/store";
+import { getPagePreviewText } from "../core/yjs-editor/editor/utils";
+import assert from "assert";
 
 export function SideBarNoteList({ files }: { files: NoteItemType[] }) {
+  const { collection, editor } = useEditor()!;
+  // const [notes, setNotes] = useState<NoteItemType[]>([]);
+  const [notes, setNotes] = useState<NoteItemType[]>([]);
+  // 尝试使用 Map，每次只更新指定 ID 的Doc数据
+
   useEffect(() => {
-    console.log("Component has been mounted");
-    return () => {
-      console.log("Component will be unmounted");
+    if (!collection || !editor) return;
+
+    /**
+     * Generate a NoteItemType from a given Doc.
+     *
+     * @param {Doc} doc - the document to create the note from
+     * @return {NoteItemType | undefined} the generated NoteItemType or undefined if collection or doc.meta is missing
+     */
+    const createNoteFromDoc = (doc: Doc): NoteItemType => {
+      // if (!collection || !doc.meta) return;
+      assert(collection, "Collection is missing");
+      assert(doc.meta, "Doc meta is missing");
+      console.log("update note list :(");
+
+      // 生成 tags
+      const tags = doc.meta.tags
+        .map((tagId) => {
+          // 先拿到 doc 的 tagsID
+          const tagOptions = collection.meta.properties.tags?.options.find(
+            (option) => option.id === tagId, // 然后去 collection 中查找对应的定义
+          );
+          return tagOptions;
+        })
+        .filter((tag) => tag != undefined) as Tag[]; // 最后过滤掉不存在的
+
+      return {
+        id: doc.meta.id,
+        name: doc.meta.title || "Untitled",
+        brief: getPagePreviewText(doc),
+        createdTime: doc.meta.createDate,
+        lastModified: doc.history.lastChange || doc.meta.createDate,
+        tags,
+      };
     };
-  }, []); // 空依赖数组表示只在组件挂载和卸载时运行
+
+    /**
+     * Updates all notes
+     *
+     * @return {void}
+     */
+    const updateNotes = (): void => {
+      const docsArray = Array.from(collection.docs.values());
+
+      const notes: NoteItemType[] = docsArray.map((doc) =>
+        createNoteFromDoc(doc),
+      );
+      setNotes(notes);
+
+      // 放弃使用 Map
+      // const updateNotes = new Map<string, NoteItemType>();
+      // collection.docs.forEach((doc) => {
+      //   if (!doc.meta) return;
+      //   updateNotes.set(doc.meta.id, createNoteFromDoc(doc)); // 生成 NoteItemType
+      // });
+      // setNotes(updateNotes); // 更新 notes
+    };
+
+    // const updateNote = (doc: Doc): void => {
+    //   if (!doc.meta) return;
+    //   assert(doc.meta.id, "Doc meta is missing");
+    //   setNotes((prevNotes) => {
+    //     const newNotes = new Map(prevNotes);
+    //     newNotes.set(doc.meta.id, createNoteFromDoc(doc));
+    //     return newNotes;
+    //   });
+    // };
+
+    const disposable = [
+      collection.slots.docUpdated.on(updateNotes),
+      editor.slots.docLinkClicked.on(updateNotes),
+      editor.doc.slots.blockUpdated.on((update) => {
+        if (update.type !== "update") {
+          console.log("block added or deleted");
+          updateNotes();
+        }
+      }),
+    ];
+
+    console.log("NoteList Component has been mounted");
+    return () => {
+      console.log("NoteList Component will be unmounted");
+      disposable.forEach((d) => d.dispose());
+    };
+  }, [editor, collection]);
 
   return (
     <Tabs defaultValue="all">
@@ -38,7 +126,7 @@ export function SideBarNoteList({ files }: { files: NoteItemType[] }) {
           </SideBarTitle>
           {/* <div className="h-3 "></div> */}
           <TabsContent value="all" className="mt-3">
-            <FileList files={files} />
+            <FileList files={notes} />
           </TabsContent>
           <TabsContent value="stared" className="mt-3">
             <FileList files={files.filter((item) => item.stars)} />

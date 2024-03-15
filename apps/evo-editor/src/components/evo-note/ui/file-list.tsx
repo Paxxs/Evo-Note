@@ -5,14 +5,24 @@ import { formatDistanceToNow } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useNote } from "../useNote";
 import ContextMenu from "./context-menu";
+import { Tag } from "@blocksuite/store";
 
+// 定义单个标签的类型
+// export type Tag = {
+//   color: string;
+//   id: string;
+//   value: string;
+// };
+
+// 定义笔记项的类型
 export type NoteItemType = {
   id: string;
   name: string;
   brief: string;
-  createdTime: string;
-  lastModified: string;
+  createdTime: number | string;
+  lastModified: number | string;
   stars?: boolean; // 是否收藏
+  tags?: Tag[]; // 不用自定义的了
 };
 
 interface FileListProps {
@@ -28,70 +38,77 @@ export function FileList({ className, files }: FileListProps) {
         className={cn("overflow-auto h-[calc(100vh-90px)] pt-4", className)}
       > */}
       <div className={cn("flex flex-col gap-2 p-4 pt-0 ", className)}>
-        {files?.map((note, index) => {
-          return (
-            <ContextMenu
-              key={index}
-              items={[
-                {
-                  type: "item",
-                  label: "Open",
-                  onClick: (event, item) => {
-                    setSelectNote({
-                      selected: files[index].id,
-                    });
-                    console.log("OpenClick", event, item);
+        {files &&
+          files.map((note, index) => {
+            return (
+              <ContextMenu
+                key={index}
+                items={[
+                  {
+                    type: "item",
+                    label: "Open",
+                    onClick: (event, item) => {
+                      setSelectNote({
+                        selected: files[index].id,
+                      });
+                      console.log("OpenClick", event, item);
+                    },
                   },
-                },
-                {
-                  type: "separator",
-                },
-                {
-                  type: "radio",
-                  label: "Property",
-                  value: "createdTime",
-                  values: [
-                    {
-                      name: "L " + note.lastModified,
-                      value: "lastModified",
-                    },
-                    {
-                      name: "C " + note.createdTime,
-                      value: "createdTime",
-                    },
-                  ],
-                },
-                {
-                  type: "separator",
-                },
-                {
-                  type: "sub",
-                  label: "Operate",
-                  items: [
-                    {
-                      type: "checkbox",
-                      label: "Star",
-                      checked: note.stars ? true : false,
-                    },
-                    {
-                      type: "item",
-                      label: "Delete",
-                      onClick: (event, item) => {
-                        console.log("OpenClick", event, item);
+                  {
+                    type: "separator",
+                  },
+                  {
+                    type: "radio",
+                    label: "Property",
+                    value: "createdTime",
+                    values: [
+                      {
+                        name:
+                          "L " + new Date(note.lastModified).toLocaleString(),
+                        value: "lastModified",
                       },
-                    },
-                  ],
-                },
-                {
-                  type: "item",
-                  label: "Copy Path",
-                },
-              ]}
-            >
-              <NoteItemNode note={note} />
-            </ContextMenu>
-          );
-        })}
+                      {
+                        name:
+                          "C " + new Date(note.createdTime).toLocaleString(),
+                        value: "createdTime",
+                      },
+                    ],
+                  },
+                  {
+                    type: "separator",
+                  },
+                  {
+                    type: "sub",
+                    label: "Operate",
+                    items: [
+                      // {
+                      //   type: "checkbox",
+                      //   label: "Star",
+                      //   checked: note.stars ? true : false,
+                      // },
+                      {
+                        type: "item",
+                        label: "Export Markdown",
+                      },
+                      {
+                        type: "item",
+                        label: "Export Html",
+                      },
+                      {
+                        type: "item",
+                        label: "Delete",
+                        onClick: (event, item) => {
+                          console.log("OpenClick", event, item);
+                        },
+                      },
+                    ],
+                  },
+                ]}
+              >
+                <NoteItemNode note={note} />
+              </ContextMenu>
+            );
+          })}
       </div>
       {/* </ScrollArea> */}
     </>
@@ -103,7 +120,7 @@ function NoteItemNode({ note }: { note: NoteItemType }) {
   return (
     <button
       className={cn(
-        "flex flex-col items-start gap-2 border p-3 rounded-lg hover:bg-accent transition-all text-sm text-left",
+        "flex flex-col items-start gap-2 border p-3 rounded-lg hover:bg-accent transition-all text-sm text-left w-full",
         selectNote.selected === note.id && "bg-muted", // 选中的文件
       )}
       onClick={() =>

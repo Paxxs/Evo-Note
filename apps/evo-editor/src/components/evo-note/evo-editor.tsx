@@ -78,7 +78,7 @@ export default function EvoEditor({
     <>
       <YjsEditorProvider>
         <div className="flex flex-col w-full bg-background">
-          <div className="mf-system-menu flex flex-row items-center justify-between border-b select-none h-12 mf-draggable">
+          <div className="mf-system-menu flex flex-row items-center justify-between border-b select-none h-12">
             <SysMenu
               className="rounded-none shadow-none border-none h-8 pl-3"
               items={[
@@ -198,6 +198,9 @@ export default function EvoEditor({
                 },
               ]}
             />
+            <div className="flex-grow mf-draggable h-full">
+              {/* 拖动区域 */}
+            </div>
             <div className="flex flex-row">{isWails && <ControlButton />}</div>
           </div>
           <ResizablePanelGroup

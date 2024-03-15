@@ -26,8 +26,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "../go-backend/out/types/**/*.ts",
     "../go-backend/dist/types/**/*.ts"
   ],
-  "exclude": ["node_modules", "../go-backend/out/types/**/*.ts"]
+  "exclude": ["node_modules", "../go-backend/dist/types/**/*.ts"]
 }

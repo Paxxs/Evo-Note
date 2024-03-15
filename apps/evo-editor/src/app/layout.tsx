@@ -5,6 +5,7 @@ import "./globals.css";
 
 import { cn } from "@/lib/utils";
 import Provider from "./providers";
+import { Toaster } from "@/components/ui/sonner";
 
 const fontSans = FontSans({
   subsets: ["latin-ext"],
@@ -36,7 +37,10 @@ export default function RootLayout({
           noteSC.variable,
         )}
       >
-        <Provider>{children}</Provider>
+        <Provider>
+          {children}
+          <Toaster richColors duration={3000} />
+        </Provider>
       </body>
     </html>
   );

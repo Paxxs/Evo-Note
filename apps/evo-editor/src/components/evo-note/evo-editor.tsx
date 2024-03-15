@@ -361,52 +361,57 @@ export default function EvoEditor({
                 }
               />
             </ResizablePanel>
-            <ResizableHandle withHandle />
+            <ResizableHandle />
             <ResizablePanel
               minSize={20}
+              maxSize={30}
               // collapsible={isFileCollapsible}
-              collapsible={false}
+              collapsible={true}
               // defaultSize={defaultLayout[1]}
+            >
+              <Tabs
+                className="w-full border-r"
+                defaultValue="notes"
+                value={tabsValue}
+                // onValueChange={(value) => setTabsValue(value as TabsValue)}
+              >
+                <TabsContent
+                  value="notes"
+                  className="mt-0 data-[state=inactive]:hidden"
+                  forceMount
+                >
+                  <SideBarNoteList files={testFilesData} />
+                </TabsContent>
+                <TabsContent
+                  value="search"
+                  className="mt-0 data-[state=inactive]:hidden"
+                  forceMount
+                >
+                  <SideBarSearch />
+                </TabsContent>
+                <TabsContent
+                  value="copilot"
+                  className="mt-0 data-[state=inactive]:hidden"
+                  forceMount
+                >
+                  <SideBarAI />
+                </TabsContent>
+                <TabsContent
+                  value="trash"
+                  className="mt-0 data-[state=inactive]:hidden"
+                  forceMount
+                >
+                  <SidebarTrash />
+                </TabsContent>
+              </Tabs>
+            </ResizablePanel>
+            <ResizableHandle withHandle />
+            <ResizablePanel
+              minSize={40}
+              collapsible={false}
               className="select-none"
             >
-              <div className="flex flex-row h-full">
-                <Tabs
-                  className="w-72 border-r"
-                  defaultValue="notes"
-                  value={tabsValue}
-                  // onValueChange={(value) => setTabsValue(value as TabsValue)}
-                >
-                  <TabsContent
-                    value="notes"
-                    className="mt-0 data-[state=inactive]:hidden"
-                    forceMount
-                  >
-                    <SideBarNoteList files={testFilesData} />
-                  </TabsContent>
-                  <TabsContent
-                    value="search"
-                    className="mt-0 data-[state=inactive]:hidden"
-                    forceMount
-                  >
-                    <SideBarSearch />
-                  </TabsContent>
-                  <TabsContent
-                    value="copilot"
-                    className="mt-0 data-[state=inactive]:hidden"
-                    forceMount
-                  >
-                    <SideBarAI />
-                  </TabsContent>
-                  <TabsContent
-                    value="trash"
-                    className="mt-0 data-[state=inactive]:hidden"
-                    forceMount
-                  >
-                    <SidebarTrash />
-                  </TabsContent>
-                </Tabs>
-                <NoteDisplay />
-              </div>
+              <NoteDisplay />
             </ResizablePanel>
           </ResizablePanelGroup>
           <SidebarSettings

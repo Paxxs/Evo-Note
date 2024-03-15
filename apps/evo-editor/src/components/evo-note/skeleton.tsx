@@ -3,7 +3,7 @@ import { Skeleton } from "../ui/skeleton";
 export default function EvoSkeleton() {
   return (
     <>
-      <div className="flex flex-col w-full bg-background">
+      <div className="flex flex-col w-full bg-background mf-draggable">
         <div className="flex flex-row items-center justify-between border-b select-none h-12 space-x-7">
           <Skeleton className="ml-3 h-5 w-60 " />
           <div className="flex flex-row gap-6 justify-center items-center">

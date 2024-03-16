@@ -8,6 +8,7 @@ import { useEditor } from "../core/yjs-editor/components/EditorProvider";
 import { Doc, Tag } from "@blocksuite/store";
 import { getPagePreviewText } from "../core/yjs-editor/editor/utils";
 import assert from "assert";
+import logger from "@/lib/logger";
 
 export function SideBarNoteList({ files }: { files: NoteItemType[] }) {
   const { collection, editor } = useEditor()!;
@@ -28,7 +29,6 @@ export function SideBarNoteList({ files }: { files: NoteItemType[] }) {
       // if (!collection || !doc.meta) return;
       assert(collection, "Collection is missing");
       assert(doc.meta, "Doc meta is missing");
-      console.log("update note list :(");
 
       // 生成 tags
       const tags = doc.meta.tags
@@ -58,7 +58,7 @@ export function SideBarNoteList({ files }: { files: NoteItemType[] }) {
      */
     const updateNotes = (): void => {
       const docsArray = Array.from(collection.docs.values());
-
+      logger.debug("sidebar-note-list: Updating Notes List");
       const notes: NoteItemType[] = docsArray.map((doc) =>
         createNoteFromDoc(doc),
       );
@@ -82,30 +82,30 @@ export function SideBarNoteList({ files }: { files: NoteItemType[] }) {
     //     return newNotes;
     //   });
     // };
+    if (notes.length === 0) {
+      updateNotes();
+    }
 
     const disposable = [
-      collection.slots.docUpdated.on(updateNotes),
-      editor.slots.docLinkClicked.on(updateNotes),
-      editor.doc.slots.blockUpdated.on((update) => {
-        if (update.type !== "update") {
-          console.log("block added or deleted");
-          updateNotes();
-        }
+      collection.slots.docAdded.on((docId) => {
+        logger.debug("sidebar-note-list: EVENT: docAdded", docId);
+        updateNotes();
       }),
+      collection.slots.docUpdated.on(updateNotes),
     ];
 
-    console.log("NoteList Component has been mounted");
+    logger.debug("NoteList Component has been mounted");
     return () => {
-      console.log("NoteList Component will be unmounted");
+      logger.debug("NoteList Component will be unmounted");
       disposable.forEach((d) => d.dispose());
     };
-  }, [editor, collection]);
+  }, [collection, editor, notes]);
 
   return (
     <Tabs defaultValue="all">
       <ScrollArea
         // 要减去顶部系统bar的高度
-        className="h-[calc(100dvh-2.25rem)]"
+        className="h-[calc(100dvh-3rem)]"
       >
         <div className="relative flex flex-col">
           <SideBarTitle title="Notes">
@@ -129,7 +129,11 @@ export function SideBarNoteList({ files }: { files: NoteItemType[] }) {
             <FileList files={notes} />
           </TabsContent>
           <TabsContent value="stared" className="mt-3">
-            <FileList files={files.filter((item) => item.stars)} />
+            <FileList
+              files={notes.filter((item) => {
+                return item.tags.some((tag) => tag.value === "stared");
+              })}
+            />
           </TabsContent>
         </div>
         <ScrollBar orientation="vertical" />

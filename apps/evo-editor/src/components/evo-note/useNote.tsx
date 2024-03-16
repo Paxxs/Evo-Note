@@ -1,6 +1,5 @@
 import { atom, useAtom } from "jotai";
 
-import { testFilesData } from "./test-files-data";
 import { NoteItemType } from "./ui/file-list";
 
 type Config = {
@@ -8,7 +7,7 @@ type Config = {
 };
 
 const configAtom = atom<Config>({
-  selected: testFilesData[0].id,
+  selected: null,
 });
 
 /**

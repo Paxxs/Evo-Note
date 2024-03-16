@@ -48,7 +48,9 @@ export async function createEmptyDoc(
     id,
   });
   doc.load(() => {
-    const pageBlockId = doc.addBlock("affine:page", {});
+    const pageBlockId = doc.addBlock("affine:page", {
+      title: new doc.Text(""),
+    });
     doc.addBlock("affine:surface", {}, pageBlockId);
     const noteId = doc.addBlock("affine:note", {}, pageBlockId);
     doc.addBlock("affine:paragraph", {}, noteId);
@@ -64,7 +66,7 @@ export async function createEmptyDoc(
  */
 export const createDocBlock = (collection: DocCollection): Doc => {
   const id = collection.idGenerator();
-  return createDefaultDoc(collection, { id });
+  return createDefaultDoc(collection, { id, title: "" });
 };
 
 /**

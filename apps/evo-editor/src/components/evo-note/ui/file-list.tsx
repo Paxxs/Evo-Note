@@ -1,11 +1,12 @@
-import { Sparkle, Star } from "lucide-react";
 import { Badge } from "../../ui/badge";
-import { ScrollArea } from "../../ui/scroll-area";
 import { formatDistanceToNow } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useNote } from "../useNote";
 import ContextMenu from "./context-menu";
 import { Tag } from "@blocksuite/store";
+import { useEditor } from "../core/yjs-editor/components/EditorProvider";
+import logger from "@/lib/logger";
+import { useEffect, useState } from "react";
 
 // 定义单个标签的类型
 // export type Tag = {
@@ -21,94 +22,86 @@ export type NoteItemType = {
   brief: string;
   createdTime: number | string;
   lastModified: number | string;
-  stars?: boolean; // 是否收藏
-  tags?: Tag[]; // 不用自定义的了
+  tags: Tag[]; // 不用自定义的了
 };
 
 interface FileListProps {
   className?: string;
-  files?: NoteItemType[];
+  files: NoteItemType[];
 }
 
 export function FileList({ className, files }: FileListProps) {
   const [selectNote, setSelectNote] = useNote();
+  const { collection, editor } = useEditor()!;
+  // console.log("note:", files);
   return (
     <>
       {/* <ScrollArea
         className={cn("overflow-auto h-[calc(100vh-90px)] pt-4", className)}
       > */}
       <div className={cn("flex flex-col gap-2 p-4 pt-0 ", className)}>
-        {files &&
-          files.map((note, index) => {
-            return (
-              <ContextMenu
-                key={index}
-                items={[
-                  {
-                    type: "item",
-                    label: "Open",
-                    onClick: (event, item) => {
-                      setSelectNote({
-                        selected: files[index].id,
-                      });
-                      console.log("OpenClick", event, item);
+        {files.map((note, index) => {
+          return (
+            <ContextMenu
+              key={index}
+              items={[
+                {
+                  type: "item",
+                  label: "Open",
+                  onClick: (event, item) => {
+                    setSelectNote({
+                      selected: files[index].id,
+                    });
+                    console.log("OpenClick", event, item);
+                  },
+                },
+                {
+                  type: "separator",
+                },
+                {
+                  type: "radio",
+                  label: "Property",
+                  value: "createdTime",
+                  values: [
+                    {
+                      name: "L " + new Date(note.lastModified).toLocaleString(),
+                      value: "lastModified",
                     },
+                    {
+                      name: "C " + new Date(note.createdTime).toLocaleString(),
+                      value: "createdTime",
+                    },
+                  ],
+                },
+                {
+                  type: "separator",
+                },
+                {
+                  type: "item",
+                  label: "Delete",
+                  onClick: (event, item) => {
+                    if (collection && editor) {
+                      collection.removeDoc(note.id);
+                      if (note.id === selectNote.selected) {
+                        logger.debug(
+                          "file-list: 😠 看看是不是相等",
+                          note.id,
+                          editor.doc.id,
+                        );
+                        // 如果删除的是当前选中的，则要处理 editor
+                        const docs = Array.from(collection.docs.values());
+                        editor.doc = docs[0];
+                      }
+                    }
+                    logger.debug("file-list: delete OpenClick", event, item);
                   },
-                  {
-                    type: "separator",
-                  },
-                  {
-                    type: "radio",
-                    label: "Property",
-                    value: "createdTime",
-                    values: [
-                      {
-                        name:
-                          "L " + new Date(note.lastModified).toLocaleString(),
-                        value: "lastModified",
-                      },
-                      {
-                        name:
-                          "C " + new Date(note.createdTime).toLocaleString(),
-                        value: "createdTime",
-                      },
-                    ],
-                  },
-                  {
-                    type: "separator",
-                  },
-                  {
-                    type: "sub",
-                    label: "Operate",
-                    items: [
-                      // {
-                      //   type: "checkbox",
-                      //   label: "Star",
-                      //   checked: note.stars ? true : false,
-                      // },
-                      {
-                        type: "item",
-                        label: "Export Markdown",
-                      },
-                      {
-                        type: "item",
-                        label: "Export Html",
-                      },
-                      {
-                        type: "item",
-                        label: "Delete",
-                        onClick: (event, item) => {
-                          console.log("OpenClick", event, item);
-                        },
-                      },
-                    ],
-                  },
-                ]}
-              >
-                <NoteItemNode note={note} />
-              </ContextMenu>
-            );
-          })}
+                },
+              ]}
+            >
+              <NoteItemNode note={note} />
+            </ContextMenu>
+          );
+        })}
       </div>
       {/* </ScrollArea> */}
     </>
@@ -117,11 +110,25 @@ export function FileList({ className, files }: FileListProps) {
 
 function NoteItemNode({ note }: { note: NoteItemType }) {
   const [selectNote, setSelectNote] = useNote();
+  const { editor } = useEditor()!;
+  const [selected, setSelected] = useState(false);
+
+  useEffect(() => {
+    if (editor) {
+      setSelected(editor.doc.id === note.id);
+    } else {
+      logger.debug(
+        "😶 NoteItemNode(when set selected variable): editor is not ready yet",
+      );
+      setSelected(selectNote.selected === note.id);
+    }
+  }, [editor, selectNote, note]);
+
   return (
     <button
       className={cn(
         "flex flex-col items-start gap-2 border p-3 rounded-lg hover:bg-accent transition-all text-sm text-left w-full",
-        selectNote.selected === note.id && "bg-muted", // 选中的文件
+        selected && "bg-muted", // 选中的文件
       )}
       onClick={() =>
         setSelectNote({
@@ -143,25 +150,36 @@ function NoteItemNode({ note }: { note: NoteItemType }) {
       <div
         className={cn(
           "text-xs text-muted-foreground line-clamp-2",
-          selectNote.selected === note.id && "font-medium",
+          selected && "font-medium",
         )}
       >
         {note.brief.substring(0, 300)}
       </div>
-      <div className="flex flex-row gap-2 items-center w-full">
-        {note.stars && (
-          <Badge
-            variant={selectNote.selected === note.id ? "default" : "secondary"}
-            className="gap-1 pl-1.5"
-          >
-            <Sparkle className="w-3.5 h-3.5" />
-            Stared
-          </Badge>
-        )}
+      <div className="flex flex-row gap-2 items-center w-full flex-nowrap">
+        <div className="space-x-1 whitespace-pre">
+          {note.tags &&
+            note.tags.slice(0, 2).map((tag) => (
+              <Badge
+                key={tag.id}
+                variant={selected ? "default" : "outline"}
+                className="gap-1 pl-1.5 font-normal"
+                style={
+                  selectNote.selected !== note.id
+                    ? {
+                        backgroundColor: tag.color,
+                      }
+                    : {}
+                }
+              >
+                {tag.value}
+              </Badge>
+            ))}
+          {note.tags && note.tags.length > 2 && <span>...</span>}
+        </div>
         <div
           className={cn(
-            "ml-auto text-xs",
-            selectNote.selected === note.id
+            "ml-auto text-xs whitespace-pre",
+            selected
               ? "text-gray-900 dark:text-zinc-200"
               : "text-muted-foreground",
           )}

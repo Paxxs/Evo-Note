@@ -10,40 +10,55 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Redo2, Undo2 } from "lucide-react";
 import { Doc } from "@blocksuite/store";
+import logger from "@/lib/logger";
 
 export default function NoteDisplay() {
-  const [selectedNote] = useNote();
+  const [selectNote, setSelectNote] = useNote();
   const { editor, collection } = useEditor()!;
-  const [doc, setDoc] = useState<Doc | null>(null);
-  const [canRedo, setCanRedo] = useState(false);
-  const [canUndo, setCanUndo] = useState(false);
-
   const [isPage, setIsPage] = useState(true);
+  const [doc, setDoc] = useState<Doc | null>(null);
 
   useEffect(() => {
-    if (!editor) {
-      console.log("Editor is not ready yet");
+    if (!collection || !editor) {
+      logger.warn("😶 note-display: Editor or collection is not ready yet");
       return;
     }
 
+    if (selectNote.selected !== null) {
+      logger.debug("😶 note-display-currentNote.selected", selectNote.selected);
+      const newDoc = collection.docs.get(selectNote.selected);
+      if (newDoc) editor.doc = newDoc;
+    } else {
+      setSelectNote({
+        selected: editor.doc.id,
+      });
+    }
     const updateDoc = () => {
-      console.log("updateDoc", editor.doc, editor.doc.meta?.title);
       setDoc(editor.doc);
     };
-    const updateRedoAndUndo = () => {
-      setCanRedo(editor.doc.canRedo);
-      setCanUndo(editor.doc.canUndo);
-    };
     const disposable = [
-      editor.doc.slots.blockUpdated.on(updateDoc),
-      // collection.slots.docUpdated.on(updateDoc),
-      editor.doc.slots.historyUpdated.on(updateRedoAndUndo),
+      // editor.doc.slots.blockUpdated.on(() => {
+      //   logger.debug("😶 note-display-EVENT: doc.slots.blockUpdated");
+      //   updateDoc();
+      // }),
+      collection.slots.docUpdated.on(() => {
+        logger.debug("😶 note-display-EVENT: collection.slots.docUpdated");
+        updateDoc();
+      }),
+      editor.slots.docLinkClicked.on((docId) => {
+        logger.debug(
+          "😶 note-display-EVENT: editor.slots.docLinkClicked",
+          docId,
+        );
+        updateDoc();
+        if (docId) setSelectNote({ selected: docId.docId });
+      }),
     ];
 
     return () => {
       disposable.forEach((d) => d.dispose());
     };
-  }, [editor]);
+  }, [editor, collection, selectNote, setSelectNote]);
 
   return (
     <div className="flex h-full flex-col flex-grow">
@@ -55,7 +70,6 @@ export default function NoteDisplay() {
                 <Button
                   size="icon"
                   variant="ghost"
-                  disabled={!canUndo}
                   onClick={() => {
                     console.log("undo");
                     doc?.undo();
@@ -63,12 +77,7 @@ export default function NoteDisplay() {
                 >
                   <Undo2 className="w-4 h-4" />
                 </Button>
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  disabled={!canRedo}
-                  onClick={() => doc?.redo()}
-                >
+                <Button size="icon" variant="ghost" onClick={() => doc?.redo()}>
                   <Redo2 className="w-4 h-4" />
                 </Button>
               </div>
@@ -94,8 +103,8 @@ export default function NoteDisplay() {
           className={cn(
             "dark:bg-[#141414]",
             !isPage
-              ? "h-[calc(100dvh-3rem-52px)]"
-              : "min-h-[calc(100dvh-3rem-52px)]",
+              ? "h-[calc(100dvh-3rem-52.8px)]"
+              : "min-h-[calc(100dvh-3rem-52.8px)]",
           )}
         />
         <ScrollBar orientation="vertical" />

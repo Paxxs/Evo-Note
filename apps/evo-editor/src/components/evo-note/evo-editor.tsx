@@ -34,6 +34,7 @@ import ControlButton from "./ui/control-button";
 import { useIsWailsEnvironment } from "@/hooks/use-is-wails-environment";
 import { toast } from "sonner";
 import { createDocBlock } from "./core/yjs-editor/editor/utils";
+import { useNote } from "./useNote";
 
 interface EvoEditorProps {
   defaultLayout?: number[];
@@ -63,6 +64,7 @@ export default function EvoEditor({
 
   const isWails = useIsWailsEnvironment();
   const { editor } = useEditor()!;
+  const [_, setSelectNote] = useNote();
 
   return (
     <>
@@ -284,6 +286,9 @@ export default function EvoEditor({
                     editor.doc.load();
                     editor.doc.resetHistory();
                     toast.success("New note created");
+                    setSelectNote({
+                      selected: editor.doc.id,
+                    });
                   }
                 }}
               />

@@ -6,7 +6,7 @@ import ContextMenu from "./context-menu";
 import { Tag } from "@blocksuite/store";
 import { useEditor } from "../core/yjs-editor/components/EditorProvider";
 import logger from "@/lib/logger";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 
 // 定义单个标签的类型
 // export type Tag = {
@@ -19,7 +19,7 @@ import { useEffect, useState } from "react";
 export type NoteItemType = {
   id: string;
   name: string;
-  brief: string;
+  brief: string | string[];
   createdTime: number | string;
   lastModified: number | string;
   tags: Tag[]; // 不用自定义的了
@@ -28,11 +28,17 @@ export type NoteItemType = {
 interface FileListProps {
   className?: string;
   files: NoteItemType[];
+  disableContextMenu?: boolean;
 }
 
-export function FileList({ className, files }: FileListProps) {
+export function FileList({
+  className,
+  files,
+  disableContextMenu = false,
+}: FileListProps) {
   const [selectNote, setSelectNote] = useNote();
   const { collection, editor } = useEditor()!;
+  const NoteItem = memo(NoteItemNode);
   // console.log("note:", files);
   return (
     <>
@@ -41,7 +47,9 @@ export function FileList({ className, files }: FileListProps) {
       > */}
       <div className={cn("flex flex-col gap-2 p-4 pt-0 ", className)}>
         {files.map((note, index) => {
-          return (
+          return disableContextMenu ? (
+            <NoteItem note={note} />
+          ) : (
             <ContextMenu
               key={index}
               items={[
@@ -98,7 +106,7 @@ export function FileList({ className, files }: FileListProps) {
                 },
               ]}
             >
-              <NoteItemNode note={note} />
+              <NoteItem note={note} />
             </ContextMenu>
           );
         })}
@@ -117,9 +125,6 @@ function NoteItemNode({ note }: { note: NoteItemType }) {
     if (editor) {
       setSelected(editor.doc.id === note.id);
     } else {
-      logger.debug(
-        "😶 NoteItemNode(when set selected variable): editor is not ready yet",
-      );
       setSelected(selectNote.selected === note.id);
     }
   }, [editor, selectNote, note]);
@@ -153,7 +158,11 @@ function NoteItemNode({ note }: { note: NoteItemType }) {
           selected && "font-medium",
         )}
       >
-        {note.brief.substring(0, 300)}
+        {typeof note.brief === "string"
+          ? note.brief.substring(0, 300) // 如果是文章，就截取前300个字符
+          : note.brief.map((item, index) => {
+              return <li key={index}>{item.substring(0, 100)}</li>; // 搜索结果才这样渲染
+            })}
       </div>
       <div className="flex flex-row gap-2 items-center w-full flex-nowrap">
         <div className="space-x-1 whitespace-pre">

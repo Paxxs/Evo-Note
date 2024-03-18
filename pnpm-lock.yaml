@@ -53,6 +53,9 @@ importers:
       "@blocksuite/store":
         specifier: 0.13.0-canary-202403120738-e15d583
         version: 0.13.0-canary-202403120738-e15d583(lit@3.1.2)(yjs@13.6.14)
+      "@hookform/resolvers":
+        specifier: ^3.3.4
+        version: 3.3.4(react-hook-form@7.51.1)
       "@radix-ui/react-context-menu":
         specifier: ^2.1.5
         version: 2.1.5(@types/react-dom@18.2.19)(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0)
@@ -65,6 +68,9 @@ importers:
       "@radix-ui/react-icons":
         specifier: ^1.3.0
         version: 1.3.0(react@18.2.0)
+      "@radix-ui/react-label":
+        specifier: ^2.0.2
+        version: 2.0.2(@types/react-dom@18.2.19)(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0)
       "@radix-ui/react-menubar":
         specifier: ^1.0.4
         version: 1.0.4(@types/react-dom@18.2.19)(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0)
@@ -80,6 +86,9 @@ importers:
       "@radix-ui/react-slot":
         specifier: ^1.0.2
         version: 1.0.2(@types/react@18.2.60)(react@18.2.0)
+      "@radix-ui/react-switch":
+        specifier: ^1.0.3
+        version: 1.0.3(@types/react-dom@18.2.19)(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0)
       "@radix-ui/react-tabs":
         specifier: ^1.0.4
         version: 1.0.4(@types/react-dom@18.2.19)(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0)
@@ -96,8 +105,8 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1
       jotai:
-        specifier: ^2.7.0
-        version: 2.7.0(@types/react@18.2.60)(react@18.2.0)
+        specifier: ^2.7.1
+        version: 2.7.1(@types/react@18.2.60)(react@18.2.0)
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
@@ -119,6 +128,9 @@ importers:
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
+      react-hook-form:
+        specifier: ^7.51.1
+        version: 7.51.1(react@18.2.0)
       react-resizable-panels:
         specifier: ^2.0.13
         version: 2.0.13(react-dom@18.2.0)(react@18.2.0)
@@ -137,6 +149,9 @@ importers:
       y-indexeddb:
         specifier: ^9.0.12
         version: 9.0.12(yjs@13.6.14)
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
     devDependencies:
       "@tailwindcss/typography":
         specifier: ^0.5.10
@@ -1031,6 +1046,17 @@ packages:
       }
     dev: true
 
+  /@hookform/resolvers@3.3.4(react-hook-form@7.51.1):
+    resolution:
+      {
+        integrity: sha512-o5cgpGOuJYrd+iMKvkttOclgwRW86EsWJZZRC23prf0uU2i48Htq4PuT73AVb9ionFyZrwYEITuOFGF+BydEtQ==,
+      }
+    peerDependencies:
+      react-hook-form: ^7.0.0
+    dependencies:
+      react-hook-form: 7.51.1(react@18.2.0)
+    dev: false
+
   /@humanwhocodes/config-array@0.11.14:
     resolution:
       {
@@ -1862,6 +1888,30 @@ packages:
       react: 18.2.0
     dev: false
 
+  /@radix-ui/react-label@2.0.2(@types/react-dom@18.2.19)(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0):
+    resolution:
+      {
+        integrity: sha512-N5ehvlM7qoTLx7nWPodsPYPgMzA5WM8zZChQg8nyFJKnDO5WHdba1vv5/H6IO5LtJMfD2Q3wh1qHFGNtK0w3bQ==,
+      }
+    peerDependencies:
+      "@types/react": "*"
+      "@types/react-dom": "*"
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
+    peerDependenciesMeta:
+      "@types/react":
+        optional: true
+      "@types/react-dom":
+        optional: true
+    dependencies:
+      "@babel/runtime": 7.24.0
+      "@radix-ui/react-primitive": 1.0.3(@types/react-dom@18.2.19)(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0)
+      "@types/react": 18.2.60
+      "@types/react-dom": 18.2.19
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
   /@radix-ui/react-menu@2.0.6(@types/react-dom@18.2.19)(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0):
     resolution:
       {
@@ -2249,6 +2299,36 @@ packages:
       "@radix-ui/react-compose-refs": 1.0.1(@types/react@18.2.60)(react@18.2.0)
       "@types/react": 18.2.60
       react: 18.2.0
+    dev: false
+
+  /@radix-ui/react-switch@1.0.3(@types/react-dom@18.2.19)(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0):
+    resolution:
+      {
+        integrity: sha512-mxm87F88HyHztsI7N+ZUmEoARGkC22YVW5CaC+Byc+HRpuvCrOBPTAnXgf+tZ/7i0Sg/eOePGdMhUKhPaQEqow==,
+      }
+    peerDependencies:
+      "@types/react": "*"
+      "@types/react-dom": "*"
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
+    peerDependenciesMeta:
+      "@types/react":
+        optional: true
+      "@types/react-dom":
+        optional: true
+    dependencies:
+      "@babel/runtime": 7.24.0
+      "@radix-ui/primitive": 1.0.1
+      "@radix-ui/react-compose-refs": 1.0.1(@types/react@18.2.60)(react@18.2.0)
+      "@radix-ui/react-context": 1.0.1(@types/react@18.2.60)(react@18.2.0)
+      "@radix-ui/react-primitive": 1.0.3(@types/react-dom@18.2.19)(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0)
+      "@radix-ui/react-use-controllable-state": 1.0.1(@types/react@18.2.60)(react@18.2.0)
+      "@radix-ui/react-use-previous": 1.0.1(@types/react@18.2.60)(react@18.2.0)
+      "@radix-ui/react-use-size": 1.0.1(@types/react@18.2.60)(react@18.2.0)
+      "@types/react": 18.2.60
+      "@types/react-dom": 18.2.19
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /@radix-ui/react-tabs@1.0.4(@types/react-dom@18.2.19)(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0):
@@ -7202,6 +7282,25 @@ packages:
       react: 18.2.0
     dev: false
 
+  /jotai@2.7.1(@types/react@18.2.60)(react@18.2.0):
+    resolution:
+      {
+        integrity: sha512-bsaTPn02nFgWNP6cBtg/htZhCu4s0wxqoklRHePp6l/vlsypR9eLn7diRliwXYWMXDpPvW/LLA2afI8vwgFFaw==,
+      }
+    engines: { node: ">=12.20.0" }
+    peerDependencies:
+      "@types/react": ">=17.0.0"
+      react: ">=17.0.0"
+    peerDependenciesMeta:
+      "@types/react":
+        optional: true
+      react:
+        optional: true
+    dependencies:
+      "@types/react": 18.2.60
+      react: 18.2.0
+    dev: false
+
   /joycon@3.1.1:
     resolution:
       {
@@ -10160,6 +10259,18 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
+    dev: false
+
+  /react-hook-form@7.51.1(react@18.2.0):
+    resolution:
+      {
+        integrity: sha512-ifnBjl+kW0ksINHd+8C/Gp6a4eZOdWyvRv0UBaByShwU8JbVx5hTcTWEcd5VdybvmPTATkVVXk9npXArHmo56w==,
+      }
+    engines: { node: ">=12.22.0" }
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /react-icons@4.12.0(react@18.2.0):

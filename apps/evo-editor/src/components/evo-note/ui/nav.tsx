@@ -1,3 +1,4 @@
+"use Client";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
@@ -9,6 +10,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useConfig } from "@/hooks/use-config";
+import { type ReactNode, useEffect } from "react";
 
 interface NavProps {
   isCollapsed: boolean;
@@ -31,6 +34,9 @@ export function Nav({
   className,
   onClick,
 }: NavProps) {
+  const [config] = useConfig();
+  // 导航栏在夜间模式下是否使用主题自带的 accent 颜色
+  // 默认不使用，因为刺眼
   const NavLink = ({
     keyValue,
     href,
@@ -43,7 +49,7 @@ export function Nav({
     href?: string;
     className?: string;
     key?: string;
-    children?: React.ReactNode;
+    children?: ReactNode;
     onClick?: (keyValue: string) => void;
   }) => {
     const Tag = href ? Link : "a";
@@ -86,6 +92,7 @@ export function Nav({
                         // "h-10"
                         "h-11 w-11",
                         keyValue === link.keyValue &&
+                          !config.navDarkAccent &&
                           "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white",
                       )}
                       onClick={onClick}
@@ -107,6 +114,7 @@ export function Nav({
                         "justify-start",
                         "h-11 pl-3",
                         keyValue === link.keyValue &&
+                          !config.navDarkAccent &&
                           "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
                       )}
                       onClick={onClick}

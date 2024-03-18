@@ -2,6 +2,9 @@
 
 import { type NoteItemType } from "@/components/evo-note/ui/file-list";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
+import { ThemeSwitcher } from "@/components/ui/theme-switcher";
+import { useConfig } from "@/hooks/use-config";
 import useLocalStorage from "@/hooks/use-local-storage";
 import {
   type Dispatch,
@@ -29,12 +32,13 @@ export default function Provider({ children }: { children: ReactNode }) {
     "evo__notes",
     [],
   ) as [NoteItemType[], Dispatch<SetStateAction<NoteItemType[]>>];
+  const [config] = useConfig();
   return (
     <ThemeProvider
       attribute="class"
       defaultTheme="system"
       enableSystem
-      disableTransitionOnChange
+      // disableTransitionOnChange
     >
       <AppContext.Provider
         value={{
@@ -42,7 +46,33 @@ export default function Provider({ children }: { children: ReactNode }) {
           setNotes,
         }}
       >
-        {children}
+        <div
+          vaul-drawer-wrapper=""
+          onContextMenu={(e) => {
+            // 首先，将e.target断言为HTMLElement
+            const targetElement = e.target as HTMLElement;
+            // Allow context menu on any input
+            if (targetElement) {
+              if (["INPUT", "TEXTAREA"].includes(targetElement.tagName)) {
+                return;
+              }
+              if (targetElement.parentElement?.tagName === "V-TEXT") {
+                // block suit stuff
+                return;
+              }
+              if (window.getSelection()?.toString()) {
+                // Allow context menu on any text selection
+                return;
+              }
+            }
+            // Disable the context menu otherwise
+            e.preventDefault();
+          }}
+        >
+          {children}
+          <Toaster richColors duration={4000} className="select-none" />
+        </div>
+        <ThemeSwitcher />
       </AppContext.Provider>
     </ThemeProvider>
   );

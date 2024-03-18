@@ -22,8 +22,8 @@ export default function NiceDraw({
 }: NiceDrawProps) {
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="h-[80%]">
-        <div className="mx-auto w-full max-w-sm">
+      <DrawerContent className="h-[90%]">
+        <div className="mx-auto w-full max-w-lg">
           <DrawerHeader>
             <DrawerTitle>{title}</DrawerTitle>
             {description && <DrawerTitle>{description}</DrawerTitle>}

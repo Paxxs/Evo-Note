@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"fmt"
+	"v2note/internal/server"
 )
 
 // App struct
@@ -19,6 +20,7 @@ func NewApp() *App {
 func (a *App) startup(ctx context.Context) {
 	// Perform your setup here
 	a.ctx = ctx
+	server.Start(assets, true)
 }
 
 // domReady is called after front-end resources have been loaded
@@ -36,6 +38,7 @@ func (a *App) beforeClose(ctx context.Context) (prevent bool) {
 // shutdown is called at application termination
 func (a *App) shutdown(ctx context.Context) {
 	// Perform your teardown here
+	server.Stop()
 }
 
 // Greet returns a greeting for the given name

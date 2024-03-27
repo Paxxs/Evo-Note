@@ -1,11 +1,10 @@
 /*
 Copyright © 2024 SuperPaxos <superpaxxs@hotmail.com>
-
 */
 package cmd
 
 import (
-	"fmt"
+	"v2note/internal/server"
 
 	"github.com/spf13/cobra"
 )
@@ -14,10 +13,10 @@ import (
 var serveCmd = &cobra.Command{
 	Use:   "serve",
 	Short: "Run V2Note in server mode",
-    Long: `The serve command launches V2Note as a backend service on a server, enabling access from any location via a web browser.
+	Long: `The serve command launches V2Note as a backend service on a server, enabling access from any location via a web browser.
 It facilitates future cloud synchronization and real-time collaborative editing, leveraging CRDT technology for data consistency.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("serve called")
+		server.Start(embedFiles, false)
 	},
 }
 

@@ -15,6 +15,7 @@ func (r *Router) Init(db *gorm.DB) {
 	r.DB = db
 	r.Echo = echo.New()
 	r.Echo.HideBanner = true
+	r.Echo.HidePort = true
 }
 
 func (r *Router) RegisterMiddleware(middleware ...echo.MiddlewareFunc) {

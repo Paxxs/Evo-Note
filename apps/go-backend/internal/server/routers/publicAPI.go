@@ -1,6 +1,9 @@
 package routers
 
 import (
+	"v2note/internal/server/middlewares"
+	"v2note/pkg/logger"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"gorm.io/gorm"
@@ -21,7 +24,9 @@ func InitPublicAPI(db *gorm.DB) *echo.Echo {
 }
 
 func registerPublicAPIMiddleware() {
-	publicAPI.RegisterMiddleware(middleware.Recover())
+	publicAPI.RegisterMiddleware(middleware.Recover(), middlewares.ZapLogger(
+		logger.NewModule("publicAPI").L(),
+	))
 }
 
 func registerPublicAPIRouter() {

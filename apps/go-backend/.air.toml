@@ -1,0 +1,81 @@
+root = "."
+testdata_dir = "testdata"
+tmp_dir = "tmp"
+
+[build]
+# Add additional arguments when running binary (bin/full_bin). Will run './tmp/main hello world'.
+args_bin = ["serve"]
+bin = "build/bin/temp.exe"
+# Just plain old shell command. You could use `make` as well.
+cmd = "go build -o ./build/bin/temp.exe ."
+delay = 1000
+# Directories to exclude from watching.
+exclude_dir = [
+  "assets",
+  "tmp",
+  "vendor",
+  "testdata",
+  "dist",
+  "build",
+  "scripts",
+  "backend-impl-test",
+]
+# Files to exclude from watching.
+exclude_file = []
+# Regular expressions for files to exclude from watching.
+exclude_regex = ["_test.go"]
+# Whether to exclude unchanged files in each build.
+exclude_unchanged = false
+# Whether to follow symbolic links.
+follow_symlink = false
+# The binary to run after building.
+full_bin = ""
+# Directories to include in watching.
+include_dir = []
+# File extensions to include in watching.
+include_ext = ["go", "tpl", "tmpl", "html"]
+# Files to include in watching.
+include_file = []
+# Delay before killing the running binary.
+kill_delay = "0s"
+# Log file for build errors.
+log = "build-errors.log"
+# Whether to use polling for file changes.
+poll = false
+# Polling interval for file changes.
+poll_interval = 0
+# Command to run after the main command.
+post_cmd = []
+# Command to run before the main command.
+pre_cmd = []
+# Whether to rerun the command on file changes.
+rerun = false
+# Delay before rerunning the command.
+rerun_delay = 500
+# Send Interrupt signal before killing process (windows does not support this feature)
+send_interrupt = false
+# Whether to stop on compilation error.
+stop_on_error = true
+
+[color]
+app = ""
+build = "yellow"
+main = "magenta"
+runner = "green"
+watcher = "cyan"
+
+[log]
+# Whether to log only main process output.
+main_only = false
+# Whether to log time with each log entry.
+time = false
+
+[misc]
+# Whether to clean up on exit.
+clean_on_exit = false
+
+[screen]
+# Whether to clear the screen on rebuild.
+clear_on_rebuild = false
+# Whether to keep the scroll position on rebuild.
+keep_scroll = true

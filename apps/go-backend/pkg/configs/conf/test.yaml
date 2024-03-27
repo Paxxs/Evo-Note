@@ -1,0 +1,9 @@
+log:
+  level: debug
+server:
+  port: 8080
+  clean_old_data_hours: 2
+  max_job: 10
+  read_timeout: 0
+  run_mode: debug
+  write_timeout: 0

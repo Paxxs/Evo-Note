@@ -2,7 +2,7 @@ package server
 
 import (
 	"embed"
-	"fmt"
+	// "fmt"
 	"io/fs"
 	"net/http"
 
@@ -16,7 +16,8 @@ func loadFrontendStatic(e *echo.Echo) {
 
 func getFileSystem(embedFiles *embed.FS) http.FileSystem {
 
-	fmt.Println("using server mode")
+	mylog.Info("using server mode, load frontend static.")
+	// fmt.Println("using server mode")
 	distFs, err := fs.Sub(embedFiles, "dist")
 	if err != nil {
 		panic(err)

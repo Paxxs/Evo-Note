@@ -14,6 +14,7 @@ import (
 
 var publicAPI *Router
 
+// InitPublicAPI initializes the public API router.
 func InitPublicAPI(db *gorm.DB) *echo.Echo {
 	publicAPI = &Router{}
 	publicAPI.Name = "publicAPI"
@@ -34,15 +35,15 @@ func registerPublicAPIMiddleware() {
 
 func registerPublicAPIRouter(db *gorm.DB) {
 
-	// collectionRepo := repositories.NewCollectionRepository(db)
-	// collectionService := services.NewCollectionService(collectionRepo)
-	// collectionHandler := handler.NewCollectionHandler(collectionService)
+	collectionRepo := repositories.NewCollectionRepository(db)
+	collectionService := services.NewCollectionService(collectionRepo)
+	collectionHandler := handler.NewCollectionHandler(collectionService)
 
-	// docHandler := handler.NewDocHandler(
-	// 	services.NewDocService(
-	// 		repositories.NewDocRepository(db),
-	// 	),
-	// )
+	docHandler := handler.NewDocHandler(
+		services.NewDocService(
+			repositories.NewDocRepository(db),
+		),
+	)
 
 	blobHandler := handler.NewBlobHandler(
 		services.NewBlobService(
@@ -52,17 +53,11 @@ func registerPublicAPIRouter(db *gorm.DB) {
 
 	v1Group := publicAPI.Echo.Group("/api/v1")
 
-	v1Group.GET("/collection", func(c echo.Context) error {
-		return nil
-	})
+	v1Group.GET("/collection", collectionHandler.Index)
 	collectionGroup := v1Group.Group("/collection/:id")
 	{
-		replaceMe := func(c echo.Context) error {
-			return nil
-		}
-
-		collectionGroup.PUT("", replaceMe)
-		collectionGroup.DELETE("", replaceMe)
+		collectionGroup.PUT("", collectionHandler.Put)
+		collectionGroup.DELETE("", collectionHandler.Delete)
 
 		blobGroup := collectionGroup.Group("/blob")
 		{
@@ -74,10 +69,10 @@ func registerPublicAPIRouter(db *gorm.DB) {
 
 		docGroup := collectionGroup.Group("/doc")
 		{
-			docGroup.GET("/:key", replaceMe)
-			docGroup.GET("", replaceMe)
-			docGroup.PUT("/:key", replaceMe)
-			docGroup.DELETE("/:key", replaceMe)
+			docGroup.GET("/:key", docHandler.Get)
+			docGroup.GET("", docHandler.Index)
+			docGroup.PUT("/:key", docHandler.Put)
+			docGroup.DELETE("/:key", docHandler.Delete)
 		}
 
 	}

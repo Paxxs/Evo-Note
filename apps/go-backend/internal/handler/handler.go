@@ -2,26 +2,17 @@ package handler
 
 import "v2note/internal/services"
 
+// BlobHandler handles blob requests.
 type BlobHandler struct {
 	service services.BlobService
 }
 
+// DocHandler handles doc requests.
 type DocHandler struct {
 	service services.DocService
 }
 
-func NewDocHandler(service services.DocService) *DocHandler {
-	return &DocHandler{service: service}
-}
-
+// CollectionHandler handles collection requests.
 type CollectionHandler struct {
 	service services.CollectionService
-}
-
-func NewBlobHandler(service services.BlobService) *BlobHandler {
-	return &BlobHandler{service: service}
-}
-
-func NewCollectionHandler(service services.CollectionService) *CollectionHandler {
-	return &CollectionHandler{service: service}
 }

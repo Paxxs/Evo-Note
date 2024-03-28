@@ -3,10 +3,17 @@ package handler
 import (
 	"io"
 	"net/http"
+	"v2note/internal/services"
 
 	"github.com/labstack/echo/v4"
 )
 
+// NewBlobHandler creates a new instance of BlobHandler.
+func NewBlobHandler(service services.BlobService) *BlobHandler {
+	return &BlobHandler{service: service}
+}
+
+// Get handles GET requests to retrieve a blob from the database by ID and key.
 func (bh *BlobHandler) Get(c echo.Context) error {
 	id := c.Param("id")
 	key := c.Param("key")
@@ -19,6 +26,7 @@ func (bh *BlobHandler) Get(c echo.Context) error {
 	return c.Blob(http.StatusOK, "application/octet-stream", data)
 }
 
+// Put handles the PUT requests to update or create a blob in the database.
 func (bh *BlobHandler) Put(c echo.Context) error {
 	id := c.Param("id")
 	key := c.Param("key")
@@ -33,6 +41,8 @@ func (bh *BlobHandler) Put(c echo.Context) error {
 	}
 	return c.NoContent(http.StatusOK)
 }
+
+// Delete handles DELETE requests to remove a blob by ID and key in the database.
 func (bh *BlobHandler) Delete(c echo.Context) error {
 	id := c.Param("id")
 	key := c.Param("key")
@@ -42,6 +52,7 @@ func (bh *BlobHandler) Delete(c echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+// Index handles GET requests to list all blob ids in the database by collection id.
 func (bh *BlobHandler) Index(c echo.Context) error {
 	id := c.Param("id")
 	keys, err := bh.service.IndexBlobIDs(id)

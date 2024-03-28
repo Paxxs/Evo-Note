@@ -1,7 +1,10 @@
 package routers
 
 import (
+	"v2note/internal/handler"
+	"v2note/internal/repositories"
 	"v2note/internal/server/middlewares"
+	"v2note/internal/services"
 	"v2note/pkg/logger"
 
 	"github.com/labstack/echo/v4"
@@ -19,7 +22,7 @@ func InitPublicAPI(db *gorm.DB) *echo.Echo {
 	// 注册中间件
 	registerPublicAPIMiddleware()
 	// 注册路由
-	registerPublicAPIRouter()
+	registerPublicAPIRouter(db)
 	return publicAPI.Echo
 }
 
@@ -29,7 +32,24 @@ func registerPublicAPIMiddleware() {
 	))
 }
 
-func registerPublicAPIRouter() {
+func registerPublicAPIRouter(db *gorm.DB) {
+
+	// collectionRepo := repositories.NewCollectionRepository(db)
+	// collectionService := services.NewCollectionService(collectionRepo)
+	// collectionHandler := handler.NewCollectionHandler(collectionService)
+
+	// docHandler := handler.NewDocHandler(
+	// 	services.NewDocService(
+	// 		repositories.NewDocRepository(db),
+	// 	),
+	// )
+
+	blobHandler := handler.NewBlobHandler(
+		services.NewBlobService(
+			repositories.NewBlobRepository(db),
+		),
+	)
+
 	v1Group := publicAPI.Echo.Group("/api/v1")
 
 	v1Group.GET("/collection", func(c echo.Context) error {
@@ -46,10 +66,10 @@ func registerPublicAPIRouter() {
 
 		blobGroup := collectionGroup.Group("/blob")
 		{
-			blobGroup.GET("/:key", replaceMe)
-			blobGroup.GET("", replaceMe)
-			blobGroup.PUT("/:key", replaceMe)
-			blobGroup.DELETE("/:key", replaceMe)
+			blobGroup.GET("/:key", blobHandler.Get)
+			blobGroup.GET("", blobHandler.Index)
+			blobGroup.PUT("/:key", blobHandler.Put)
+			blobGroup.DELETE("/:key", blobHandler.Delete)
 		}
 
 		docGroup := collectionGroup.Group("/doc")

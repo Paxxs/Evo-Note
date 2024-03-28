@@ -21,8 +21,8 @@ func (h *BlobHandler) GetBlob(c echo.Context) error {
 	return c.Blob(http.StatusOK, "application/octet-stream", blob.Data)
 }
 
-// PutBlob handles the HTTP PUT request to store a blob in the database.
-func (h *BlobHandler) PutBlob(c echo.Context) error {
+// Put handles the HTTP PUT request to store a blob in the database.
+func (h *BlobHandler) Put(c echo.Context) error {
 	id := c.Param("id")
 	key := c.Param("key")
 

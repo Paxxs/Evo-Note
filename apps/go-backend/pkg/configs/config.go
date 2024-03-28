@@ -55,6 +55,7 @@ func NewConfig() *Config {
 	return &Config{
 		Server: server{
 			Port: "4115",
+			Host: "0.0.0.0",
 		},
 		Log: log{},
 		// DataBase: database{

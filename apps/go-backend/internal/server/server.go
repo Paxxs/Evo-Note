@@ -34,9 +34,11 @@ func Start(files *embed.FS, webviewMode bool) {
 	e = routers.InitPublicAPI(db)
 
 	// load static files
+	listenAddr := "127.0.0.1" // 默认不触发防火墙，只监听本机
 	if !webviewMode {
 		loadFrontendStatic(e)
 		e.HidePort = false
+		listenAddr = configs.Server.Host // 如果不是 GUI 模式，则使用配置中的 host，默认是 0.0.0.0，会触发防火墙。
 	}
 
 	// windows 上这个信号应该不起作用的
@@ -46,9 +48,9 @@ func Start(files *embed.FS, webviewMode bool) {
 	// Start server
 	go func() {
 		if !webviewMode {
-			mylog.Info(fmt.Sprintf("starting server on localhost:%s", configs.Server.Port))
+			mylog.Info(fmt.Sprintf("starting server on %s:%s", listenAddr, configs.Server.Port))
 		}
-		if err := e.Start(":" + configs.Server.Port); err != nil && err != http.ErrServerClosed {
+		if err := e.Start(listenAddr + ":" + configs.Server.Port); err != nil && err != http.ErrServerClosed {
 			mylog.Fatal("shutting down the server", zap.Error(err))
 		}
 

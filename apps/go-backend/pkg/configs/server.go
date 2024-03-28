@@ -5,6 +5,7 @@ package configs
 // server 结构体包含了应用服务器的配置信息。
 type server struct {
 	Port string `mapstructure:"PORT" yaml:"port"` // Port 定义服务器监听的端口号。
+	Host string `mapstructure:"HOST" yaml:"host"` // Host 定义服务器监听的主机地址。
 	// MaxJob            int    `mapstructure:"MAX_JOB" yaml:"max_job"`                           // MaxJob 定义服务器能够同时处理的最大任务数量。
 	// CleanOldDataHours int    `mapstructure:"CLEAN_OLD_DATA_HOURS" yaml:"clean_old_data_hours"` // CleanOldDataHours 定义了多少小时后旧数据应该被清理。
 	// RunMode           string `mapstructure:"RUN_MODE" yaml:"run_mode"`                         // RunMode 定义了应用的运行模式（如开发模式或生产模式）。

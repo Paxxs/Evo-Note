@@ -43,3 +43,8 @@ func (cs *CollectionServiceImpl) IndexCollection() (map[string]string, error) {
 	}
 	return collectionMap, nil
 }
+
+// DeleteCollection deletes the collection specified by the collectionID.
+func (cs *CollectionServiceImpl) DeleteCollection(collectionID string) error {
+	return cs.repo.DeleteCollection(collectionID)
+}

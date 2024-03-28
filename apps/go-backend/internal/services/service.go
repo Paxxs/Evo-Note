@@ -21,4 +21,5 @@ type CollectionService interface {
 	CreateCollection(collectionID, name string) error
 	GetCollectionName(collectionID string) (string, error)
 	IndexCollection() (map[string]string, error)
+	DeleteCollection(collectionID string) error
 }

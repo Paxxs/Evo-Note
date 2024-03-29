@@ -4,7 +4,6 @@ import { type NoteItemType } from "@/components/evo-note/ui/file-list";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeSwitcher } from "@/components/ui/theme-switcher";
-import { useConfig } from "@/hooks/use-config";
 import useLocalStorage from "@/hooks/use-local-storage";
 import {
   type Dispatch,
@@ -13,6 +12,7 @@ import {
   createContext,
   useContext,
 } from "react";
+import { Provider as JotaiProvider, createStore } from "jotai";
 
 // 定义我们的应用上下文
 const AppContext = createContext<{
@@ -32,7 +32,7 @@ export default function Provider({ children }: { children: ReactNode }) {
     "evo__notes",
     [],
   ) as [NoteItemType[], Dispatch<SetStateAction<NoteItemType[]>>];
-  const [config] = useConfig();
+  const store = createStore();
   return (
     <ThemeProvider
       attribute="class"
@@ -40,40 +40,42 @@ export default function Provider({ children }: { children: ReactNode }) {
       enableSystem
       // disableTransitionOnChange
     >
-      <AppContext.Provider
-        value={{
-          notes,
-          setNotes,
-        }}
-      >
-        <div
-          vaul-drawer-wrapper=""
-          onContextMenu={(e) => {
-            // 首先，将e.target断言为HTMLElement
-            const targetElement = e.target as HTMLElement;
-            // Allow context menu on any input
-            if (targetElement) {
-              if (["INPUT", "TEXTAREA"].includes(targetElement.tagName)) {
-                return;
-              }
-              if (targetElement.parentElement?.tagName === "V-TEXT") {
-                // block suit stuff
-                return;
-              }
-              if (window.getSelection()?.toString()) {
-                // Allow context menu on any text selection
-                return;
-              }
-            }
-            // Disable the context menu otherwise
-            e.preventDefault();
+      <JotaiProvider store={store}>
+        <AppContext.Provider
+          value={{
+            notes,
+            setNotes,
           }}
         >
-          {children}
-          <Toaster richColors duration={4000} className="select-none" />
-        </div>
-        <ThemeSwitcher />
-      </AppContext.Provider>
+          <div
+            vaul-drawer-wrapper=""
+            onContextMenu={(e) => {
+              // 首先，将e.target断言为HTMLElement
+              const targetElement = e.target as HTMLElement;
+              // Allow context menu on any input
+              if (targetElement) {
+                if (["INPUT", "TEXTAREA"].includes(targetElement.tagName)) {
+                  return;
+                }
+                if (targetElement.parentElement?.tagName === "V-TEXT") {
+                  // block suit stuff
+                  return;
+                }
+                if (window.getSelection()?.toString()) {
+                  // Allow context menu on any text selection
+                  return;
+                }
+              }
+              // Disable the context menu otherwise
+              e.preventDefault();
+            }}
+          >
+            {children}
+            <Toaster richColors duration={4000} className="select-none" />
+          </div>
+          <ThemeSwitcher />
+        </AppContext.Provider>
+      </JotaiProvider>
     </ThemeProvider>
   );
 }

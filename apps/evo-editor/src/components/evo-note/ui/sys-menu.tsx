@@ -10,7 +10,7 @@ import {
   MenubarSubContent,
   MenubarSubTrigger,
 } from "@/components/ui/menubar";
-import React from "react";
+import React, { memo } from "react";
 
 // 定义菜单项类型
 type MenuItemType = "item" | "separator" | "sub";
@@ -49,7 +49,8 @@ interface sysMenuProps {
   items: MenuData[];
 }
 
-export default function SysMenu({ className, items }: sysMenuProps) {
+const SysMenu = memo(function SysMenu({ className, items }: sysMenuProps) {
+  console.log("SysMenu 重新渲染了");
   /**
    * Renders the menu items based on the provided data.
    *
@@ -95,4 +96,6 @@ export default function SysMenu({ className, items }: sysMenuProps) {
       ))}
     </Menubar>
   );
-}
+});
+
+export { SysMenu, type MenuData };

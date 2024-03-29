@@ -1,6 +1,8 @@
 package routers
 
 import (
+	"fmt"
+	"net/url"
 	"v2note/internal/handler"
 	"v2note/internal/repositories"
 	"v2note/internal/server/middlewares"
@@ -31,6 +33,19 @@ func registerPublicAPIMiddleware() {
 	publicAPI.RegisterMiddleware(middleware.Recover(), middlewares.ZapLogger(
 		logger.NewModule("publicAPI").L(),
 	))
+
+	publicAPI.RegisterMiddleware(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{},
+		AllowMethods: []string{echo.GET, echo.HEAD, echo.PUT, echo.PATCH, echo.POST, echo.DELETE},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
+		AllowOriginFunc: func(origin string) (bool, error) {
+			u, err := url.Parse(origin)
+			if err != nil {
+				return false, err
+			}
+			return u.Hostname() == "wails.localhost", nil
+		},
+	}))
 }
 
 func registerPublicAPIRouter(db *gorm.DB) {

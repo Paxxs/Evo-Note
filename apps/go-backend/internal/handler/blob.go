@@ -31,12 +31,13 @@ func (bh *BlobHandler) Put(c echo.Context) error {
 	id := c.Param("id")
 	key := c.Param("key")
 
+	contentType := c.Request().Header.Get("Content-Type")
 	data, err := io.ReadAll(c.Request().Body)
 	if err != nil {
 		return err
 	}
 
-	if err := bh.service.PutBlob(id, key, data); err != nil {
+	if err := bh.service.PutBlob(id, key, data, contentType); err != nil {
 		return err
 	}
 	return c.NoContent(http.StatusOK)

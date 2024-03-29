@@ -24,8 +24,16 @@ func (h *CollectionHandler) Index(c echo.Context) error {
 // Put handles the PUT requests to update or create a collection in the database.
 func (h *CollectionHandler) Put(c echo.Context) error {
 	id := c.Param("id")
-	name := c.Param("name")
-	if err := h.service.CreateCollection(id, name); err != nil {
+
+	type requestBody struct {
+		Name string `json:"name"`
+	}
+
+	var body requestBody
+	if err := c.Bind(&body); err != nil {
+		return err
+	}
+	if err := h.service.CreateCollection(id, body.Name); err != nil {
 		return err
 	}
 	return c.NoContent(http.StatusOK)

@@ -8,10 +8,12 @@ import (
 	"os"
 	"os/signal"
 	"time"
+	"v2note/internal/models"
 	"v2note/internal/server/routers"
 	"v2note/pkg/configs"
 	"v2note/pkg/logger"
 
+	"github.com/glebarez/sqlite"
 	"github.com/labstack/echo/v4"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
@@ -29,6 +31,12 @@ func Start(files *embed.FS, webviewMode bool) {
 	// config path
 	mylog.Debug("config path", zap.String("Path", configs.Path))
 
+	// DB init
+	db, err := gorm.Open(sqlite.Open("v2note.db"), &gorm.Config{})
+	if err != nil {
+		mylog.Fatal("failed to connect database", zap.Error(err))
+	}
+	db.AutoMigrate(&models.Collection{}, &models.Doc{}, &models.Blob{})
 	// Router init
 	embedFiles = files
 	e = routers.InitPublicAPI(db)

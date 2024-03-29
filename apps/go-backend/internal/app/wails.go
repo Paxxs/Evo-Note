@@ -4,6 +4,7 @@ package app
 import (
 	"embed"
 	"log"
+	"v2note/internal/server"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/logger"
@@ -91,14 +92,16 @@ func Run(fs *embed.FS) {
 		},
 		// Linux platform specific options
 		Linux: &linux.Options{
-			Icon: icon,
+			Icon:                icon,
 			WindowIsTranslucent: true,
-			ProgramName: "v2Note",
+			ProgramName:         "v2Note",
 		},
 	}
 
+	server.Start(assets, true)
+
 	err := wails.Run(opts)
-	
+
 	if err != nil {
 		log.Fatal(err)
 	}

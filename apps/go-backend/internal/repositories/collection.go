@@ -22,7 +22,7 @@ func (r *CollectionRepository) CreateCollection(collectionID, name string) error
 		ID:   collectionID,
 		Name: name,
 	}
-	return r.DB.Create(&collection).Error
+	return r.DB.Save(&collection).Error
 }
 
 // GetCollection retrieves a collection by its ID.

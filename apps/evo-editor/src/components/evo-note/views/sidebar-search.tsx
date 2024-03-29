@@ -47,7 +47,7 @@ export default function SideBarSearch() {
               name: doc.meta?.title || "Untitled",
               brief: `${key}: - ${value.content}`,
               createdTime: doc.meta?.createDate || 0,
-              lastModified: doc.history.lastChange || 0,
+              lastModified: doc.history?.lastChange || 0,
               tags: [], // 懒得写了
             };
             filesMap.set(doc.id, newFile);

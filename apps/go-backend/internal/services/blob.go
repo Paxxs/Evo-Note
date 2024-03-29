@@ -25,11 +25,12 @@ func (bs *BlobServiceImpl) GetBlob(collectionID, id string) ([]byte, error) {
 }
 
 // PutBlob stores the blob data with the given collectionID and blob ID.
-func (bs *BlobServiceImpl) PutBlob(collectionID, id string, data []byte) error {
+func (bs *BlobServiceImpl) PutBlob(collectionID, id string, data []byte, contentType string) error {
 	// Create a new blob instance with the provided data
 	blob := &models.Blob{
 		ID:           id,
 		CollectionID: collectionID,
+		ContentType:  contentType,
 		Data:         data,
 	}
 	return bs.repo.PutBlob(blob)

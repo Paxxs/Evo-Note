@@ -28,7 +28,6 @@ const YjsEditorProvider = ({ children }: { children: React.ReactNode }) => {
   const [provider, setProvider] = React.useState<Provider | null>(null);
 
   useEffect(() => {
-    // TODO 初始化编辑器，拿到对象
     initEditor().then(({ editor, provider, collection }) => {
       setEditor(editor);
       setProvider(provider);

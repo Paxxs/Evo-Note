@@ -53,7 +53,7 @@ func (r *BlobRepository) DeleteBlob(collectionID, id string) error {
 func (r *BlobRepository) PutBlob(blob *models.Blob) error {
 	return r.DB.Clauses(clause.OnConflict{
 		Columns:   []clause.Column{{Name: "id"}},
-		DoUpdates: clause.AssignmentColumns([]string{"data"}),
+		DoUpdates: clause.AssignmentColumns([]string{"data", "content_type"}),
 	}).Create(&blob).Error
 }
 

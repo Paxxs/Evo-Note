@@ -46,7 +46,7 @@ export function SideBarNoteList({ files }: { files: NoteItemType[] }) {
         name: doc.meta.title || "Untitled",
         brief: getPagePreviewText(doc),
         createdTime: doc.meta.createDate,
-        lastModified: doc.history.lastChange || doc.meta.createDate,
+        lastModified: doc.history?.lastChange || doc.meta.createDate,
         tags,
       };
     };
@@ -59,6 +59,7 @@ export function SideBarNoteList({ files }: { files: NoteItemType[] }) {
     const updateNotes = (): void => {
       const docsArray = Array.from(collection.docs.values());
       logger.debug("sidebar-note-list: Updating Notes List");
+      logger.debug("docMetas: ", collection.meta.docMetas);
       const notes: NoteItemType[] = docsArray.map((doc) =>
         createNoteFromDoc(doc),
       );
@@ -92,6 +93,8 @@ export function SideBarNoteList({ files }: { files: NoteItemType[] }) {
         updateNotes();
       }),
       collection.slots.docUpdated.on(updateNotes),
+      collection.meta.docMetaUpdated.on(updateNotes),
+      // collection.store.spaces.
     ];
 
     logger.debug("NoteList Component has been mounted");

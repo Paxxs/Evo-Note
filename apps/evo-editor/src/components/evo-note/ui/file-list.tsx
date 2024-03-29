@@ -37,7 +37,7 @@ export function FileList({
   disableContextMenu = false,
 }: FileListProps) {
   const [selectNote, setSelectNote] = useNote();
-  const { collection, editor } = useEditor()!;
+  const { editor, provider } = useEditor()!;
   const NoteItem = memo(NoteItemNode);
   // console.log("note:", files);
   return (
@@ -88,18 +88,33 @@ export function FileList({
                   type: "item",
                   label: "Delete",
                   onClick: (event, item) => {
-                    if (collection && editor) {
-                      collection.removeDoc(note.id);
-                      if (note.id === selectNote.selected) {
-                        logger.debug(
-                          "file-list: 😠 看看是不是相等",
-                          note.id,
-                          editor.doc.id,
-                        );
-                        // 如果删除的是当前选中的，则要处理 editor
-                        const docs = Array.from(collection.docs.values());
-                        editor.doc = docs[0];
-                      }
+                    if (editor && provider) {
+                      // 是否是删除的当前选择的
+                      let isDeleteCurrentNote = selectNote.selected === note.id;
+
+                      provider
+                        .deleteDoc(note.id)
+                        .then((docId) => {
+                          if (docId != "") {
+                            // 文档已经删除
+                            logger.debug(
+                              "file-list: delete OpenClick provider.deleteDoc: docID",
+                              docId,
+                              `current selectNote: ${selectNote.selected} == ${note.id}`,
+                            );
+
+                            // 如果不是当前选择的则不用刷新
+                            if (isDeleteCurrentNote) {
+                              provider.changeEditorDoc(docId, editor);
+                            }
+                          }
+                        })
+                        .catch((err) => {
+                          logger.error(
+                            "file-list: delete OpenClick provider.deleteDoc Error",
+                            err,
+                          );
+                        });
                     }
                     logger.debug("file-list: delete OpenClick", event, item);
                   },
@@ -118,16 +133,12 @@ export function FileList({
 
 function NoteItemNode({ note }: { note: NoteItemType }) {
   const [selectNote, setSelectNote] = useNote();
-  const { editor } = useEditor()!;
+  // const { editor } = useEditor()!;
   const [selected, setSelected] = useState(false);
 
   useEffect(() => {
-    if (editor) {
-      setSelected(editor.doc.id === note.id);
-    } else {
-      setSelected(selectNote.selected === note.id);
-    }
-  }, [editor, selectNote, note]);
+    setSelected(selectNote.selected === note.id);
+  }, [selectNote.selected, note.id]);
 
   return (
     <button

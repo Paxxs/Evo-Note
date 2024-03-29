@@ -3,7 +3,7 @@ package services
 // BlobService defines the interface for blob operations.
 type BlobService interface {
 	GetBlob(collectionID, id string) ([]byte, error)
-	PutBlob(collectionID, id string, data []byte) error
+	PutBlob(collectionID, id string, data []byte, contentType string) error
 	DeleteBlob(collectionID, id string) error
 	IndexBlobIDs(collectionID string) ([]string, error)
 }

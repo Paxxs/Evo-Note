@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"v2note/internal/server"
+	"v2note/pkg/configs"
 )
 
 // App struct
@@ -20,7 +21,6 @@ func NewApp() *App {
 func (a *App) startup(ctx context.Context) {
 	// Perform your setup here
 	a.ctx = ctx
-	server.Start(assets, true)
 }
 
 // domReady is called after front-end resources have been loaded
@@ -44,4 +44,9 @@ func (a *App) shutdown(ctx context.Context) {
 // Greet returns a greeting for the given name
 func (a *App) Greet(name string) string {
 	return fmt.Sprintf("Hello %s, It's show time!", name)
+}
+
+// GetBackendAPIURL returns the backend API URL
+func (a *App) GetBackendAPIURL() string {
+	return fmt.Sprintf("//127.0.0.1:%s", configs.Server.Port)
 }

@@ -14,7 +14,7 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { Separator } from "../ui/separator";
-import SysMenu from "./ui/sys-menu";
+import { SysMenu, type MenuData } from "./ui/sys-menu";
 import { Tabs, TabsContent } from "../ui/tabs";
 import { SideBarNoteList } from "./views/sidebar-note-list";
 import SideBarSearch from "./views/sidebar-search";
@@ -35,6 +35,7 @@ import { useIsWailsEnvironment } from "@/hooks/use-is-wails-environment";
 import { toast } from "sonner";
 import { createDocBlock } from "./core/yjs-editor/editor/utils";
 import { useNote } from "./useNote";
+import { ModeToggle } from "./theme-toggle";
 
 interface EvoEditorProps {
   defaultLayout?: number[];
@@ -49,6 +50,140 @@ type TabsValue =
   | "preference"
   | "settings"
   | "newNote";
+
+const sysMenuItem: MenuData[] = [
+  {
+    title: "File",
+    items: [
+      {
+        type: "item",
+        label: "New Note",
+      },
+      {
+        type: "separator",
+      },
+      {
+        type: "item",
+        label: "Save",
+      },
+      {
+        type: "separator",
+      },
+      {
+        type: "item",
+        label: "Perferences",
+      },
+      {
+        type: "separator",
+      },
+      {
+        type: "item",
+        label: "Exit",
+      },
+    ],
+  },
+  {
+    title: "Edit",
+    items: [
+      {
+        type: "item",
+        label: "Toggle Editor",
+      },
+      {
+        type: "separator",
+      },
+      {
+        type: "item",
+        label: "[dev] Show diagnostic",
+      },
+    ],
+  },
+  {
+    title: "View",
+    items: [
+      {
+        type: "item",
+        label: "Toggle Navbar",
+      },
+      {
+        type: "item",
+        label: "Toggle Sidebar",
+      },
+      {
+        type: "separator",
+      },
+      {
+        type: "item",
+        label: "Toogle Fullscreen",
+      },
+      {
+        type: "separator",
+      },
+      {
+        type: "sub",
+        label: "Appearance",
+        items: [
+          {
+            type: "item",
+            label: "Dark Mode",
+          },
+          {
+            type: "item",
+            label: "Light Mode",
+          },
+          {
+            type: "item",
+            label: "Auto Mode",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    title: "Help",
+    items: [
+      {
+        type: "item",
+        label: "Video Tutorials",
+      },
+      {
+        type: "item",
+        label: "Tips and Tricks",
+      },
+      {
+        type: "separator",
+      },
+      {
+        type: "item",
+        label: "Feedback",
+      },
+      {
+        type: "separator",
+      },
+      {
+        type: "item",
+        label: "About",
+      },
+    ],
+  },
+];
+
+const workspace: {
+  label: string;
+  email: string;
+  icon: React.ReactNode;
+}[] = [
+  {
+    label: "V2Note",
+    email: "Workspace",
+    icon: (
+      <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <title>V2Note</title>
+        <path d="M0 2.0H24l-12 21.05z" fill="currentColor" />
+      </svg>
+    ),
+  },
+];
 
 export default function EvoEditor({
   defaultLayout = [15, 25, 70],
@@ -72,125 +207,13 @@ export default function EvoEditor({
         <div className="mf-system-menu flex flex-row items-center justify-between border-b select-none h-12">
           <SysMenu
             className="rounded-none shadow-none border-none h-8 pl-3"
-            items={[
-              {
-                title: "File",
-                items: [
-                  {
-                    type: "item",
-                    label: "New Note",
-                  },
-                  {
-                    type: "separator",
-                  },
-                  {
-                    type: "item",
-                    label: "Save",
-                  },
-                  {
-                    type: "separator",
-                  },
-                  {
-                    type: "item",
-                    label: "Perferences",
-                  },
-                  {
-                    type: "separator",
-                  },
-                  {
-                    type: "item",
-                    label: "Exit",
-                  },
-                ],
-              },
-              {
-                title: "Edit",
-                items: [
-                  {
-                    type: "item",
-                    label: "Toggle Editor",
-                  },
-                  {
-                    type: "separator",
-                  },
-                  {
-                    type: "item",
-                    label: "[dev] Show diagnostic",
-                  },
-                ],
-              },
-              {
-                title: "View",
-                items: [
-                  {
-                    type: "item",
-                    label: "Toggle Navbar",
-                  },
-                  {
-                    type: "item",
-                    label: "Toggle Sidebar",
-                  },
-                  {
-                    type: "separator",
-                  },
-                  {
-                    type: "item",
-                    label: "Toogle Fullscreen",
-                  },
-                  {
-                    type: "separator",
-                  },
-                  {
-                    type: "sub",
-                    label: "Appearance",
-                    items: [
-                      {
-                        type: "item",
-                        label: "Dark Mode",
-                      },
-                      {
-                        type: "item",
-                        label: "Light Mode",
-                      },
-                      {
-                        type: "item",
-                        label: "Auto Mode",
-                      },
-                    ],
-                  },
-                ],
-              },
-              {
-                title: "Help",
-                items: [
-                  {
-                    type: "item",
-                    label: "Video Tutorials",
-                  },
-                  {
-                    type: "item",
-                    label: "Tips and Tricks",
-                  },
-                  {
-                    type: "separator",
-                  },
-                  {
-                    type: "item",
-                    label: "Feedback",
-                  },
-                  {
-                    type: "separator",
-                  },
-                  {
-                    type: "item",
-                    label: "About",
-                  },
-                ],
-              },
-            ]}
+            items={sysMenuItem}
           />
           <div className="flex-grow mf-draggable h-full">{/* 拖动区域 */}</div>
-          <div className="flex flex-row">{isWails && <ControlButton />}</div>
+          <div className="flex flex-row items-center">
+            <ModeToggle />
+            {isWails && <ControlButton />}
+          </div>
         </div>
         <ResizablePanelGroup
           direction="horizontal"
@@ -224,22 +247,7 @@ export default function EvoEditor({
               >
                 {/* <ModeToggle /> */}
                 <AccountSwitcher
-                  accounts={[
-                    {
-                      label: "V2Note",
-                      email: "Workspace",
-                      icon: (
-                        <svg
-                          role="img"
-                          viewBox="0 0 24 24"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <title>V2Note</title>
-                          <path d="M0 2.0H24l-12 21.05z" fill="currentColor" />
-                        </svg>
-                      ),
-                    },
-                  ]}
+                  accounts={workspace}
                   isCollapsed={isCollapsed}
                 />
               </div>

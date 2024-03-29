@@ -20,7 +20,7 @@ interface AccountSwitcherProps {
   }[];
 }
 
-export function AccountSwitcher({
+export const AccountSwitcher = React.memo(function AccountSwitcher({
   isCollapsed,
   accounts,
 }: AccountSwitcherProps) {
@@ -60,4 +60,4 @@ export function AccountSwitcher({
       </SelectContent>
     </Select>
   );
-}
+});

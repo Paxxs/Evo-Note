@@ -383,6 +383,7 @@ export const getPagePreviewText = (
   maxPreviewLength: number = 150,
   maxSearchBlockCount: number = 30,
 ): string => {
+  doc.load();
   const docRoot = doc.root;
   if (!docRoot) {
     return "";

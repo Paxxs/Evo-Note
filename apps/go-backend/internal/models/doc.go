@@ -1,5 +1,6 @@
 package models
 
+// Doc is a doc model.
 type Doc struct {
 	BasicModel
 	ID           string `gorm:"primaryKey"`

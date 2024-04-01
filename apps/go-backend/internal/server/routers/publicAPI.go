@@ -1,7 +1,6 @@
 package routers
 
 import (
-	"fmt"
 	"net/url"
 	"v2note/internal/handler"
 	"v2note/internal/repositories"

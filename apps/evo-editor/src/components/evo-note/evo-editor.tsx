@@ -26,7 +26,7 @@ import NoteDisplay from "./views/note-display";
 
 // import dynamic from "next/dynamic";
 import { useEditor } from "./core/yjs-editor/components/EditorProvider";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 import { testFilesData } from "./test-files-data";
@@ -36,6 +36,8 @@ import { toast } from "sonner";
 import { createDocBlock } from "./core/yjs-editor/editor/utils";
 import { useNote } from "./useNote";
 import { ModeToggle } from "./theme-toggle";
+import { getPanelGroupElement } from "react-resizable-panels";
+import logger from "@/lib/logger";
 
 interface EvoEditorProps {
   defaultLayout?: number[];
@@ -185,6 +187,9 @@ const workspace: {
   },
 ];
 
+const NAV_MAX_SIZE_IN_PIXELS = 180;
+const NOTE_LIST_MAX_SIZE_IN_PIXELS = 400;
+
 export default function EvoEditor({
   defaultLayout = [15, 25, 70],
 }: EvoEditorProps) {
@@ -200,6 +205,53 @@ export default function EvoEditor({
   const isWails = useIsWailsEnvironment();
   const { editor } = useEditor()!;
   const [_, setSelectNote] = useNote();
+
+  const [navMaxSize, setNavMaxSize] = useState<number>(20);
+  const [noteListMaxSize, setNoteListMaxSize] = useState<number>(35);
+  const groupElementRef = useRef<HTMLElement | null>(null);
+  const resizeHandleWidth = useRef<number>(0);
+
+  const handleResize = useCallback(
+    (groupOffsetWidth: number | undefined, resizeHandleWidth: number) => {
+      if (groupOffsetWidth) {
+        let width = groupOffsetWidth - resizeHandleWidth;
+
+        if (width > 0) {
+          setNavMaxSize((NAV_MAX_SIZE_IN_PIXELS / width) * 100);
+          setNoteListMaxSize((NOTE_LIST_MAX_SIZE_IN_PIXELS / width) * 100);
+        }
+      }
+    },
+    [],
+  );
+
+  useEffect(() => {
+    const observer = new ResizeObserver((entries) => {
+      // Use requestAnimationFrame to avoid multiple resize events in a short time
+      window.requestAnimationFrame(() => {
+        handleResize(
+          groupElementRef.current?.offsetWidth,
+          resizeHandleWidth.current,
+        );
+      });
+    });
+
+    if (!groupElementRef.current) {
+      groupElementRef.current = getPanelGroupElement("group");
+      const resizeHandles = document.querySelectorAll<HTMLElement>(
+        "[data-panel-resize-handle-id]",
+      );
+      resizeHandleWidth.current = Array.from(resizeHandles).reduce(
+        (total, handle) => total + handle.offsetWidth,
+        0,
+      );
+    } else {
+      logger.debug("[Evo-Editor] 🤖 new resize observer");
+      observer.observe(groupElementRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [handleResize]);
 
   return (
     <>
@@ -218,19 +270,20 @@ export default function EvoEditor({
         <ResizablePanelGroup
           direction="horizontal"
           className="h-full items-stretch"
+          id="group"
         >
           <ResizablePanel
             // ref={NavResizablePanelRef}
             // defaultSize={defaultLayout[0]}
-            maxSize={20}
-            minSize={15}
+            maxSize={navMaxSize}
+            minSize={navMaxSize - 1}
             className={cn(
               "flex flex-col select-none",
               isCollapsed &&
-                "min-w-[56px] max-w-[56px] transition-all duration-300 ease-in-out",
+                "min-w-[56px] transition-all duration-300 ease-in-out",
             )}
             collapsible={true}
-            collapsedSize={4}
+            // collapsedSize={10}
             onCollapse={() => {
               setIsCollapsed(true);
             }}
@@ -344,14 +397,14 @@ export default function EvoEditor({
           <ResizableHandle />
           <ResizablePanel
             minSize={20}
-            // maxSize={30}
+            maxSize={noteListMaxSize}
             // collapsible={isFileCollapsible}
             collapsible={true}
             className="select-none"
             // defaultSize={defaultLayout[1]}
           >
             <Tabs
-              className="w-full"
+              className="w-full max-w-full"
               defaultValue="notes"
               value={tabsValue}
               // onValueChange={(value) => setTabsValue(value as TabsValue)}

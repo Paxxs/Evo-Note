@@ -9,6 +9,7 @@ export default function EditorContainer({ className }: { className?: string }) {
     if (editorContainerRef.current && editor) {
       editorContainerRef.current.innerHTML = "";
       editorContainerRef.current.appendChild(editor);
+      editor.spellcheck = false;
     }
   }, [editor]);
   return (

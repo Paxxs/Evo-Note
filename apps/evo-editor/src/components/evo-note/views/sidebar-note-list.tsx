@@ -110,7 +110,7 @@ export function SideBarNoteList({ files }: { files: NoteItemType[] }) {
         // 要减去顶部系统bar的高度
         className="h-[calc(100dvh-3rem)]"
       >
-        <div className="relative flex flex-col">
+        <div className="relative flex flex-col w-full">
           <SideBarTitle title="Notes">
             <TabsList className="ml-auto">
               <TabsTrigger
@@ -128,10 +128,10 @@ export function SideBarNoteList({ files }: { files: NoteItemType[] }) {
             </TabsList>
           </SideBarTitle>
           {/* <div className="h-3 "></div> */}
-          <TabsContent value="all" className="mt-3">
+          <TabsContent value="all" className="mt-3 max-w-full">
             <FileList files={notes} />
           </TabsContent>
-          <TabsContent value="stared" className="mt-3">
+          <TabsContent value="stared" className="mt-3 max-w-full">
             <FileList
               files={notes.filter((item) => {
                 return item.tags.some((tag) => tag.value === "stared");
@@ -139,7 +139,6 @@ export function SideBarNoteList({ files }: { files: NoteItemType[] }) {
             />
           </TabsContent>
         </div>
-        <ScrollBar orientation="vertical" />
       </ScrollArea>
     </Tabs>
   );

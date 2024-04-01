@@ -45,7 +45,7 @@ export function FileList({
       {/* <ScrollArea
         className={cn("overflow-auto h-[calc(100vh-90px)] pt-4", className)}
       > */}
-      <div className={cn("flex flex-col gap-2 p-4 pt-0 ", className)}>
+      <div className={cn("flex flex-col gap-2 p-4 pt-0 w-full", className)}>
         {files.map((note, index) => {
           return disableContextMenu ? (
             <NoteItem note={note} />
@@ -152,27 +152,26 @@ function NoteItemNode({ note }: { note: NoteItemType }) {
         })
       }
     >
-      <div className="gap-1 flex flex-col w-full">
-        {/* 水平 */}
-        <div className="flex flex-row items-center">
-          <p className="font-semibold truncate">{note.name}</p>
-          {/* <div className="ml-auto text-xs text-muted-foreground">
+      {/* 水平 */}
+      <div className="flex flex-row items-center w-full">
+        <p className="font-semibold truncate max-w-full">{note.name}</p>
+        {/* <div className="ml-auto text-xs text-muted-foreground">
         {formatDistanceToNow(new Date("2021-12-12"), {
           addSuffix: true,
         })}
       </div> */}
-        </div>
       </div>
       <div
         className={cn(
-          "text-xs text-muted-foreground line-clamp-2",
+          "text-xs text-muted-foreground max-w-full",
           selected && "font-medium",
+          typeof note.brief === "string" && "line-clamp-2",
         )}
       >
         {typeof note.brief === "string"
-          ? note.brief.substring(0, 300) // 如果是文章，就截取前300个字符
+          ? note.brief.substring(0, 100) // 如果是文章，就截取前300个字符
           : note.brief.map((item, index) => {
-              return <li key={index}>{item.substring(0, 100)}</li>; // 搜索结果才这样渲染
+              return <li key={index}>{item.substring(0, 30)}</li>; // 搜索结果才这样渲染
             })}
       </div>
       <div className="flex flex-row gap-2 items-center w-full flex-nowrap">

@@ -106,6 +106,7 @@ export function FileList({
                             // 如果不是当前选择的则不用刷新
                             if (isDeleteCurrentNote) {
                               provider.changeEditorDoc(docId, editor);
+                              setSelectNote({ selected: docId });
                             }
                           }
                         })

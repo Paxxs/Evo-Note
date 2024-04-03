@@ -9,7 +9,7 @@ export default function SideBarTitle({
 }) {
   return (
     <>
-      <div className="sticky top-0 z-10 flex flex-col mf-bg-blur border-b">
+      <div className="sticky top-0 z-[1] flex flex-col mf-bg-blur border-b">
         <div className="flex items-center px-4 py-2 max-h-[52px] min-h-[52px]">
           <h1 className="text-xl font-bold">{title}</h1>
           {children}

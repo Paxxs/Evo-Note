@@ -22,13 +22,13 @@ const HistoryManager = memo(function HistoryManager({ doc }: { doc: Doc }) {
       setCanRedo(doc.history.canRedo());
     };
     updateUndoManagerState();
-    const disposeable = doc.slots.blockUpdated.on(() => {
+    const disposable = doc.slots.blockUpdated.on(() => {
       logger.debug("[HistoryManager] doc.history blockUpdated");
       updateUndoManagerState();
     });
 
     return () => {
-      disposeable.dispose();
+      disposable.dispose();
     };
   }, [doc]);
 

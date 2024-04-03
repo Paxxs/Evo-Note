@@ -65,6 +65,8 @@ func registerPublicAPIRouter(db *gorm.DB) {
 		),
 	)
 
+	proxyHandler := handler.NewProxyHandler()
+
 	v1Group := publicAPI.Echo.Group("/api/v1")
 
 	v1Group.GET("/collection", collectionHandler.Index)
@@ -90,4 +92,7 @@ func registerPublicAPIRouter(db *gorm.DB) {
 		}
 
 	}
+	v1Group.POST("/link-preview", proxyHandler.GetWebPageInfo)
+	v1Group.GET("/image", proxyHandler.GetImage)
+
 }

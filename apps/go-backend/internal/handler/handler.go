@@ -16,3 +16,6 @@ type DocHandler struct {
 type CollectionHandler struct {
 	service services.CollectionService
 }
+
+type ProxyHandler struct {
+}

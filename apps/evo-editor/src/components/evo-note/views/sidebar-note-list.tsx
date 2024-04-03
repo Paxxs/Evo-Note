@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FileList, NoteItemType } from "../ui/file-list";
 import SideBarTitle from "../ui/sider-bar-title";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useEditor } from "../core/yjs-editor/components/EditorProvider";
 import { Doc, Tag } from "@blocksuite/store";
 import { getPagePreviewText } from "../core/yjs-editor/editor/utils";
@@ -12,29 +12,30 @@ import logger from "@/lib/logger";
 
 export function SideBarNoteList({ files }: { files: NoteItemType[] }) {
   const { collection, editor } = useEditor()!;
-  // const [notes, setNotes] = useState<NoteItemType[]>([]);
   const [notes, setNotes] = useState<NoteItemType[]>([]);
-  // 尝试使用 Map，每次只更新指定 ID 的Doc数据
 
-  useEffect(() => {
-    if (!collection || !editor) return;
+  const staredFiles = useMemo(() => {
+    return notes.filter((item) =>
+      item.tags.some((tag) => tag.value === "stared"),
+    );
+  }, [notes]);
 
-    /**
-     * Generate a NoteItemType from a given Doc.
-     *
-     * @param {Doc} doc - the document to create the note from
-     * @return {NoteItemType | undefined} the generated NoteItemType or undefined if collection or doc.meta is missing
-     */
-    const createNoteFromDoc = (doc: Doc): NoteItemType => {
+  /**
+   * Generate a NoteItemType from a given Doc.
+   *
+   * @param {Doc} doc - the document to create the note from
+   * @return {NoteItemType | undefined} the generated NoteItemType or undefined if collection or doc.meta is missing
+   */
+  const createNoteFromDoc = useCallback(
+    (doc: Doc): NoteItemType => {
       // if (!collection || !doc.meta) return;
-      assert(collection, "Collection is missing");
+      // assert(collection, "Collection is missing");
       assert(doc.meta, "Doc meta is missing");
-
       // 生成 tags
       const tags = doc.meta.tags
         .map((tagId) => {
           // 先拿到 doc 的 tagsID
-          const tagOptions = collection.meta.properties.tags?.options.find(
+          const tagOptions = collection!.meta.properties.tags?.options.find(
             (option) => option.id === tagId, // 然后去 collection 中查找对应的定义
           );
           return tagOptions;
@@ -49,30 +50,50 @@ export function SideBarNoteList({ files }: { files: NoteItemType[] }) {
         lastModified: doc.history?.lastChange || doc.meta.createDate,
         tags,
       };
-    };
+    },
+    [collection],
+  );
 
-    /**
-     * Updates all notes
-     *
-     * @return {void}
-     */
-    const updateNotes = (): void => {
-      const docsArray = Array.from(collection.docs.values());
-      logger.debug("sidebar-note-list: Updating Notes List");
-      logger.debug("docMetas: ", collection.meta.docMetas);
-      const notes: NoteItemType[] = docsArray.map((doc) =>
-        createNoteFromDoc(doc),
-      );
-      setNotes(notes);
+  /**
+   * Updates all notes
+   *
+   * @return {void}
+   */
+  const updateNotes = useCallback((): void => {
+    const docsArray = Array.from(collection!.docs.values());
+    logger.debug("sidebar-note-list: Updating Notes List");
+    logger.debug("sidebar-note-list: docMetas: ", collection!.meta.docMetas);
+    const notes: NoteItemType[] = docsArray.map((doc) =>
+      createNoteFromDoc(doc),
+    );
+    setNotes(notes);
 
-      // 放弃使用 Map
-      // const updateNotes = new Map<string, NoteItemType>();
-      // collection.docs.forEach((doc) => {
-      //   if (!doc.meta) return;
-      //   updateNotes.set(doc.meta.id, createNoteFromDoc(doc)); // 生成 NoteItemType
-      // });
-      // setNotes(updateNotes); // 更新 notes
-    };
+    // 放弃使用 Map
+    // const updateNotes = new Map<string, NoteItemType>();
+    // collection.docs.forEach((doc) => {
+    //   if (!doc.meta) return;
+    //   updateNotes.set(doc.meta.id, createNoteFromDoc(doc)); // 生成 NoteItemType
+    // });
+    // setNotes(updateNotes); // 更新 notes
+  }, [collection, createNoteFromDoc]);
+
+  const generateNoteByDocId = useCallback(
+    function generateNoteByDocId(docId: string) {
+      const doc = collection!.getDoc(docId);
+      if (doc) {
+        return createNoteFromDoc(doc);
+      }
+      return null;
+    },
+    [collection, createNoteFromDoc],
+  );
+
+  if (notes.length === 0 && collection) {
+    updateNotes();
+  }
+
+  useEffect(() => {
+    if (!collection || !editor) return;
 
     // const updateNote = (doc: Doc): void => {
     //   if (!doc.meta) return;
@@ -83,18 +104,35 @@ export function SideBarNoteList({ files }: { files: NoteItemType[] }) {
     //     return newNotes;
     //   });
     // };
-    if (notes.length === 0) {
-      updateNotes();
-    }
-
     const disposable = [
+      // 添加时候
       collection.slots.docAdded.on((docId) => {
         logger.debug("sidebar-note-list: EVENT: docAdded", docId);
-        updateNotes();
+        const note = generateNoteByDocId(docId);
+        if (note) {
+          setNotes((prevNotes) => [...prevNotes, note]);
+        }
       }),
-      collection.slots.docUpdated.on(updateNotes),
-      collection.meta.docMetaUpdated.on(updateNotes),
-      // collection.store.spaces.
+      // 删除时候
+      collection.slots.docRemoved.on((docId) => {
+        logger.debug("sidebar-note-list: EVENT: docRemoved", docId);
+        setNotes((prevNotes) => prevNotes.filter((note) => note.id !== docId));
+      }),
+      // 更新时候
+      collection.slots.docUpdated.on(() => {
+        // doc 标题、标签更新时候会触发
+        logger.debug("sidebar-note-list: EVENT: collection.slots.docUpdated");
+        setTimeout(() => {
+          const updateNote = generateNoteByDocId(editor.doc.id);
+          if (updateNote) {
+            setNotes((prevNotes) =>
+              prevNotes.map((note) =>
+                note.id === updateNote.id ? updateNote : note,
+              ),
+            );
+          }
+        }, 300);
+      }),
     ];
 
     logger.debug("NoteList Component has been mounted");
@@ -102,7 +140,7 @@ export function SideBarNoteList({ files }: { files: NoteItemType[] }) {
       logger.debug("NoteList Component will be unmounted");
       disposable.forEach((d) => d.dispose());
     };
-  }, [collection, editor, notes]);
+  }, [collection, editor, generateNoteByDocId, updateNotes]);
 
   return (
     <Tabs defaultValue="all">
@@ -132,11 +170,7 @@ export function SideBarNoteList({ files }: { files: NoteItemType[] }) {
             <FileList files={notes} />
           </TabsContent>
           <TabsContent value="stared" className="mt-3 max-w-full">
-            <FileList
-              files={notes.filter((item) => {
-                return item.tags.some((tag) => tag.value === "stared");
-              })}
-            />
+            <FileList files={staredFiles} />
           </TabsContent>
         </div>
       </ScrollArea>

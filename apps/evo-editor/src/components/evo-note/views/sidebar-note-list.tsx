@@ -88,9 +88,11 @@ export function SideBarNoteList({ files }: { files: NoteItemType[] }) {
     [collection, createNoteFromDoc],
   );
 
-  if (notes.length === 0 && collection) {
-    updateNotes();
-  }
+  useEffect(() => {
+    if (notes.length === 0 && collection) {
+      updateNotes();
+    }
+  }, [notes.length, collection, updateNotes]);
 
   useEffect(() => {
     if (!collection || !editor) return;
@@ -135,13 +137,17 @@ export function SideBarNoteList({ files }: { files: NoteItemType[] }) {
       }),
     ];
 
-    logger.debug("NoteList Component has been mounted");
     return () => {
-      logger.debug("NoteList Component will be unmounted");
       disposable.forEach((d) => d.dispose());
     };
   }, [collection, editor, generateNoteByDocId, updateNotes]);
 
+  useEffect(() => {
+    logger.debug("NoteList Component has been mounted");
+    return () => {
+      logger.debug("NoteList Component will be unmounted");
+    };
+  }, []);
   return (
     <Tabs defaultValue="all">
       <ScrollArea

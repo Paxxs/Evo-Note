@@ -11,29 +11,56 @@ import {
   WindowToggleMaximise,
 } from "@/wails/wailsjs/runtime/runtime";
 import { Maximize2, Minimize2, Minus, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useEditor } from "../core/yjs-editor/components/EditorProvider";
+import { toast } from "sonner";
 
 export default function ControlButton() {
+  const { collection } = useEditor()!;
   const [isMinimised, setIsMinimised] = useState(true); // 默认窗口时最小的
+
   useWails(() => {
     WindowIsMaximised().then((isMaximised) => {
-      if (isMaximised) {
-        setIsMinimised(false);
-      } else {
-        setIsMinimised(true);
-      }
+      setIsMinimised(!isMaximised);
     });
   });
-  useEffect(() => {}, []);
+
+  const maxOnClick = useCallback(() => {
+    WindowToggleMaximise();
+    setIsMinimised(!isMinimised);
+  }, [isMinimised]);
+
+  const minOnClick = useCallback(() => {
+    WindowMinimise();
+  }, []);
+
+  const closeOnClick = useCallback(() => {
+    if (collection) {
+      toast.info("😀 Saving...");
+      if (!collection.docSync.canGracefulStop()) {
+        toast.info("😉 Just need one more time...");
+        collection.docSync
+          .waitForGracefulStop()
+          .then(() => {
+            toast.success("😀 Saved");
+            Quit();
+          })
+          .catch((err) => {
+            toast.error("😢 data save error:" + err);
+            return;
+          });
+      }
+    }
+    Quit();
+  }, [collection]);
+
   return (
     <>
       <Button
         variant="ghost"
         size="icon"
         className="rounded-none h-12 w-12 border-b"
-        onClick={() => {
-          WindowMinimise();
-        }}
+        onClick={minOnClick}
       >
         <Minus className="h-4 w-4" />
       </Button>
@@ -41,27 +68,19 @@ export default function ControlButton() {
         variant="ghost"
         size="icon"
         className="rounded-none h-12 w-12 border-b"
-        onClick={() => {
-          console.log("被点击");
-          WindowToggleMaximise();
-          setIsMinimised(!isMinimised);
-        }}
+        onClick={maxOnClick}
       >
         {isMinimised ? (
           <Maximize2 className="h-4 w-4" />
         ) : (
           <Minimize2 className="h-4 w-4" />
         )}
-        {/* <Maximize2 className="h-4 w-4" /> */}
-        {/* <Minimize2 className="h-4 w-4" /> */}
       </Button>
       <Button
         variant="ghost"
         size="icon"
         className="hover:bg-destructive rounded-none h-12 w-12 border-b"
-        onClick={() => {
-          Quit();
-        }}
+        onClick={closeOnClick}
       >
         <X className="h-4 w-4" />
       </Button>

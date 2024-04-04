@@ -5,7 +5,6 @@ import {
   Search,
   Settings,
   Trash2,
-  X,
 } from "lucide-react";
 import { Nav } from "@/components/evo-note/ui/nav";
 import {
@@ -29,7 +28,6 @@ import { useEditor } from "./core/yjs-editor/components/EditorProvider";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
-import { testFilesData } from "./test-files-data";
 import ControlButton from "./ui/control-button";
 import { useIsWailsEnvironment } from "@/hooks/use-is-wails-environment";
 import { toast } from "sonner";

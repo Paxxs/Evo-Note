@@ -104,6 +104,9 @@ importers:
       date-fns:
         specifier: ^3.3.1
         version: 3.3.1
+      framer-motion:
+        specifier: ^11.0.24
+        version: 11.0.24(react-dom@18.2.0)(react@18.2.0)
       jotai:
         specifier: ^2.7.1
         version: 2.7.1(@types/react@18.2.60)(react@18.2.0)
@@ -113,6 +116,9 @@ importers:
       lucide-react:
         specifier: ^0.343.0
         version: 0.343.0(react@18.2.0)
+      mini-svg-data-uri:
+        specifier: ^1.4.4
+        version: 1.4.4
       next:
         specifier: 14.1.3
         version: 14.1.3(react-dom@18.2.0)(react@18.2.0)(sass@1.71.1)
@@ -5824,6 +5830,28 @@ packages:
     engines: { node: ^14.13.1 || >=16.0.0 }
     dev: false
 
+  /framer-motion@11.0.24(react-dom@18.2.0)(react@18.2.0):
+    resolution:
+      {
+        integrity: sha512-l2iM8NR53qtcujgAqYvGPJJGModPNWEVUaATRDLfnaLvUoFpImovBm0AHalSSsY8tW6knP8mfJTW4WYGbnAe4w==,
+      }
+    peerDependencies:
+      "@emotion/is-prop-valid": "*"
+      react: ^18.0.0
+      react-dom: ^18.0.0
+    peerDependenciesMeta:
+      "@emotion/is-prop-valid":
+        optional: true
+      react:
+        optional: true
+      react-dom:
+        optional: true
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      tslib: 2.6.2
+    dev: false
+
   /framework-utils@1.1.0:
     resolution:
       {
@@ -8958,6 +8986,14 @@ packages:
       }
     engines: { node: ">=4" }
     dev: true
+
+  /mini-svg-data-uri@1.4.4:
+    resolution:
+      {
+        integrity: sha512-r9deDe9p5FJUPZAk3A59wGH7Ii9YrjjWw0jmw/liSbHl2CHiyXj6FcDXDu2K3TjVAXqiJdaw3xxwlZZr9E6nHg==,
+      }
+    hasBin: true
+    dev: false
 
   /minimatch@3.0.8:
     resolution:

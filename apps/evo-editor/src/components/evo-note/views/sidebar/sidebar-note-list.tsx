@@ -9,6 +9,19 @@ import { getPagePreviewText } from "../../core/yjs-editor/editor/utils";
 import assert from "assert";
 import logger from "@/lib/logger";
 
+const ControlTab = memo(function ControlTab() {
+  return (
+    <TabsList className="ml-auto">
+      <TabsTrigger value="all" className="text-zinc-600  dark:text-zinc-200">
+        All
+      </TabsTrigger>
+      <TabsTrigger value="stared" className="text-zinc-600  dark:text-zinc-200">
+        Stared
+      </TabsTrigger>
+    </TabsList>
+  );
+});
+
 export const SideBarNoteList = memo(function SideBarNoteList() {
   const { collection, editor } = useEditor()!;
   const [notes, setNotes] = useState<NoteItemType[]>([]);
@@ -155,20 +168,7 @@ export const SideBarNoteList = memo(function SideBarNoteList() {
       >
         <div className="relative flex flex-col w-full">
           <SideBarTitle title="Notes">
-            <TabsList className="ml-auto">
-              <TabsTrigger
-                value="all"
-                className="text-zinc-600  dark:text-zinc-200"
-              >
-                All
-              </TabsTrigger>
-              <TabsTrigger
-                value="stared"
-                className="text-zinc-600  dark:text-zinc-200"
-              >
-                Stared
-              </TabsTrigger>
-            </TabsList>
+            <ControlTab />
           </SideBarTitle>
           {/* <div className="h-3 "></div> */}
           <TabsContent value="all" className="mt-3 max-w-full">

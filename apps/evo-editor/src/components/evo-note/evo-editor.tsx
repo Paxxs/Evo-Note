@@ -430,7 +430,7 @@ export default function EvoEditor({
                 className="mt-0 data-[state=inactive]:hidden"
                 forceMount
               >
-                <SideBarNoteList files={testFilesData} />
+                <SideBarNoteList />
               </TabsContent>
               <TabsContent
                 value="search"

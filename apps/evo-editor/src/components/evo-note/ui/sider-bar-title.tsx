@@ -1,6 +1,8 @@
 // import { Separator } from "@/components/ui/separator";
 
-export default function SideBarTitle({
+import { memo } from "react";
+
+export default memo(function SideBarTitle({
   title,
   children,
 }: {
@@ -18,4 +20,4 @@ export default function SideBarTitle({
       </div>
     </>
   );
-}
+});

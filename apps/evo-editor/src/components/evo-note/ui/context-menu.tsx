@@ -60,7 +60,7 @@ interface SubMenuItem extends BaseContextMenuItem {
 }
 
 // 使用联合类型来定义可以接受的菜单项
-type ContextMenuItemI =
+export type ContextMenuItemI =
   | Item
   | CheckboxItem
   | RadioItem

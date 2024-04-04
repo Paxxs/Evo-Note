@@ -36,7 +36,10 @@ import { toast } from "sonner";
 import { createDocBlock } from "./core/yjs-editor/editor/utils";
 import { useNote } from "./useNote";
 import { ModeToggle } from "./theme-toggle";
-import { getPanelGroupElement } from "react-resizable-panels";
+import {
+  ImperativePanelHandle,
+  getPanelGroupElement,
+} from "react-resizable-panels";
 import logger from "@/lib/logger";
 
 interface EvoEditorProps {
@@ -197,7 +200,7 @@ export default function EvoEditor({
   // const [isFileCollapsible, setIsFileCollapsible] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false); // 设置菜单
 
-  // const NavResizablePanelRef = useRef<ImperativePanelHandle>(null);
+  const sideBarResizablePanelRef = useRef<ImperativePanelHandle>(null);
   // const [selectedNote] = useNote();
 
   const [tabsValue, setTabsValue] = useState<TabsValue>("notes");
@@ -333,7 +336,20 @@ export default function EvoEditor({
               />
               <Separator />
               <Nav
-                onClick={(keyValue) => setTabsValue(keyValue as TabsValue)}
+                onClick={(keyValue) => {
+                  const panel = sideBarResizablePanelRef.current;
+                  if (!panel) return;
+
+                  // 如果展开状态且 tabsValue 与 keyValue 一致则收缩并return
+                  if (panel.isExpanded() && keyValue === tabsValue) {
+                    panel.collapse();
+                    return;
+                  } else {
+                    // 如果是收缩状态的则展开，并更新状态
+                    panel.expand();
+                    setTabsValue(keyValue as TabsValue);
+                  }
+                }}
                 isCollapsed={isCollapsed}
                 keyValue={tabsValue}
                 links={[
@@ -396,11 +412,11 @@ export default function EvoEditor({
           </ResizablePanel>
           <ResizableHandle />
           <ResizablePanel
+            ref={sideBarResizablePanelRef}
             minSize={20}
             maxSize={noteListMaxSize}
-            // collapsible={isFileCollapsible}
             collapsible={true}
-            className="select-none"
+            className="select-none transition-all duration-100 ease-in-out"
             // defaultSize={defaultLayout[1]}
           >
             <Tabs

@@ -7,7 +7,7 @@ tmp_dir = "tmp"
 args_bin = ["serve"]
 bin = "build/bin/temp.exe"
 # Just plain old shell command. You could use `make` as well.
-cmd = "go build -o ./build/bin/temp.exe ."
+cmd = "go build -tags dev -o ./build/bin/temp.exe ."
 delay = 1000
 # Directories to exclude from watching.
 exclude_dir = [

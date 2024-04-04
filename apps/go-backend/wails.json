@@ -17,6 +17,5 @@
     "copyright": "© 2024  MorFans.cn",
     "productName": "v2Note",
     "comments": "v2Note offers a dual editing experience, combining visual block and canvas modes in a single note interface. It operates on a local-first approach, ensuring data privacy and control. This command opens the V2Note window, providing a seamless, cross-platform note-taking environment without reliance on cloud services."
-  },
-  "obfuscated": true
+  }
 }

@@ -1,5 +1,5 @@
-import SideBarTitle from "../ui/sider-bar-title";
-import { FileList } from "../ui/file-list";
+import SideBarTitle from "../../ui/sider-bar-title";
+import { FileList } from "../../ui/file-list";
 
 export default function SidebarTrash() {
   return (

@@ -1,4 +1,4 @@
-import SideBarTitle from "../ui/sider-bar-title";
+import SideBarTitle from "../../ui/sider-bar-title";
 
 export default function SideBarAI() {
   return (

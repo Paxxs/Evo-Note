@@ -1,13 +1,13 @@
 import { Input } from "@/components/ui/input";
-import SideBarTitle from "../ui/sider-bar-title";
+import SideBarTitle from "../../ui/sider-bar-title";
 import { Search } from "lucide-react";
-import { FileList, NoteItemType } from "../ui/file-list";
+import { FileList, NoteItemType } from "../../ui/file-list";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { testFilesData } from "../test-files-data";
+import { testFilesData } from "../../test-files-data";
 import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { debounce } from "lodash-es";
 import logger from "@/lib/logger";
-import { useEditor } from "../core/yjs-editor/components/EditorProvider";
+import { useEditor } from "../../core/yjs-editor/components/EditorProvider";
 
 export default function SideBarSearch() {
   const [searchText, setSearchText] = useState("");

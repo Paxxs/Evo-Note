@@ -16,11 +16,11 @@ import {
 import { Separator } from "../ui/separator";
 import { SysMenu, type MenuData } from "./ui/sys-menu";
 import { Tabs, TabsContent } from "../ui/tabs";
-import { SideBarNoteList } from "./views/sidebar-note-list";
-import SideBarSearch from "./views/sidebar-search";
-import SideBarAI from "./views/sidebar-copilot";
-import SidebarTrash from "./views/sidebar-trash";
-import SidebarSettings from "./views/sidebar-settings";
+import { SideBarNoteList } from "./views/sidebar/sidebar-note-list";
+import SideBarSearch from "./views/sidebar/sidebar-search";
+import SideBarAI from "./views/sidebar/sidebar-copilot";
+import SidebarTrash from "./views/sidebar/sidebar-trash";
+import SidebarSettings from "./views/sidebar/sidebar-settings";
 import { AccountSwitcher } from "./ui/account-switcher";
 import NoteDisplay from "./views/note-display";
 

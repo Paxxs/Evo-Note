@@ -1,16 +1,15 @@
-import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FileList, NoteItemType } from "../ui/file-list";
-import SideBarTitle from "../ui/sider-bar-title";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useEditor } from "../core/yjs-editor/components/EditorProvider";
+import { FileList, NoteItemType } from "../../ui/file-list";
+import SideBarTitle from "../../ui/sider-bar-title";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { useEditor } from "../../core/yjs-editor/components/EditorProvider";
 import { Doc, Tag } from "@blocksuite/store";
-import { getPagePreviewText } from "../core/yjs-editor/editor/utils";
+import { getPagePreviewText } from "../../core/yjs-editor/editor/utils";
 import assert from "assert";
 import logger from "@/lib/logger";
 
-export function SideBarNoteList({ files }: { files: NoteItemType[] }) {
+export const SideBarNoteList = memo(function SideBarNoteList() {
   const { collection, editor } = useEditor()!;
   const [notes, setNotes] = useState<NoteItemType[]>([]);
 
@@ -182,4 +181,4 @@ export function SideBarNoteList({ files }: { files: NoteItemType[] }) {
       </ScrollArea>
     </Tabs>
   );
-}
+});

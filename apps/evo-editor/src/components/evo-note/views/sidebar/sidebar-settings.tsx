@@ -1,5 +1,5 @@
 import SettingsPage from "@/app/dashboard/preference/page";
-import NiceDraw from "../ui/nice-draw";
+import NiceDraw from "../../ui/nice-draw";
 
 interface SideBarSettingsProps {
   open: boolean;

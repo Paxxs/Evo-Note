@@ -56,12 +56,16 @@ func Start(files *embed.FS, webviewMode bool) {
 	// Start server
 	go func() {
 		if !webviewMode {
-			mylog.Info(fmt.Sprintf("starting server on %s:%s", listenAddr, configs.Server.Port))
+			serverInfo := fmt.Sprintf("starting server on %s:%s", listenAddr, configs.Server.Port)
+			if configs.DevFlag {
+				serverInfo = fmt.Sprintf("starting server on http://%s:%s (dev mode)", listenAddr, configs.Server.Port)
+			}
+			mylog.Info(serverInfo)
+
 		}
 		if err := e.Start(listenAddr + ":" + configs.Server.Port); err != nil && err != http.ErrServerClosed {
-			mylog.Fatal("shutting down the server", zap.Error(err))
+			mylog.Panic("shutting down the server", zap.Error(err))
 		}
-
 	}()
 
 	// 如果在 webview 下，不等待中断信号，由 webview 来管理生命周期

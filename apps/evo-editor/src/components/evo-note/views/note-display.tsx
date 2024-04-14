@@ -59,13 +59,13 @@ const HistoryManager = memo(function HistoryManager({ doc }: { doc: Doc }) {
 
 export default function NoteDisplay() {
   const [selectNote, setSelectNote] = useNote();
-  const { editor, collection, provider } = useEditor()!;
+  const { editor, provider } = useEditor()!;
   const [isPage, setIsPage] = useState(true);
   const [doc, setDoc] = useState<Doc | null>(null);
 
   useEffect(() => {
     if (!editor || !provider) {
-      logger.error("[note-display] Editor or collection is not ready yet");
+      logger.info("[note-display] Editor or collection is not ready yet");
       return;
     }
     logger.debug("😶 [note-display]: mounted");

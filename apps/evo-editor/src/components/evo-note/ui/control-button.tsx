@@ -16,7 +16,7 @@ import { useEditor } from "../core/yjs-editor/components/EditorProvider";
 import { toast } from "sonner";
 
 export default function ControlButton() {
-  const { collection } = useEditor()!;
+  const { provider } = useEditor()!;
   const [isMinimised, setIsMinimised] = useState(true); // 默认窗口时最小的
 
   useWails(() => {
@@ -35,6 +35,9 @@ export default function ControlButton() {
   }, []);
 
   const closeOnClick = useCallback(() => {
+    if (!provider) return;
+    const { collection } = provider;
+
     if (collection) {
       toast.info("😀 Saving...");
       if (!collection.docSync.canGracefulStop()) {
@@ -52,7 +55,7 @@ export default function ControlButton() {
       }
     }
     Quit();
-  }, [collection]);
+  }, [provider]);
 
   return (
     <>

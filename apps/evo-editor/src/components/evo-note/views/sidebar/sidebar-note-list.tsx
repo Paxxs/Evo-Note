@@ -26,6 +26,7 @@ const ControlTab = memo(function ControlTab() {
 export const SideBarNoteList = memo(function SideBarNoteList() {
   const { editor, provider } = useEditor()!;
   const [notes, setNotes] = useState<NoteItemType[]>([]);
+  const [selectedNote] = useNote();
 
   const staredFiles = useMemo(() => {
     return notes.filter((item) =>
@@ -161,6 +162,35 @@ export const SideBarNoteList = memo(function SideBarNoteList() {
       disposable.forEach((d) => d.dispose());
     };
   }, [provider, editor, generateNoteByDocId, updateNotes]);
+
+  useEffect(() => {
+    if (!provider || !selectedNote.selected || !editor) return;
+    logger.debug(
+      `[sidebar-note-list] register editor doc event, selected:${selectedNote.selected},editor:${editor.doc.id}`,
+    );
+    const disposable = provider.collection.docs
+      .get(selectedNote.selected)
+      ?.slots.blockUpdated.on((e) => {
+        logger.debug("[sidebar-note-list] EVENT: blockUpdated", e);
+        setTimeout(() => {
+          const updateNote = generateNoteByDocId(editor.doc.id);
+          if (updateNote) {
+            setNotes((prevNotes) =>
+              prevNotes.map((note) =>
+                note.id === updateNote.id ? updateNote : note,
+              ),
+            );
+          }
+        }, 300);
+      });
+
+    return () => {
+      logger.debug(
+        `[sidebar-note-list] EVENT: disposable current doc,selected:${selectedNote.selected},editor:${editor.doc.id}`,
+      );
+      disposable?.dispose();
+    };
+  }, [provider, selectedNote.selected, editor, generateNoteByDocId]);
 
   useEffect(() => {
     logger.debug("NoteList Component has been mounted");

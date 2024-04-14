@@ -20,10 +20,8 @@ import { CanvasTextFonts } from "./fonts";
 
 export async function initEditor() {
   const backendUrl = await getBackendUrl();
-  const provider = await Provider.init(backendUrl);
-  const doc = await provider.connect();
-
-  const { collection } = provider;
+  const provider = await Provider.newProvider({ backendUrl });
+  const { doc } = provider;
   const editor = new AffineEditorContainer();
 
   // 覆盖默认的预览链接
@@ -47,7 +45,7 @@ export async function initEditor() {
     logger.debug("🤖 [initEditor] docLinkClicked event", docId);
     provider.changeEditorDoc(docId, editor);
   });
-  return { editor, provider, collection };
+  return { editor, provider };
 }
 
 class pageService extends PageRootService {

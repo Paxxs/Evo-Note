@@ -1,59 +1,84 @@
-import { DocCollection, Y } from "@blocksuite/store";
+import { Doc, DocCollection, Y } from "@blocksuite/store";
 import { createEmptyDoc, createCollection, assertExists } from "../utils";
 import { AffineEditorContainer } from "@blocksuite/presets";
 import logger from "@/lib/logger";
+import { getBackendUrl } from "@/lib/backendConfig";
 
 const logIdentifier = "[Provider]";
 
 export class Provider {
   collection!: DocCollection; // definite assignment assertion。
+  doc!: Doc; // 可用的首Doc
   // 会被明确地赋值，且不会在构造函数里直接赋值。用于告诉编译器别警报
   private constructor(
     private backendUrl: string,
     private collectionId: string,
   ) {} // 私有的构造函数，让外部不能直接实例化
-  static async init(backendUrl: string, id: string = "evo-note-main") {
-    return new Provider(backendUrl, id);
-  }
-  async connect() {
-    logger.debug(`${logIdentifier}::connect()`);
-    this.collection = await createCollection();
 
-    logger.debug(`${logIdentifier}::connect()::waitForSynced()`);
-    await this.collection.waitForSynced();
+  /**
+   * A static method to create a new Provider instance with optional backend URL and collection ID parameters.
+   *
+   * @param {Readonly<{
+   *   backendUrl?: string;
+   *   collectionId?: string;
+   * }>} opts - Optional parameters for backend URL and collection ID.
+   * @return {Promise<Provider>} - A Promise that resolves to a new Provider instance.
+   */
+  static async newProvider(
+    opts: Readonly<{
+      backendUrl?: string;
+      collectionId?: string;
+    }> = {},
+  ): Promise<Provider> {
+    let { backendUrl, collectionId = "evo-note-main" } = opts;
+    if (!backendUrl) backendUrl = await getBackendUrl();
 
-    // 判断是否需要初始化
-    const shouldInit = this.collection.docs.size === 0;
+    try {
+      const provider = new Provider(backendUrl, collectionId);
 
-    if (shouldInit) {
-      logger.debug(`${logIdentifier}::connect()::init()`);
-      return createEmptyDoc(this.collection);
-    } else {
-      logger.debug(
-        `${logIdentifier}::connect() 😀 no need init(), size:`,
-        this.collection.docs.size,
-      );
+      logger.debug(`${logIdentifier}::connect()`);
+      provider.collection = await createCollection();
 
-      // 不需要初始化就找一个根文档
-      const firstPageId =
-        this.collection.docs.size > 0
-          ? this.collection.docs.keys().next().value
-          : // 如果小于0，大概是正在加载吧，等待一下拿一个
-            await new Promise<string>((resolve) => {
-              this.collection.slots.docAdded.once((id) => resolve(id));
-            });
+      logger.debug(`${logIdentifier}::connect()::waitForSynced()`);
+      await provider.collection.waitForSynced();
 
-      logger.debug(`${logIdentifier}::connect()::firstPageId`, firstPageId);
+      // 判断是否需要初始化
+      const shouldInit = provider.collection.docs.size === 0;
 
-      const doc = this.collection.getDoc(firstPageId);
-      assertExists(doc);
-      doc.load();
-      // wait for data injected from provider
-      if (!doc.root) {
-        await new Promise((resolve) => doc.slots.rootAdded.once(resolve));
+      if (shouldInit) {
+        logger.debug(`${logIdentifier}::connect()::init()`);
+        provider.doc = createEmptyDoc(provider.collection);
+      } else {
+        logger.debug(
+          `${logIdentifier}::connect() 😀 no need init(), size:`,
+          provider.collection.docs.size,
+        );
+
+        // 不需要初始化就找一个根文档
+        const firstPageId =
+          provider.collection.docs.size > 0
+            ? provider.collection.docs.keys().next().value
+            : // 如果小于0，大概是正在加载吧，等待一下拿一个
+              await new Promise<string>((resolve) => {
+                provider.collection.slots.docAdded.once((id) => resolve(id));
+              });
+
+        logger.debug(`${logIdentifier}::connect()::firstPageId`, firstPageId);
+
+        const doc = provider.collection.getDoc(firstPageId);
+        assertExists(doc);
+        doc.load();
+        // wait for data injected from provider
+        if (!doc.root) {
+          await new Promise((resolve) => doc.slots.rootAdded.once(resolve));
+        }
+        doc.resetHistory();
+        provider.doc = doc;
       }
-      doc.resetHistory();
-      return doc;
+      return provider;
+    } catch (error) {
+      logger.error(`${logIdentifier}::createProvider() error:`, error);
+      throw error;
     }
   }
 

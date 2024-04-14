@@ -8,6 +8,7 @@ import { Doc, Tag } from "@blocksuite/store";
 import { getPagePreviewText } from "../../core/yjs-editor/editor/utils";
 import assert from "assert";
 import logger from "@/lib/logger";
+import { useNote } from "../../useNote";
 
 const ControlTab = memo(function ControlTab() {
   return (
@@ -23,7 +24,7 @@ const ControlTab = memo(function ControlTab() {
 });
 
 export const SideBarNoteList = memo(function SideBarNoteList() {
-  const { collection, editor } = useEditor()!;
+  const { editor, provider } = useEditor()!;
   const [notes, setNotes] = useState<NoteItemType[]>([]);
 
   const staredFiles = useMemo(() => {
@@ -40,14 +41,14 @@ export const SideBarNoteList = memo(function SideBarNoteList() {
    */
   const createNoteFromDoc = useCallback(
     (doc: Doc): NoteItemType => {
-      // if (!collection || !doc.meta) return;
-      // assert(collection, "Collection is missing");
       assert(doc.meta, "Doc meta is missing");
+      assert(provider, "Provider is not ready");
+      const { collection } = provider;
       // 生成 tags
       const tags = doc.meta.tags
         .map((tagId) => {
           // 先拿到 doc 的 tagsID
-          const tagOptions = collection!.meta.properties.tags?.options.find(
+          const tagOptions = collection.meta.properties.tags?.options.find(
             (option) => option.id === tagId, // 然后去 collection 中查找对应的定义
           );
           return tagOptions;
@@ -63,7 +64,7 @@ export const SideBarNoteList = memo(function SideBarNoteList() {
         tags,
       };
     },
-    [collection],
+    [provider],
   );
 
   /**
@@ -72,9 +73,11 @@ export const SideBarNoteList = memo(function SideBarNoteList() {
    * @return {void}
    */
   const updateNotes = useCallback((): void => {
-    const docsArray = Array.from(collection!.docs.values());
-    logger.debug("sidebar-note-list: Updating Notes List");
-    logger.debug("sidebar-note-list: docMetas: ", collection!.meta.docMetas);
+    if (!provider) return;
+    const { collection } = provider;
+    const docsArray = Array.from(collection.docs.values());
+    logger.debug("[sidebar-note-list]: Updating All Notes List");
+    logger.debug("[sidebar-note-list]: docMetas: ", collection.meta.docMetas);
     const notes: NoteItemType[] = docsArray.map((doc) =>
       createNoteFromDoc(doc),
     );
@@ -87,27 +90,31 @@ export const SideBarNoteList = memo(function SideBarNoteList() {
     //   updateNotes.set(doc.meta.id, createNoteFromDoc(doc)); // 生成 NoteItemType
     // });
     // setNotes(updateNotes); // 更新 notes
-  }, [collection, createNoteFromDoc]);
+  }, [provider, createNoteFromDoc]);
 
   const generateNoteByDocId = useCallback(
     function generateNoteByDocId(docId: string) {
+      if (!provider) return null;
+      const { collection } = provider;
       const doc = collection!.getDoc(docId);
       if (doc) {
         return createNoteFromDoc(doc);
       }
       return null;
     },
-    [collection, createNoteFromDoc],
+    [provider, createNoteFromDoc],
   );
 
   useEffect(() => {
-    if (notes.length === 0 && collection) {
-      updateNotes();
-    }
-  }, [notes.length, collection, updateNotes]);
+    if (!provider) return;
+    logger.debug(
+      "[sidebar-note-list] useEffect: provider is changed, update notes",
+    );
+    updateNotes();
+  }, [provider, updateNotes]);
 
   useEffect(() => {
-    if (!collection || !editor) return;
+    if (!provider || !editor) return;
 
     // const updateNote = (doc: Doc): void => {
     //   if (!doc.meta) return;
@@ -120,22 +127,22 @@ export const SideBarNoteList = memo(function SideBarNoteList() {
     // };
     const disposable = [
       // 添加时候
-      collection.slots.docAdded.on((docId) => {
-        logger.debug("sidebar-note-list: EVENT: docAdded", docId);
+      provider.collection.slots.docAdded.on((docId) => {
+        logger.debug("[sidebar-note-list] EVENT: docAdded", docId);
         const note = generateNoteByDocId(docId);
         if (note) {
           setNotes((prevNotes) => [...prevNotes, note]);
         }
       }),
       // 删除时候
-      collection.slots.docRemoved.on((docId) => {
-        logger.debug("sidebar-note-list: EVENT: docRemoved", docId);
+      provider.collection.slots.docRemoved.on((docId) => {
+        logger.debug("[sidebar-note-list] EVENT: docRemoved", docId);
         setNotes((prevNotes) => prevNotes.filter((note) => note.id !== docId));
       }),
       // 更新时候
-      collection.slots.docUpdated.on(() => {
+      provider.collection.slots.docUpdated.on(() => {
         // doc 标题、标签更新时候会触发
-        logger.debug("sidebar-note-list: EVENT: collection.slots.docUpdated");
+        logger.debug("[sidebar-note-list] EVENT: collection.slots.docUpdated");
         setTimeout(() => {
           const updateNote = generateNoteByDocId(editor.doc.id);
           if (updateNote) {
@@ -150,9 +157,10 @@ export const SideBarNoteList = memo(function SideBarNoteList() {
     ];
 
     return () => {
+      logger.debug("[sidebar-note-list] EVENT: disposable all");
       disposable.forEach((d) => d.dispose());
     };
-  }, [collection, editor, generateNoteByDocId, updateNotes]);
+  }, [provider, editor, generateNoteByDocId, updateNotes]);
 
   useEffect(() => {
     logger.debug("NoteList Component has been mounted");

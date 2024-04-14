@@ -15,9 +15,12 @@ import { getBackendUrl } from "@/lib/backendConfig";
 const logID = "[Utils]";
 
 export async function createCollection(
-  name = "Evo Workspace",
-  id = "evo-note-main",
+  opts: {
+    id?: string;
+    name?: string;
+  } = {},
 ) {
+  const { id = "evo-note-main", name = "Evo Workspace" } = opts;
   const backendUrl = await getBackendUrl().then((url) => {
     return url;
   });
@@ -367,7 +370,7 @@ export function createEmptyDoc(
  */
 export const createDocBlock = (collection: DocCollection): Doc => {
   const id = collection.idGenerator();
-  return createDefaultDoc(collection, { id, title: "" });
+  return createDefaultDoc(collection, { id });
 };
 
 /**

@@ -20,7 +20,10 @@ import { CanvasTextFonts } from "./fonts";
 
 export async function initEditor() {
   const backendUrl = await getBackendUrl();
-  const provider = await Provider.newProvider({ backendUrl });
+  const provider = await Provider.newProvider({
+    backendUrl,
+    collectionId: "evo-note-main",
+  });
   const { doc } = provider;
   const editor = new AffineEditorContainer();
 

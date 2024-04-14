@@ -20,7 +20,10 @@ import SideBarSearch from "./views/sidebar/sidebar-search";
 import SideBarAI from "./views/sidebar/sidebar-copilot";
 import SidebarTrash from "./views/sidebar/sidebar-trash";
 import SidebarSettings from "./views/sidebar/sidebar-settings";
-import { AccountSwitcher } from "./ui/account-switcher";
+import {
+  WorkspaceSwitcher,
+  type WorkspaceSwitcherProps,
+} from "./ui/account-switcher";
 import NoteDisplay from "./views/note-display";
 
 // import dynamic from "next/dynamic";
@@ -39,6 +42,7 @@ import {
   getPanelGroupElement,
 } from "react-resizable-panels";
 import logger from "@/lib/logger";
+import { Provider } from "./core/yjs-editor/editor/provider/provider";
 
 interface EvoEditorProps {
   defaultLayout?: number[];
@@ -63,11 +67,15 @@ const sysMenuItem: MenuData[] = [
         label: "New Note",
       },
       {
+        type: "item",
+        label: "New Workspace",
+      },
+      {
         type: "separator",
       },
       {
         type: "item",
-        label: "Save",
+        label: "Export",
       },
       {
         type: "separator",
@@ -171,14 +179,20 @@ const sysMenuItem: MenuData[] = [
   },
 ];
 
-const workspace: {
-  label: string;
-  email: string;
-  icon: React.ReactNode;
-}[] = [
+const workspace: WorkspaceSwitcherProps["workspaces"] = [
   {
     label: "V2Note",
-    email: "Workspace",
+    id: "evo-note-main",
+    icon: (
+      <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <title>V2Note</title>
+        <path d="M0 2.0H24l-12 21.05z" fill="currentColor" />
+      </svg>
+    ),
+  },
+  {
+    label: "test2",
+    id: "test2",
     icon: (
       <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <title>V2Note</title>
@@ -204,13 +218,14 @@ export default function EvoEditor({
   const [tabsValue, setTabsValue] = useState<TabsValue>("notes");
 
   const isWails = useIsWailsEnvironment();
-  const { editor } = useEditor()!;
+  const { editor, provider, changeProvider } = useEditor()!;
   const [_, setSelectNote] = useNote();
 
   const [navMaxSize, setNavMaxSize] = useState<number>(20);
   const [noteListMaxSize, setNoteListMaxSize] = useState<number>(35);
   const groupElementRef = useRef<HTMLElement | null>(null);
   const resizeHandleWidth = useRef<number>(0);
+  const [currentWorkspace, setCurrentWorkspace] = useState("evo-note-main"); // 改成 Atom
 
   const handleResize = useCallback(
     (groupOffsetWidth: number | undefined, resizeHandleWidth: number) => {
@@ -253,6 +268,23 @@ export default function EvoEditor({
 
     return () => observer.disconnect();
   }, [handleResize]);
+
+  const onChangeWorkspace = async (workspaceId: string) => {
+    if (!provider || !editor) return;
+    if (workspaceId !== provider.collection.id) {
+      logger.debug("[Evo-Editor] 🤖 onChangeWorkspace: ", workspaceId);
+      const newProvider = await Provider.newProvider({
+        collectionId: workspaceId,
+      });
+      changeProvider(newProvider);
+      setSelectNote({
+        selected: null,
+      });
+      const { doc } = newProvider;
+      editor.doc = doc;
+      setCurrentWorkspace(newProvider.collection.id);
+    }
+  };
 
   return (
     <>
@@ -300,9 +332,11 @@ export default function EvoEditor({
                 )}
               >
                 {/* <ModeToggle /> */}
-                <AccountSwitcher
-                  accounts={workspace}
+                <WorkspaceSwitcher
+                  workspaces={workspace}
                   isCollapsed={isCollapsed}
+                  onChange={onChangeWorkspace}
+                  value={currentWorkspace}
                 />
               </div>
               <Separator />

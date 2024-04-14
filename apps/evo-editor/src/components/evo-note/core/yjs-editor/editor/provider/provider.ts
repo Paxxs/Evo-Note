@@ -3,6 +3,7 @@ import { createEmptyDoc, createCollection, assertExists } from "../utils";
 import { AffineEditorContainer } from "@blocksuite/presets";
 import logger from "@/lib/logger";
 import { getBackendUrl } from "@/lib/backendConfig";
+import { createDefaultDoc } from "@blocksuite/blocks/dist/index.js";
 
 const logIdentifier = "[Provider]";
 
@@ -36,21 +37,21 @@ export class Provider {
     try {
       const provider = new Provider(backendUrl, collectionId);
 
-      logger.debug(`${logIdentifier}::connect()`);
-      provider.collection = await createCollection();
+      logger.debug(`${logIdentifier}::newProvider()`, collectionId);
+      provider.collection = await createCollection({ id: collectionId });
 
-      logger.debug(`${logIdentifier}::connect()::waitForSynced()`);
+      logger.debug(`${logIdentifier}::newProvider()::waitForSynced()`);
       await provider.collection.waitForSynced();
 
       // 判断是否需要初始化
       const shouldInit = provider.collection.docs.size === 0;
 
       if (shouldInit) {
-        logger.debug(`${logIdentifier}::connect()::init()`);
-        provider.doc = createEmptyDoc(provider.collection);
+        logger.debug(`${logIdentifier}::newProvider()::init()`);
+        provider.doc = createDefaultDoc(provider.collection);
       } else {
         logger.debug(
-          `${logIdentifier}::connect() 😀 no need init(), size:`,
+          `${logIdentifier}::newProvider() 😀 no need init(), size:`,
           provider.collection.docs.size,
         );
 
@@ -63,7 +64,10 @@ export class Provider {
                 provider.collection.slots.docAdded.once((id) => resolve(id));
               });
 
-        logger.debug(`${logIdentifier}::connect()::firstPageId`, firstPageId);
+        logger.debug(
+          `${logIdentifier}::newProvider()::firstPageId`,
+          firstPageId,
+        );
 
         const doc = provider.collection.getDoc(firstPageId);
         assertExists(doc);

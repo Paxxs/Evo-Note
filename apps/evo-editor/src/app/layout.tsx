@@ -7,6 +7,7 @@ import "./themes.css";
 import { cn } from "@/lib/utils";
 import Provider from "./providers";
 import { type ReactNode } from "react";
+import Metrics from "./merics";
 
 const fontSans = FontSans({
   subsets: ["latin-ext"],
@@ -41,6 +42,7 @@ export default function RootLayout({
         )}
       >
         <Provider>{children}</Provider>
+        <Metrics />
       </body>
     </html>
   );

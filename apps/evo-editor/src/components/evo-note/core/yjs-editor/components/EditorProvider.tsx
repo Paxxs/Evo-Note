@@ -1,5 +1,4 @@
 import { AffineEditorContainer } from "@blocksuite/presets";
-import { DocCollection } from "@blocksuite/store";
 import React, { createContext, useContext, useEffect } from "react";
 import { initEditor } from "../editor/editor";
 import { Provider } from "../editor/provider/provider";

@@ -34,26 +34,13 @@ export default function ControlButton() {
     WindowMinimise();
   }, []);
 
-  const closeOnClick = useCallback(() => {
+  const closeOnClick = useCallback(async () => {
     if (!provider) return;
-    const { collection } = provider;
 
-    if (collection) {
-      toast.info("😀 Saving...");
-      if (!collection.docSync.canGracefulStop()) {
-        toast.info("😉 Just need one more time...");
-        collection.docSync
-          .waitForGracefulStop()
-          .then(() => {
-            toast.success("😀 Saved");
-            Quit();
-          })
-          .catch((err) => {
-            toast.error("😢 data save error:" + err);
-            return;
-          });
-      }
-    }
+    await provider.stopSync().catch((err) => {
+      toast.error("😢 data save error:" + err);
+      return;
+    });
     Quit();
   }, [provider]);
 

@@ -271,27 +271,43 @@ export default function EvoEditor({
 
   const onChangeWorkspace = async (workspaceId: string) => {
     if (!provider || !editor) return;
-    if (workspaceId !== provider.collection.id) {
-      logger.debug("[Evo-Editor] 🤖 onChangeWorkspace: ", workspaceId);
+
+    if (workspaceId === provider.collection.id) return;
+
+    logger.debug("[Evo-Editor] 🤖 onChangeWorkspace: ", workspaceId);
+
+    try {
+      toast.info("📦 Saving Workspace Notes...");
+      await provider.stopSync();
+    } catch (error) {
+      logger.error("[Evo-Editor] 🤖 stopSync error: ", error);
+      toast.error("🚨 Stop sync error: " + error);
+      return;
+    }
+
+    try {
       const newProvider = await Provider.newProvider({
         collectionId: workspaceId,
       });
+
       changeProvider(newProvider);
-      setSelectNote({
-        selected: null,
-      });
-      const { doc } = newProvider;
-      editor.doc = doc;
+      setSelectNote({ selected: null });
+      editor.doc = newProvider.doc;
       setCurrentWorkspace(newProvider.collection.id);
+
+      toast.success("🎉 Loading success!");
+    } catch (error) {
+      logger.error("[Evo-Editor] 🤖 Error loading new provider: ", error);
+      toast.error("🚨 Error loading new workspace: " + error);
     }
   };
 
   return (
     <>
-      <div className="flex flex-col w-full bg-background">
+      <div className="flex flex-col w-full bg-background/95">
         <div className="mf-system-menu flex flex-row items-center justify-between border-b select-none h-12">
           <SysMenu
-            className="rounded-none shadow-none border-none h-8 pl-3"
+            className="rounded-none shadow-none border-none h-8 pl-3 bg-transparent"
             items={sysMenuItem}
           />
           <div className="flex-grow mf-draggable h-full">{/* 拖动区域 */}</div>
@@ -302,7 +318,7 @@ export default function EvoEditor({
         </div>
         <ResizablePanelGroup
           direction="horizontal"
-          className="h-full items-stretch"
+          className="h-full items-stretch bg-background"
           id="group"
         >
           <ResizablePanel

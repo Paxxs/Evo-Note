@@ -43,7 +43,7 @@ func Run(fs *embed.FS) {
 		Frameless:         true,
 		StartHidden:       false,
 		HideWindowOnClose: false,
-		BackgroundColour:  &options.RGBA{R: 255, G: 255, B: 255, A: 80},
+		BackgroundColour:  &options.RGBA{R: 255, G: 255, B: 255, A: 0},
 		AssetServer: &assetserver.Options{
 			Assets: *assets,
 		},

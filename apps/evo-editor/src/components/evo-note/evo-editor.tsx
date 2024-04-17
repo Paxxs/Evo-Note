@@ -43,6 +43,11 @@ import {
 } from "react-resizable-panels";
 import logger from "@/lib/logger";
 import { Provider } from "./core/yjs-editor/editor/provider/provider";
+import {
+  WindowSetDarkTheme,
+  WindowSetLightTheme,
+} from "@/wails/wailsjs/runtime/runtime";
+import { useTheme } from "next-themes";
 
 interface EvoEditorProps {
   defaultLayout?: number[];
@@ -227,6 +232,8 @@ export default function EvoEditor({
   const resizeHandleWidth = useRef<number>(0);
   const [currentWorkspace, setCurrentWorkspace] = useState("evo-note-main"); // 改成 Atom
 
+  const { resolvedTheme } = useTheme();
+
   const handleResize = useCallback(
     (groupOffsetWidth: number | undefined, resizeHandleWidth: number) => {
       if (groupOffsetWidth) {
@@ -269,6 +276,11 @@ export default function EvoEditor({
     return () => observer.disconnect();
   }, [handleResize]);
 
+  useEffect(() => {
+    if (!isWails) return;
+    resolvedTheme === "dark" ? WindowSetDarkTheme() : WindowSetLightTheme();
+  }, [resolvedTheme, isWails]);
+
   const onChangeWorkspace = async (workspaceId: string) => {
     if (!provider || !editor) return;
 
@@ -304,7 +316,12 @@ export default function EvoEditor({
 
   return (
     <>
-      <div className="flex flex-col w-full bg-background/95">
+      <div
+        className={cn(
+          "flex flex-col w-full",
+          isWails ? "bg-background/95" : "bg-background",
+        )}
+      >
         <div className="mf-system-menu flex flex-row items-center justify-between border-b select-none h-12">
           <SysMenu
             className="rounded-none shadow-none border-none h-8 pl-3 bg-transparent"
@@ -318,7 +335,7 @@ export default function EvoEditor({
         </div>
         <ResizablePanelGroup
           direction="horizontal"
-          className="h-full items-stretch bg-background"
+          className="h-full items-stretch"
           id="group"
         >
           <ResizablePanel

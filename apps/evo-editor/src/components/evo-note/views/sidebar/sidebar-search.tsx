@@ -68,7 +68,7 @@ export default function SideBarSearch() {
         className="h-[calc(100dvh-3rem)]"
       >
         <SideBarTitle title="Search"></SideBarTitle>
-        <div className="sticky top-[52.8px] bg-background/95 p-4 backdrop-blur supports-[backdrop-filter]:bg-background/75">
+        <div className="sticky top-[52.8px] bg-background/0 p-4 backdrop-blur supports-[backdrop-filter]:bg-background/75">
           <form
             onSubmit={(e) => {
               e.preventDefault();

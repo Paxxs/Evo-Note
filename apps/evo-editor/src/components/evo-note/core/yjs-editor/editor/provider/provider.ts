@@ -124,4 +124,25 @@ export class Provider {
     doc.load();
     editor.doc = doc;
   }
+  stopSync(): Promise<boolean> {
+    const { store } = this.collection;
+
+    const performOperations = async (): Promise<boolean> => {
+      try {
+        if (!store.docSync.canGracefulStop()) {
+          await store.docSync.waitForGracefulStop();
+        }
+        store.awarenessSync.disconnect();
+        store.awarenessStore.destroy();
+        store.docSync.forceStop();
+        return true;
+      } catch (error) {
+        throw error;
+      }
+    };
+
+    return new Promise((resolve, reject) => {
+      performOperations().then(resolve).catch(reject);
+    });
+  }
 }

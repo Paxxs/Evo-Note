@@ -9,21 +9,21 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 export default function SettingsPage(): JSX.Element {
   return (
     <>
-      <div className="w-full">
-        <Tabs defaultValue="color" orientation="vertical" className="">
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="color">Color</TabsTrigger>
+      <Tabs defaultValue="display" orientation="vertical" asChild>
+        <div className="flex-1 w-full items-start px-9 py-0 overflow-auto md:max-w-3xl md:mx-auto">
+          <TabsList className="grid grid-cols-5">
             <TabsTrigger value="display">Display</TabsTrigger>
+            <TabsTrigger value="color">Color</TabsTrigger>
             <TabsTrigger value="notes">Notes</TabsTrigger>
             <TabsTrigger value="ai">Copilot</TabsTrigger>
             <TabsTrigger value="about">About</TabsTrigger>
           </TabsList>
-          <ScrollArea className="h-[60dvh]">
-            <TabsContent value="color">
-              <ColorSettings />
-            </TabsContent>
+          <div className="my-4">
             <TabsContent value="display">
               <DisplaySettings />
+            </TabsContent>
+            <TabsContent value="color">
+              <ColorSettings />
             </TabsContent>
             <TabsContent value="notes">
               <NoteSettings />
@@ -38,9 +38,9 @@ export default function SettingsPage(): JSX.Element {
             <TabsContent value="about">
               <About />
             </TabsContent>
-          </ScrollArea>
-        </Tabs>
-      </div>
+          </div>
+        </div>
+      </Tabs>
     </>
   );
 }

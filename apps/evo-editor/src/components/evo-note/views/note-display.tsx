@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Redo2, Undo2 } from "lucide-react";
 import { type Doc } from "@blocksuite/store";
 import logger from "@/lib/logger";
+import "./note-display.css";
 
 const HistoryManager = memo(function HistoryManager({ doc }: { doc: Doc }) {
   const [canUndo, setCanUndo] = useState(false);

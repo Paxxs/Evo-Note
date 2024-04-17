@@ -22,14 +22,12 @@ export default function NiceDraw({
 }: NiceDrawProps) {
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="h-[90%]">
-        <div className="mx-auto w-full max-w-lg">
-          <DrawerHeader>
-            <DrawerTitle>{title}</DrawerTitle>
-            {description && <DrawerTitle>{description}</DrawerTitle>}
-          </DrawerHeader>
-          {children}
-        </div>
+      <DrawerContent className="h-[80%]">
+        <DrawerHeader className="sm:text-center">
+          <DrawerTitle>{title}</DrawerTitle>
+          {description && <DrawerTitle>{description}</DrawerTitle>}
+        </DrawerHeader>
+        {children}
       </DrawerContent>
     </Drawer>
   );

@@ -10,7 +10,7 @@ import {
   MenubarSubContent,
   MenubarSubTrigger,
 } from "@/components/ui/menubar";
-import React, { memo } from "react";
+import React, { memo, useCallback } from "react";
 
 // 定义菜单项类型
 type MenuItemType = "item" | "separator" | "sub";
@@ -20,6 +20,7 @@ interface BaseMenuItem {
   type: MenuItemType;
   label?: string;
   shortcut?: string;
+  actionKey?: string;
 }
 
 // 定义具体菜单项接口
@@ -47,10 +48,20 @@ interface MenuData {
 interface sysMenuProps {
   className?: string;
   items: MenuData[];
+  onMenuSelect?: (actionKey: string) => void;
 }
 
-const SysMenu = memo(function SysMenu({ className, items }: sysMenuProps) {
-  console.log("SysMenu 重新渲染了");
+const SysMenu = memo(function SysMenu({
+  className,
+  items,
+  onMenuSelect,
+}: sysMenuProps) {
+  const handleMenuItemClick = useCallback(
+    (actionKey: string) => {
+      onMenuSelect?.(actionKey);
+    },
+    [onMenuSelect],
+  );
   /**
    * Renders the menu items based on the provided data.
    *
@@ -62,7 +73,12 @@ const SysMenu = memo(function SysMenu({ className, items }: sysMenuProps) {
       switch (item.type) {
         case "item":
           return (
-            <MenubarItem key={index}>
+            <MenubarItem
+              key={index}
+              onClick={() =>
+                item.actionKey && handleMenuItemClick(item.actionKey)
+              }
+            >
               {item.label}
               {item.shortcut && (
                 <MenubarShortcut>{item.shortcut}</MenubarShortcut>
@@ -85,9 +101,12 @@ const SysMenu = memo(function SysMenu({ className, items }: sysMenuProps) {
       }
     });
   return (
-    <Menubar className={className}>
+    <Menubar
+      className={className}
+      onValueChange={(v) => console.log("value change:", v)}
+    >
       {items.map((item, index) => (
-        <MenubarMenu key={index}>
+        <MenubarMenu key={index} value={item.title}>
           <MenubarTrigger className="text-muted-foreground hover:text-primary">
             {item.title}
           </MenubarTrigger>

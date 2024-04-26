@@ -608,7 +608,7 @@ export default function EvoEditor({
             minSize={20}
             maxSize={noteListMaxSize}
             collapsible={true}
-            className="select-none transition-all duration-100 ease-in-out"
+            className="select-none"
             // defaultSize={defaultLayout[1]}
           >
             <Tabs

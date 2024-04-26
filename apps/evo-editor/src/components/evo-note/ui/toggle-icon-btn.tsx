@@ -36,7 +36,7 @@ export default function ToggleIconBtn({
       },
       clicked: {
         rotate: [0, -10, 0], // Rotate left then back to center
-        scale: [1, 1.2, 1],
+        scale: [1, 1.3, 1],
         transition: { duration: 0.4 },
       },
     },
@@ -47,7 +47,7 @@ export default function ToggleIconBtn({
       },
       clicked: {
         rotate: [0, 10, 0], // Rotate right then back to center
-        scale: [1, 1.2, 1],
+        scale: [1, 1.3, 1],
         transition: { duration: 0.4 },
       },
     },

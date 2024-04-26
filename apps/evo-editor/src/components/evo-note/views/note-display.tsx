@@ -16,11 +16,18 @@ const HistoryManager = memo(function HistoryManager({ doc }: { doc: Doc }) {
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
   useEffect(() => {
-    logger.debug("🤖[HistoryManager] mounted");
+    logger.debug("🤖[HistoryManager] mounted", doc.id, doc.meta?.title);
     const updateUndoManagerState = () => {
-      logger.debug("[HistoryManager] doc.history 😀 update state");
-      setCanUndo(doc.history.canUndo());
-      setCanRedo(doc.history.canRedo());
+      setTimeout(() => {
+        const canUndo = doc.history.canUndo();
+        const canRedo = doc.history.canRedo();
+        logger.debug(
+          "[HistoryManager] doc.history 😀 update state",
+          `canUndo=${canUndo} canRedo=${canRedo}`,
+        );
+        setCanUndo(doc.history.canUndo());
+        setCanRedo(doc.history.canRedo());
+      }, 500);
     };
     updateUndoManagerState();
     const disposable = doc.slots.blockUpdated.on(() => {
@@ -34,7 +41,7 @@ const HistoryManager = memo(function HistoryManager({ doc }: { doc: Doc }) {
   }, [doc]);
 
   return (
-    <div className="block">
+    <>
       <Button
         size="icon"
         variant="ghost"
@@ -54,7 +61,7 @@ const HistoryManager = memo(function HistoryManager({ doc }: { doc: Doc }) {
       >
         <Redo2 className="w-4 h-4" />
       </Button>
-    </div>
+    </>
   );
 });
 
@@ -101,8 +108,10 @@ export default function NoteDisplay() {
           <TooltipProvider delayDuration={0}>
             <div className="mf-bg-blur sticky z-10 top-0 flex flex-col justify-center border-b">
               <div className="flex gap-4 px-2 items-center justify-between max-h-[52px] min-h-[52px]">
-                <HistoryManager doc={doc} />
-                <div className="flex gap-4">
+                <div className="flex gap-0.5">
+                  <HistoryManager doc={doc} />
+                </div>
+                <div className="flex gap-0.5">
                   <ToggleIconBtn
                     value={isPage}
                     onValueChange={(newState) => {

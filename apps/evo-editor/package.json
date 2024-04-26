@@ -43,6 +43,7 @@
     "novel": "workspace:^",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-full-screen": "^1.1.1",
     "react-hook-form": "^7.51.1",
     "react-resizable-panels": "^2.0.13",
     "sonner": "^1.4.3",

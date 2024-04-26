@@ -28,7 +28,13 @@ import NoteDisplay from "./views/note-display";
 
 // import dynamic from "next/dynamic";
 import { useEditor } from "./core/yjs-editor/components/EditorProvider";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  type RefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { cn } from "@/lib/utils";
 
 import ControlButton from "./ui/control-button";
@@ -44,10 +50,28 @@ import {
 import logger from "@/lib/logger";
 import { Provider } from "./core/yjs-editor/editor/provider/provider";
 import {
+  Quit,
+  WindowFullscreen,
   WindowSetDarkTheme,
   WindowSetLightTheme,
+  WindowUnfullscreen,
 } from "@/wails/wailsjs/runtime/runtime";
 import { useTheme } from "next-themes";
+import {
+  FullScreen,
+  FullScreenHandle,
+  useFullScreenHandle,
+} from "react-full-screen";
+import { IconLogo } from "../ui/icons";
+import { useRouter } from "next/navigation";
+
+declare global {
+  interface Window {
+    editor: any;
+    doc: any;
+    collection: any;
+  }
+}
 
 interface EvoEditorProps {
   defaultLayout?: number[];
@@ -65,29 +89,25 @@ type TabsValue =
 
 const sysMenuItem: MenuData[] = [
   {
-    title: "File",
+    title: "Notes",
     items: [
       {
         type: "item",
         label: "New Note",
+        actionKey: "new_note",
       },
       {
         type: "item",
         label: "New Workspace",
+        actionKey: "new_workspace",
       },
       {
         type: "separator",
       },
       {
         type: "item",
-        label: "Export",
-      },
-      {
-        type: "separator",
-      },
-      {
-        type: "item",
-        label: "Perferences",
+        label: "Preferences",
+        actionKey: "settings",
       },
       {
         type: "separator",
@@ -95,22 +115,7 @@ const sysMenuItem: MenuData[] = [
       {
         type: "item",
         label: "Exit",
-      },
-    ],
-  },
-  {
-    title: "Edit",
-    items: [
-      {
-        type: "item",
-        label: "Toggle Editor",
-      },
-      {
-        type: "separator",
-      },
-      {
-        type: "item",
-        label: "[dev] Show diagnostic",
+        actionKey: "exit",
       },
     ],
   },
@@ -120,17 +125,20 @@ const sysMenuItem: MenuData[] = [
       {
         type: "item",
         label: "Toggle Navbar",
+        actionKey: "toggle_navbar",
       },
       {
         type: "item",
         label: "Toggle Sidebar",
+        actionKey: "toggle_sidebar",
       },
       {
         type: "separator",
       },
       {
         type: "item",
-        label: "Toogle Fullscreen",
+        label: "Fullscreen",
+        actionKey: "fullscreen",
       },
       {
         type: "separator",
@@ -142,14 +150,17 @@ const sysMenuItem: MenuData[] = [
           {
             type: "item",
             label: "Dark Mode",
+            actionKey: "dark_mode",
           },
           {
             type: "item",
             label: "Light Mode",
+            actionKey: "light_mode",
           },
           {
             type: "item",
             label: "Auto Mode",
+            actionKey: "auto_mode",
           },
         ],
       },
@@ -161,10 +172,12 @@ const sysMenuItem: MenuData[] = [
       {
         type: "item",
         label: "Video Tutorials",
+        actionKey: "video_tutorials",
       },
       {
         type: "item",
         label: "Tips and Tricks",
+        actionKey: "tips_tricks",
       },
       {
         type: "separator",
@@ -172,6 +185,12 @@ const sysMenuItem: MenuData[] = [
       {
         type: "item",
         label: "Feedback",
+        actionKey: "feedback",
+      },
+      {
+        type: "item",
+        label: "[dev] Attach Windows",
+        actionKey: "show_diagnostic",
       },
       {
         type: "separator",
@@ -179,6 +198,7 @@ const sysMenuItem: MenuData[] = [
       {
         type: "item",
         label: "About",
+        actionKey: "about",
       },
     ],
   },
@@ -218,6 +238,7 @@ export default function EvoEditor({
   const [isSettingsOpen, setIsSettingsOpen] = useState(false); // 设置菜单
 
   const sideBarResizablePanelRef = useRef<ImperativePanelHandle>(null);
+  const navBarResizablePanelRef = useRef<ImperativePanelHandle>(null);
   // const [selectedNote] = useNote();
 
   const [tabsValue, setTabsValue] = useState<TabsValue>("notes");
@@ -232,7 +253,10 @@ export default function EvoEditor({
   const resizeHandleWidth = useRef<number>(0);
   const [currentWorkspace, setCurrentWorkspace] = useState("evo-note-main"); // 改成 Atom
 
-  const { resolvedTheme } = useTheme();
+  const { setTheme, resolvedTheme } = useTheme();
+
+  const fullscreenHandle = useFullScreenHandle();
+  const router = useRouter();
 
   const handleResize = useCallback(
     (groupOffsetWidth: number | undefined, resizeHandleWidth: number) => {
@@ -314,6 +338,118 @@ export default function EvoEditor({
     }
   };
 
+  const closeEditor = useCallback(async () => {
+    if (!provider) return;
+
+    await provider.stopSync().catch((err) => {
+      toast.error("😢 data save error:" + err);
+      return;
+    });
+    if (!isWails) router.push("/");
+    else Quit();
+  }, [provider, isWails, router]);
+
+  const handleMenuAction = (actionKey: string) => {
+    const logMessage = `[Evo-Editor] 🤖 handleMenuAction: ${actionKey}`;
+    switch (actionKey) {
+      case "new_note":
+        logger.debug(logMessage);
+        createNewNote();
+        break;
+      case "new_workspace":
+        logger.debug(logMessage);
+        break;
+      case "settings":
+        logger.debug(logMessage);
+        setIsSettingsOpen(true);
+        break;
+      case "exit":
+        logger.debug(logMessage);
+        closeEditor();
+        break;
+      case "show_diagnostic":
+        logger.debug(logMessage);
+        if (!editor || !provider) break;
+        window.editor = editor;
+        window.doc = editor.doc;
+        window.collection = provider.collection;
+        toast.info("attaching to window");
+        break;
+      case "toggle_navbar":
+        logger.debug(logMessage);
+        togglePanel(navBarResizablePanelRef);
+        break;
+      case "toggle_sidebar":
+        logger.debug(logMessage);
+        togglePanel(sideBarResizablePanelRef);
+        break;
+      case "fullscreen":
+        logger.debug(logMessage);
+        fullscreenHandle.enter();
+        break;
+      case "dark_mode":
+        logger.debug(logMessage);
+        setTheme("dark");
+        break;
+      case "light_mode":
+        logger.debug(logMessage);
+        setTheme("light");
+        break;
+      case "auto_mode":
+        logger.debug(logMessage);
+        setTheme("system");
+        break;
+      case "video_tutorials":
+        logger.debug(logMessage);
+        break;
+      case "tips_tricks":
+        logger.debug(logMessage);
+        break;
+      case "feedback":
+        logger.debug(logMessage);
+        break;
+      case "about":
+        logger.debug(logMessage);
+        break;
+      default:
+        console.log("Action not recognized", actionKey);
+    }
+  };
+
+  const createNewNote = useCallback(() => {
+    if (!editor || !provider) return;
+    editor.doc = createDocBlock(provider.collection);
+    editor.doc.load();
+    // editor.doc.resetHistory();
+    toast.success("New note created");
+    setSelectNote({
+      selected: editor.doc.id,
+    });
+  }, [editor, setSelectNote, provider]);
+
+  const handleFullScreenChange = useCallback(
+    (state: boolean, handle: FullScreenHandle) => {
+      if (!isWails) return;
+      if (state) {
+        WindowFullscreen();
+      } else {
+        WindowUnfullscreen();
+      }
+    },
+    [isWails],
+  );
+
+  function togglePanel(panelRef: RefObject<ImperativePanelHandle>) {
+    const panel = panelRef.current;
+    if (!panel) return;
+
+    if (panel.isExpanded()) {
+      panel.collapse();
+    } else {
+      panel.expand();
+    }
+  }
+
   return (
     <>
       <div
@@ -322,15 +458,20 @@ export default function EvoEditor({
           isWails ? "bg-background/95" : "bg-background",
         )}
       >
-        <div className="mf-system-menu flex flex-row items-center justify-between border-b select-none h-12">
+        <div className="mf-system-menu flex flex-row items-center justify-between border-b select-none h-12 pl-4">
+          <IconLogo
+            className={cn("w-5 h-5")}
+            onDoubleClick={() => fullscreenHandle.enter()}
+          />
           <SysMenu
             className="rounded-none shadow-none border-none h-8 pl-3 bg-transparent"
             items={sysMenuItem}
+            onMenuSelect={handleMenuAction}
           />
           <div className="flex-grow mf-draggable h-full">{/* 拖动区域 */}</div>
           <div className="flex flex-row items-center">
             <ModeToggle />
-            {isWails && <ControlButton />}
+            {isWails && <ControlButton onCloseBtnClick={closeEditor} />}
           </div>
         </div>
         <ResizablePanelGroup
@@ -339,7 +480,7 @@ export default function EvoEditor({
           id="group"
         >
           <ResizablePanel
-            // ref={NavResizablePanelRef}
+            ref={navBarResizablePanelRef}
             // defaultSize={defaultLayout[0]}
             maxSize={navMaxSize}
             minSize={navMaxSize - 1}
@@ -388,15 +529,7 @@ export default function EvoEditor({
                   },
                 ]}
                 onClick={(keyValue) => {
-                  if (keyValue === "newNote" && editor) {
-                    editor.doc = createDocBlock(editor.doc.collection);
-                    editor.doc.load();
-                    editor.doc.resetHistory();
-                    toast.success("New note created");
-                    setSelectNote({
-                      selected: editor.doc.id,
-                    });
-                  }
+                  keyValue === "newNote" && createNewNote();
                 }}
               />
               <Separator />
@@ -446,12 +579,6 @@ export default function EvoEditor({
                     variant: "ghost",
                     keyValue: "trash",
                   },
-                  // {
-                  //   title: "Settings",
-                  //   label: "Customize your experience",
-                  //   icon: Settings,
-                  //   variant: "ghost",
-                  // },
                 ]}
               />
             </div>
@@ -481,7 +608,7 @@ export default function EvoEditor({
             minSize={20}
             maxSize={noteListMaxSize}
             collapsible={true}
-            className="select-none transition-all duration-100 ease-in-out"
+            className="select-none"
             // defaultSize={defaultLayout[1]}
           >
             <Tabs
@@ -526,7 +653,13 @@ export default function EvoEditor({
             collapsible={false}
             className="select-none"
           >
-            <NoteDisplay />
+            <FullScreen
+              handle={fullscreenHandle}
+              onChange={handleFullScreenChange}
+              className="bg-background"
+            >
+              <NoteDisplay />
+            </FullScreen>
           </ResizablePanel>
         </ResizablePanelGroup>
         <SidebarSettings

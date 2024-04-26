@@ -50,6 +50,7 @@ import {
 import logger from "@/lib/logger";
 import { Provider } from "./core/yjs-editor/editor/provider/provider";
 import {
+  Quit,
   WindowFullscreen,
   WindowSetDarkTheme,
   WindowSetLightTheme,
@@ -63,6 +64,14 @@ import {
 } from "react-full-screen";
 import { IconLogo } from "../ui/icons";
 import { useRouter } from "next/navigation";
+
+declare global {
+  interface Window {
+    editor: any;
+    doc: any;
+    collection: any;
+  }
+}
 
 interface EvoEditorProps {
   defaultLayout?: number[];
@@ -329,6 +338,17 @@ export default function EvoEditor({
     }
   };
 
+  const closeEditor = useCallback(async () => {
+    if (!provider) return;
+
+    await provider.stopSync().catch((err) => {
+      toast.error("😢 data save error:" + err);
+      return;
+    });
+    if (!isWails) router.push("/");
+    else Quit();
+  }, [provider, isWails, router]);
+
   const handleMenuAction = (actionKey: string) => {
     const logMessage = `[Evo-Editor] 🤖 handleMenuAction: ${actionKey}`;
     switch (actionKey) {
@@ -345,14 +365,15 @@ export default function EvoEditor({
         break;
       case "exit":
         logger.debug(logMessage);
-        if (isWails) {
-        } else {
-          router.push("/");
-        }
-
+        closeEditor();
         break;
       case "show_diagnostic":
         logger.debug(logMessage);
+        if (!editor || !provider) break;
+        window.editor = editor;
+        window.doc = editor.doc;
+        window.collection = provider.collection;
+        toast.info("attaching to window");
         break;
       case "toggle_navbar":
         logger.debug(logMessage);
@@ -396,15 +417,15 @@ export default function EvoEditor({
   };
 
   const createNewNote = useCallback(() => {
-    if (!editor) return;
-    editor.doc = createDocBlock(editor.doc.collection);
+    if (!editor || !provider) return;
+    editor.doc = createDocBlock(provider.collection);
     editor.doc.load();
-    editor.doc.resetHistory();
+    // editor.doc.resetHistory();
     toast.success("New note created");
     setSelectNote({
       selected: editor.doc.id,
     });
-  }, [editor, setSelectNote]);
+  }, [editor, setSelectNote, provider]);
 
   const handleFullScreenChange = useCallback(
     (state: boolean, handle: FullScreenHandle) => {
@@ -450,7 +471,7 @@ export default function EvoEditor({
           <div className="flex-grow mf-draggable h-full">{/* 拖动区域 */}</div>
           <div className="flex flex-row items-center">
             <ModeToggle />
-            {isWails && <ControlButton />}
+            {isWails && <ControlButton onCloseBtnClick={closeEditor} />}
           </div>
         </div>
         <ResizablePanelGroup

@@ -50,6 +50,7 @@ import {
 import logger from "@/lib/logger";
 import { Provider } from "./core/yjs-editor/editor/provider/provider";
 import {
+  Environment,
   Quit,
   WindowFullscreen,
   WindowSetDarkTheme,
@@ -64,6 +65,7 @@ import {
 } from "react-full-screen";
 import { IconLogo } from "../ui/icons";
 import { useRouter } from "next/navigation";
+import AboutDialog from "./ui/aboutDialog";
 
 declare global {
   interface Window {
@@ -258,6 +260,8 @@ export default function EvoEditor({
   const fullscreenHandle = useFullScreenHandle();
   const router = useRouter();
 
+  const [aboutOpen, setAboutOpen] = useState(false);
+
   const handleResize = useCallback(
     (groupOffsetWidth: number | undefined, resizeHandleWidth: number) => {
       if (groupOffsetWidth) {
@@ -410,6 +414,7 @@ export default function EvoEditor({
         break;
       case "about":
         logger.debug(logMessage);
+        setAboutOpen(true);
         break;
       default:
         console.log("Action not recognized", actionKey);
@@ -666,6 +671,7 @@ export default function EvoEditor({
           open={isSettingsOpen}
           onOpenChange={setIsSettingsOpen}
         />
+        <AboutDialog open={aboutOpen} onOpenChange={setAboutOpen} />
       </div>
     </>
   );

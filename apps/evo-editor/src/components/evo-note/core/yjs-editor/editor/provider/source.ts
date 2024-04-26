@@ -1,3 +1,5 @@
+import type { Awareness } from "y-protocols/awareness";
+
 export interface DocSource {
   /**
    * for debug
@@ -25,4 +27,9 @@ export interface DocSource {
     cb: (docId: string, data: Uint8Array) => void,
     disconnect: (reason: string) => void,
   ): Promise<() => void> | (() => void);
+}
+
+export interface AwarenessSource {
+  connect(awareness: Awareness): void;
+  disconnect(): void;
 }

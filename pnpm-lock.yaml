@@ -107,6 +107,9 @@ importers:
       framer-motion:
         specifier: ^11.0.24
         version: 11.0.24(react-dom@18.2.0)(react@18.2.0)
+      idb:
+        specifier: ^8.0.0
+        version: 8.0.0
       jotai:
         specifier: ^2.7.1
         version: 2.7.1(@types/react@18.2.60)(react@18.2.0)
@@ -158,6 +161,9 @@ importers:
       y-indexeddb:
         specifier: ^9.0.12
         version: 9.0.12(yjs@13.6.14)
+      y-protocols:
+        specifier: ^1.0.6
+        version: 1.0.6(yjs@13.6.14)
       yjs:
         specifier: ^13.6.14
         version: 13.6.14

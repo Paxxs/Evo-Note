@@ -5,12 +5,15 @@ import {
   Schema,
   Doc,
   StoreOptions,
+  createIndexeddbStorage,
 } from "@blocksuite/store";
 import { AffineSchemas, createDefaultDoc } from "@blocksuite/blocks";
 import logger from "@/lib/logger";
 import { DocSource } from "./provider/source";
 import { mergeUpdates, diffUpdate, encodeStateVectorFromUpdate } from "yjs";
 import { getBackendUrl } from "@/lib/backendConfig";
+import { BroadcastChannelAwarenessSource } from "./provider/impl/broadcast-awareness";
+import { IndexedDBDocSource } from "./provider/impl/indexeddb-docsource";
 
 const logID = "[Utils]";
 
@@ -52,15 +55,26 @@ export async function createCollection(
   const idGenerator = Generator.NanoID;
 
   const docSources: StoreOptions["docSources"] = {
-    main: new RemoteDocSource(backendUrl, id),
+    main: new IndexedDBDocSource(id),
+    shadow: [new RemoteDocSource(backendUrl, id)],
   };
 
   const collection = new DocCollection({
     schema,
     id,
-    blobStorages: [() => createRemoteBlobStorage(backendUrl, id)],
+    blobStorages: [
+      (id) => {
+        logger.debug(
+          `${logID}::::createCollection(): createRemoteBlobStorage()`,
+          id,
+        );
+        return createRemoteBlobStorage(backendUrl, id);
+      },
+      createIndexeddbStorage,
+    ],
     docSources,
     idGenerator,
+    awarenessSources: [new BroadcastChannelAwarenessSource(id)],
     defaultFlags: {
       enable_synced_doc_block: true,
       enable_expand_database_block: true,

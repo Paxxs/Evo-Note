@@ -21,9 +21,7 @@ export default function ToggleIconBtn({
 
   const [editorMode, setEditorMode] = useState<string>(stringValue);
 
-  // Convert the onValueChange prop to handle string values from Tabs
   const handleValueChange = (value: string) => {
-    // Invoke the onValueChange prop with true for "page" and false for "edgeless"
     setEditorMode(value);
     onValueChange?.(value === "page");
   };
@@ -63,7 +61,7 @@ export default function ToggleIconBtn({
                 animate={editorMode === "page" ? "clicked" : "initial"}
                 variants={iconVariants.page}
               >
-                <FileBarChart2 className="w-4" />
+                <FileBarChart2 className="w-3.5" />
               </motion.div>
             </TooltipTrigger>
             <TooltipContent side="bottom" sideOffset={10} asChild>
@@ -78,7 +76,7 @@ export default function ToggleIconBtn({
                 variants={iconVariants.edgeless}
                 animate={editorMode === "edgeless" ? "clicked" : "initial"}
               >
-                <CombineIcon className="w-4" />
+                <CombineIcon className="w-3.5" />
               </motion.div>
             </TooltipTrigger>
             <TooltipContent side="bottom" sideOffset={10} asChild>

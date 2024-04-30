@@ -66,6 +66,7 @@ const HistoryManager = memo(function HistoryManager({ doc }: { doc: Doc }) {
         }}
       >
         <Undo2 className="w-4 h-4" />
+        <span className="sr-only">Undo</span>
       </Button>
       <Button
         size="icon"
@@ -74,6 +75,7 @@ const HistoryManager = memo(function HistoryManager({ doc }: { doc: Doc }) {
         onClick={() => doc.redo()}
       >
         <Redo2 className="w-4 h-4" />
+        <span className="sr-only">Redo</span>
       </Button>
     </>
   );
@@ -123,13 +125,12 @@ export default function NoteDisplay({
   }, [editor, provider, selectNote.selected, setSelectNote]);
 
   return (
-    editor &&
-    doc && (
-      <div className="flex h-full flex-col flex-grow" ref={containerRef}>
+    <div className="flex h-full flex-col flex-grow" ref={containerRef}>
+      {editor && doc && (
         <ScrollArea className="h-dvh">
           <TooltipProvider delayDuration={0}>
             <div className="mf-bg-blur sticky z-10 top-0 flex flex-col justify-center border-b">
-              <div className="flex gap-4 px-2 items-center justify-between max-h-[52px] min-h-[52px]">
+              <div className="flex px-2 items-center justify-between max-h-[52px] min-h-[52px]">
                 <div className="flex items-center gap-2">
                   <ToggleIconBtn
                     value={isPage}
@@ -141,6 +142,7 @@ export default function NoteDisplay({
                 </div>
                 <div className="flex items-center gap-2">
                   <HistoryManager doc={doc} />
+
                   <Separator orientation="vertical" className="mx-2 h-6" />
                   <DropdownMenu>
                     <DropdownMenuTrigger>
@@ -226,7 +228,7 @@ export default function NoteDisplay({
           />
           <ScrollBar orientation="vertical" />
         </ScrollArea>
-      </div>
-    )
+      )}
+    </div>
   );
 }

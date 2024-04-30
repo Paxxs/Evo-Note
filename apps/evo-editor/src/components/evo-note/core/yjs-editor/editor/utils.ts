@@ -63,6 +63,7 @@ export async function createCollection(
     schema,
     id,
     blobStorages: [
+      createIndexeddbStorage,
       (id) => {
         logger.debug(
           `${logID}::::createCollection(): createRemoteBlobStorage()`,
@@ -70,7 +71,6 @@ export async function createCollection(
         );
         return createRemoteBlobStorage(backendUrl, id);
       },
-      createIndexeddbStorage,
     ],
     docSources,
     idGenerator,

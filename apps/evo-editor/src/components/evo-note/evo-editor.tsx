@@ -663,7 +663,7 @@ export default function EvoEditor({
               onChange={handleFullScreenChange}
               className="bg-background"
             >
-              <NoteDisplay />
+              <NoteDisplay fullscreenHandle={fullscreenHandle} />
             </FullScreen>
           </ResizablePanel>
         </ResizablePanelGroup>

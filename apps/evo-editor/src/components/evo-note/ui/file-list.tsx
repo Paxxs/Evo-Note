@@ -7,7 +7,6 @@ import { Tag } from "@blocksuite/store";
 import { useEditor } from "../core/yjs-editor/components/EditorProvider";
 import logger from "@/lib/logger";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
-import { HtmlTransformer, MarkdownTransformer } from "@blocksuite/blocks";
 
 // 定义单个标签的类型
 // export type Tag = {
@@ -149,45 +148,6 @@ const NoteItemWrapper = memo(function NoteItemWrapper({
           {
             name: "C " + new Date(note.createdTime).toLocaleString(),
             value: "createdTime",
-          },
-        ],
-      },
-      {
-        type: "separator",
-      },
-      {
-        type: "sub",
-        label: "Export",
-        items: [
-          {
-            type: "item",
-            label: "Markdown",
-            onClick: () => {
-              if (!editor) return;
-              MarkdownTransformer.exportDoc(editor.doc).catch(console.error);
-            },
-          },
-          {
-            type: "item",
-            label: "HTML",
-            onClick: () => {
-              if (!editor) return;
-              HtmlTransformer.exportDoc(editor.doc).catch(console.error);
-            },
-          },
-          {
-            type: "item",
-            label: "PNG",
-            onClick: () => {
-              rootService()?.exportManager.exportPng().catch(console.error);
-            },
-          },
-          {
-            type: "item",
-            label: "PDF",
-            onClick: () => {
-              rootService()?.exportManager.exportPdf().catch(console.error);
-            },
           },
         ],
       },

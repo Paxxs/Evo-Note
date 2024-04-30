@@ -91,6 +91,7 @@ export default function NoteDisplay({
   const rootService = () => {
     return editor?.host.spec.getService("affine:page");
   };
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!editor || !provider) {
@@ -124,7 +125,7 @@ export default function NoteDisplay({
   return (
     editor &&
     doc && (
-      <div className="flex h-full flex-col flex-grow">
+      <div className="flex h-full flex-col flex-grow" ref={containerRef}>
         <ScrollArea className="h-dvh">
           <TooltipProvider delayDuration={0}>
             <div className="mf-bg-blur sticky z-10 top-0 flex flex-col justify-center border-b">
@@ -148,18 +149,25 @@ export default function NoteDisplay({
                         <span className="sr-only">More</span>
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="z-50">
+                    <DropdownMenuContent
+                      align="end"
+                      portalProsp={{ container: containerRef.current }}
+                    >
                       <DropdownMenuLabel>Operate</DropdownMenuLabel>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        onClick={() => {
-                          fullscreenHandle?.active
-                            ? fullscreenHandle.exit()
-                            : fullscreenHandle?.enter();
-                        }}
-                      >
-                        Toggle fullscreen
-                      </DropdownMenuItem>
+                      {fullscreenHandle && (
+                        <DropdownMenuItem
+                          onClick={() => {
+                            fullscreenHandle.active
+                              ? fullscreenHandle.exit()
+                              : fullscreenHandle.enter();
+                          }}
+                        >
+                          {fullscreenHandle.active
+                            ? "Exit Fullscreen"
+                            : "Enter Fullscreen"}
+                        </DropdownMenuItem>
+                      )}
                       <DropdownMenuSub>
                         <DropdownMenuSubTrigger>Export</DropdownMenuSubTrigger>
                         <DropdownMenuSubContent>

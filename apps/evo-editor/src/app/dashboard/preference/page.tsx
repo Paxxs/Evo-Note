@@ -1,6 +1,7 @@
 "use client";
 import About from "@/components/evo-note/views/settings/about";
 import ColorSettings from "@/components/evo-note/views/settings/color-settings";
+import CopilotSettings from "@/components/evo-note/views/settings/copilot-chat";
 import DisplaySettings from "@/components/evo-note/views/settings/display-settings";
 import NoteSettings from "@/components/evo-note/views/settings/note-settings";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -29,11 +30,7 @@ export default function SettingsPage(): JSX.Element {
               <NoteSettings />
             </TabsContent>
             <TabsContent value="ai">
-              <div>
-                <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight text-center pt-8">
-                  🤖 Copilot Settings not available.
-                </h3>
-              </div>
+              <CopilotSettings />
             </TabsContent>
             <TabsContent value="about">
               <About />

@@ -19,6 +19,7 @@ import { cn } from "@/lib/utils";
 import { buttonVariants, Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
 import { Switch } from "@/components/ui/switch";
+import { useState } from "react";
 
 const themeNames = themes.map((theme) => theme.name);
 const formSchema = z.object({
@@ -39,6 +40,7 @@ export default function ColorSettings() {
       navDarkAccent: config.navDarkAccent,
     },
   });
+  const [isSubmit, setIsSubmit] = useState(false);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     let color: Theme["name"] = values.color as Theme["name"];
@@ -47,6 +49,10 @@ export default function ColorSettings() {
       theme: color,
       navDarkAccent: values.navDarkAccent,
     });
+    setIsSubmit(true);
+    setTimeout(() => {
+      setIsSubmit(false);
+    }, 1000);
     toast.info("😀 Settings saved!", {
       duration: 15 * 1000,
       description: `Color set to ${color}. ${values.navDarkAccent && "Navigation bar theme accent applied in dark mode."}}`,
@@ -139,7 +145,7 @@ export default function ColorSettings() {
             />
           </div>
         </div>
-        <Button type="submit">Save</Button>
+        <Button type="submit">{isSubmit ? "😀 Saved!" : "Submit"}</Button>
       </form>
     </Form>
   );

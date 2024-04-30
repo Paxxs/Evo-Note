@@ -66,6 +66,7 @@ import {
 import { IconLogo } from "../ui/icons";
 import { useRouter } from "next/navigation";
 import AboutDialog from "./ui/aboutDialog";
+import { useConfig } from "@/hooks/use-config";
 
 declare global {
   interface Window {
@@ -261,6 +262,8 @@ export default function EvoEditor({
   const router = useRouter();
 
   const [aboutOpen, setAboutOpen] = useState(false);
+
+  const [config, setConfig] = useConfig();
 
   const handleResize = useCallback(
     (groupOffsetWidth: number | undefined, resizeHandleWidth: number) => {
@@ -460,7 +463,7 @@ export default function EvoEditor({
       <div
         className={cn(
           "flex flex-col w-full",
-          isWails ? "bg-background/95" : "bg-background",
+          isWails && config.translucent ? "bg-background/95" : "bg-background",
         )}
       >
         <div className="mf-system-menu flex flex-row items-center justify-between border-b select-none h-12 pl-4">

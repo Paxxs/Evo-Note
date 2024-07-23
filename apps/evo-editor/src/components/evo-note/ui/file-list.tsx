@@ -121,6 +121,11 @@ const NoteItemWrapper = memo(function NoteItemWrapper({
   onOpenNote: (noteId: string) => void;
   onDeleteNote: (noteId: string) => void;
 }) {
+  const { editor } = useEditor()!;
+  const rootService = () => {
+    return editor?.host.spec.getService("affine:page");
+  };
+
   const contextMenuItems = useMemo(
     (): ContextMenuItemI[] => [
       {

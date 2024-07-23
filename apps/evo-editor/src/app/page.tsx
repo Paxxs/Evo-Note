@@ -2,13 +2,18 @@
 import { MovingButton } from "@/components/ui/moving-border";
 import { Spotlight } from "@/components/ui/spotlight";
 import { useIsWailsEnvironment } from "@/hooks/use-is-wails-environment";
-import { BrowserOpenURL } from "@/wails/wailsjs/runtime/runtime";
+import {
+  BrowserOpenURL,
+  WindowSetLightTheme,
+  WindowSetDarkTheme,
+} from "@/wails/wailsjs/runtime/runtime";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 
 // import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Home() {
   // next 主题
@@ -25,6 +30,12 @@ export default function Home() {
       window.open("https://www.morfans.cn", "_blank");
     }
   }
+
+  useEffect(() => {
+    if (!isWails) return;
+    resolvedTheme === "dark" ? WindowSetDarkTheme() : WindowSetLightTheme();
+  }, [resolvedTheme, isWails]);
+
   return (
     <main className="flex min-h-screen flex-col items-center p-24 justify-between select-none mf-draggable bg-background/[0.75] bg-grid-black/[0.02] dark:bg-grid-white/[0.02]">
       <Spotlight

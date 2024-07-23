@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { useNote } from "../useNote";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import ToggleIconBtn from "../ui/toggle-icon-btn";
@@ -7,19 +7,41 @@ import EditorContainer from "../core/yjs-editor/components/EditorContainer";
 import { useEditor } from "../core/yjs-editor/components/EditorProvider";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Redo2, Undo2 } from "lucide-react";
+import { MoreVertical, Redo2, Undo2 } from "lucide-react";
 import { type Doc } from "@blocksuite/store";
 import logger from "@/lib/logger";
+import "./note-display.css";
+import { Separator } from "@/components/ui/separator";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { HtmlTransformer, MarkdownTransformer } from "@blocksuite/blocks";
+import { type FullScreenHandle } from "react-full-screen";
 
 const HistoryManager = memo(function HistoryManager({ doc }: { doc: Doc }) {
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
   useEffect(() => {
-    logger.debug("🤖[HistoryManager] mounted");
+    logger.debug("🤖[HistoryManager] mounted", doc.id, doc.meta?.title);
     const updateUndoManagerState = () => {
-      logger.debug("[HistoryManager] doc.history 😀 update state");
-      setCanUndo(doc.history.canUndo());
-      setCanRedo(doc.history.canRedo());
+      setTimeout(() => {
+        const canUndo = doc.history.canUndo();
+        const canRedo = doc.history.canRedo();
+        logger.debug(
+          "[HistoryManager] doc.history 😀 update state",
+          `canUndo=${canUndo} canRedo=${canRedo}`,
+        );
+        setCanUndo(doc.history.canUndo());
+        setCanRedo(doc.history.canRedo());
+      }, 500);
     };
     updateUndoManagerState();
     const disposable = doc.slots.blockUpdated.on(() => {
@@ -33,7 +55,7 @@ const HistoryManager = memo(function HistoryManager({ doc }: { doc: Doc }) {
   }, [doc]);
 
   return (
-    <div className="block">
+    <>
       <Button
         size="icon"
         variant="ghost"
@@ -44,6 +66,7 @@ const HistoryManager = memo(function HistoryManager({ doc }: { doc: Doc }) {
         }}
       >
         <Undo2 className="w-4 h-4" />
+        <span className="sr-only">Undo</span>
       </Button>
       <Button
         size="icon"
@@ -52,20 +75,29 @@ const HistoryManager = memo(function HistoryManager({ doc }: { doc: Doc }) {
         onClick={() => doc.redo()}
       >
         <Redo2 className="w-4 h-4" />
+        <span className="sr-only">Redo</span>
       </Button>
-    </div>
+    </>
   );
 });
 
-export default function NoteDisplay() {
+export default function NoteDisplay({
+  fullscreenHandle,
+}: {
+  fullscreenHandle?: FullScreenHandle;
+}) {
   const [selectNote, setSelectNote] = useNote();
-  const { editor, collection, provider } = useEditor()!;
+  const { editor, provider } = useEditor()!;
   const [isPage, setIsPage] = useState(true);
   const [doc, setDoc] = useState<Doc | null>(null);
+  const rootService = () => {
+    return editor?.host.spec.getService("affine:page");
+  };
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!editor || !provider) {
-      logger.error("[note-display] Editor or collection is not ready yet");
+      logger.info("[note-display] Editor or collection is not ready yet");
       return;
     }
     logger.debug("😶 [note-display]: mounted");
@@ -93,15 +125,13 @@ export default function NoteDisplay() {
   }, [editor, provider, selectNote.selected, setSelectNote]);
 
   return (
-    editor &&
-    doc && (
-      <div className="flex h-full flex-col flex-grow">
+    <div className="flex h-full flex-col flex-grow" ref={containerRef}>
+      {editor && doc && (
         <ScrollArea className="h-dvh">
           <TooltipProvider delayDuration={0}>
             <div className="mf-bg-blur sticky z-10 top-0 flex flex-col justify-center border-b">
-              <div className="flex gap-4 px-2 items-center justify-between max-h-[52px] min-h-[52px]">
-                <HistoryManager doc={doc} />
-                <div className="flex gap-4">
+              <div className="flex px-2 items-center justify-between max-h-[52px] min-h-[52px]">
+                <div className="flex items-center gap-2">
                   <ToggleIconBtn
                     value={isPage}
                     onValueChange={(newState) => {
@@ -110,11 +140,84 @@ export default function NoteDisplay() {
                     }}
                   />
                 </div>
+                <div className="flex items-center gap-2">
+                  <HistoryManager doc={doc} />
+
+                  <Separator orientation="vertical" className="mx-2 h-6" />
+                  <DropdownMenu>
+                    <DropdownMenuTrigger>
+                      <Button variant="ghost" size="icon">
+                        <MoreVertical className="h-4 w-4" />
+                        <span className="sr-only">More</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      align="end"
+                      portalProsp={{ container: containerRef.current }}
+                    >
+                      <DropdownMenuLabel>Operate</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      {fullscreenHandle && (
+                        <DropdownMenuItem
+                          onClick={() => {
+                            fullscreenHandle.active
+                              ? fullscreenHandle.exit()
+                              : fullscreenHandle.enter();
+                          }}
+                        >
+                          {fullscreenHandle.active
+                            ? "Exit Fullscreen"
+                            : "Enter Fullscreen"}
+                        </DropdownMenuItem>
+                      )}
+                      <DropdownMenuSub>
+                        <DropdownMenuSubTrigger>Export</DropdownMenuSubTrigger>
+                        <DropdownMenuSubContent>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              MarkdownTransformer.exportDoc(editor.doc).catch(
+                                console.error,
+                              );
+                            }}
+                          >
+                            Markdown
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              HtmlTransformer.exportDoc(editor.doc).catch(
+                                console.error,
+                              );
+                            }}
+                          >
+                            HTML
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              rootService()
+                                ?.exportManager.exportPng()
+                                .catch(console.error);
+                            }}
+                          >
+                            PNG
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              rootService()
+                                ?.exportManager.exportPdf()
+                                .catch(console.error);
+                            }}
+                          >
+                            PDF
+                          </DropdownMenuItem>
+                        </DropdownMenuSubContent>
+                      </DropdownMenuSub>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
               </div>
               {/* <Separator /> */}
             </div>
           </TooltipProvider>
-          {/* <Editor /> */}
           <EditorContainer
             className={cn(
               "dark:bg-[#141414]",
@@ -125,7 +228,7 @@ export default function NoteDisplay() {
           />
           <ScrollBar orientation="vertical" />
         </ScrollArea>
-      </div>
-    )
+      )}
+    </div>
   );
 }

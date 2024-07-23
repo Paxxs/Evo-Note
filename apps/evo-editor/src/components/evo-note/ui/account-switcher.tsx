@@ -11,25 +11,34 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-interface AccountSwitcherProps {
+export interface WorkspaceSwitcherProps {
   isCollapsed: boolean;
-  accounts: {
+  workspaces: {
     label: string;
-    email: string;
+    id: string;
     icon: React.ReactNode;
   }[];
+  value?: string; // 设置选中项 id
+  onChange?: (value: string) => void;
 }
 
-export const AccountSwitcher = React.memo(function AccountSwitcher({
+export const WorkspaceSwitcher = React.memo(function WorkspaceSwitcher({
   isCollapsed,
-  accounts,
-}: AccountSwitcherProps) {
-  const [selectedAccount, setSelectedAccount] = React.useState<string>(
-    accounts[0].email,
+  workspaces,
+  value,
+  onChange,
+}: WorkspaceSwitcherProps) {
+  const [selectedWorkdpace, setSelectedWorkspace] = React.useState<string>(
+    value || workspaces[0].id,
   );
 
+  function handleChange(value: string) {
+    setSelectedWorkspace(value);
+    onChange?.(value);
+  }
+
   return (
-    <Select defaultValue={selectedAccount} onValueChange={setSelectedAccount}>
+    <Select defaultValue={selectedWorkdpace} onValueChange={handleChange}>
       <SelectTrigger
         className={cn(
           "flex h-10 items-center gap-2 [&>span]:line-clamp-1 [&>span]:flex [&>span]:w-full [&>span]:items-center [&>span]:gap-1 [&>span]:truncate [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0",
@@ -39,21 +48,25 @@ export const AccountSwitcher = React.memo(function AccountSwitcher({
         aria-label="Select account"
       >
         <SelectValue placeholder="Select an account">
-          {accounts.find((account) => account.email === selectedAccount)?.icon}
+          {
+            workspaces.find((collection) => collection.id === selectedWorkdpace)
+              ?.icon
+          }
           <span className={cn("ml-2", isCollapsed && "hidden")}>
             {
-              accounts.find((account) => account.email === selectedAccount)
-                ?.label
+              workspaces.find(
+                (collection) => collection.id === selectedWorkdpace,
+              )?.label
             }
           </span>
         </SelectValue>
       </SelectTrigger>
       <SelectContent>
-        {accounts.map((account) => (
-          <SelectItem key={account.email} value={account.email}>
+        {workspaces.map((collection) => (
+          <SelectItem key={collection.id} value={collection.id}>
             <div className="flex items-center gap-3 [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0 [&_svg]:text-foreground">
-              {account.icon}
-              {account.email}
+              {collection.icon}
+              {collection.label}
             </div>
           </SelectItem>
         ))}

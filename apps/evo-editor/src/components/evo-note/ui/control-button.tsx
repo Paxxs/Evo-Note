@@ -15,8 +15,12 @@ import { useCallback, useEffect, useState } from "react";
 import { useEditor } from "../core/yjs-editor/components/EditorProvider";
 import { toast } from "sonner";
 
-export default function ControlButton() {
-  const { collection } = useEditor()!;
+export default function ControlButton({
+  onCloseBtnClick,
+}: {
+  onCloseBtnClick: () => void;
+}) {
+  const { provider } = useEditor()!;
   const [isMinimised, setIsMinimised] = useState(true); // 默认窗口时最小的
 
   useWails(() => {
@@ -33,26 +37,6 @@ export default function ControlButton() {
   const minOnClick = useCallback(() => {
     WindowMinimise();
   }, []);
-
-  const closeOnClick = useCallback(() => {
-    if (collection) {
-      toast.info("😀 Saving...");
-      if (!collection.docSync.canGracefulStop()) {
-        toast.info("😉 Just need one more time...");
-        collection.docSync
-          .waitForGracefulStop()
-          .then(() => {
-            toast.success("😀 Saved");
-            Quit();
-          })
-          .catch((err) => {
-            toast.error("😢 data save error:" + err);
-            return;
-          });
-      }
-    }
-    Quit();
-  }, [collection]);
 
   return (
     <>
@@ -80,7 +64,7 @@ export default function ControlButton() {
         variant="ghost"
         size="icon"
         className="hover:bg-destructive rounded-none h-12 w-12 border-b"
-        onClick={closeOnClick}
+        onClick={onCloseBtnClick}
       >
         <X className="h-4 w-4" />
       </Button>

@@ -1,0 +1,8 @@
+.affine-page-viewport {
+  min-height: calc(100dvh - 3rem - 52.8px);
+}
+.fullscreen-enabled .editor-container {
+  /* background: #000; */
+  /* height: calc(100dvh - 52.8px) !important; */
+  min-height: calc(100dvh - 52.8px) !important;
+}

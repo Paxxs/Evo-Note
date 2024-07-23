@@ -13,7 +13,6 @@ import logger from "@/lib/logger";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { themes, Theme } from "@/registry/themes";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useTheme } from "next-themes";
 import { useConfig } from "@/hooks/use-config";
@@ -25,12 +24,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Switch } from "@/components/ui/switch";
+import { useState } from "react";
 
 // const themeNames = themes.map((theme) => theme.name) as Theme["name"][];
 
 // Create a union type from the theme names
-const themeNames = themes.map((theme) => theme.name);
+// const themeNames = themes.map((theme) => theme.name);
 const formSchema = z.object({
   //   style: z.string({
   //     required_error: "Style is required",
@@ -44,6 +44,9 @@ const formSchema = z.object({
   mode: z.string({
     required_error: "Mode is required",
   }),
+  translucent: z.boolean({
+    required_error: "Translucent is required",
+  }),
 });
 
 export default function DisplaySettings() {
@@ -53,12 +56,14 @@ export default function DisplaySettings() {
     themes: nextThemes,
   } = useTheme();
   const [config, setConfig] = useConfig();
+  const [isSubmit, setIsSubmit] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       //   color: config.theme,
       radius: formatNumber(config.radius),
       mode: mode,
+      translucent: config.translucent,
     },
   });
 
@@ -94,13 +99,17 @@ export default function DisplaySettings() {
 
     setConfig({
       ...config,
-      //   theme: color,
       radius: radius,
+      translucent: values.translucent,
     });
     setMode(values.mode);
+    setIsSubmit(true);
+    setTimeout(() => {
+      setIsSubmit(false);
+    }, 1000);
     toast.info("😀 Settings saved!", {
       position: "top-center",
-      description: `The radius is set to ${radius} and the theme is set to ${values.mode}.`,
+      description: `The radius is set to ${radius} and the theme is set to ${values.mode}. Translucent mode is ${values.translucent ? "enabled" : "disabled"}.`,
     });
   }
   return (
@@ -231,8 +240,28 @@ export default function DisplaySettings() {
             </FormItem>
           )}
         />
-
-        <Button type="submit">Submit</Button>
+        <FormField
+          control={form.control}
+          name="translucent"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+              <div className="space-y-0.5">
+                <FormLabel>Enable Translucent Effect</FormLabel>
+                <FormDescription>
+                  Lowers the window transparency to show beautiful acrylic blur
+                  effect (App mode).
+                </FormDescription>
+              </div>
+              <FormControl>
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <Button type="submit">{isSubmit ? "😀 Saved!" : "Submit"}</Button>
       </form>
     </Form>
   );
